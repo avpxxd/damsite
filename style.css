@@ -9,6 +9,9 @@ h1 {
     position: flex;
     text-align: center;
 }
+p {
+    color:AliceBlue;
+}
 * {
 	margin: 0;
 	padding: 0;
