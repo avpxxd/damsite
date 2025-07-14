@@ -253,6 +253,8 @@ footer {
 }
 
 .blogimg {
-  margin: 0 auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   height:170px;
 }
