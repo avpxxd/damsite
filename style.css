@@ -11,9 +11,13 @@ h1 {
 }
 h2 {
     color:AliceBlue;
+    position: flex;
+    text-align: center;
 }
 h5 {
     color:AliceBlue;
+    position: flex;
+    text-align: center;
 }
 p {
     color:AliceBlue;
