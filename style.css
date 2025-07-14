@@ -4,6 +4,11 @@ body{
 	font-family: 'Roboto', sans-serif;
 	background-color: #1D3158;
 }
+h1 {
+    color: White;
+    position: flex;
+    text-align: center;
+}
 * {
 	margin: 0;
 	padding: 0;
