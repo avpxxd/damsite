@@ -9,6 +9,12 @@ h1 {
     position: flex;
     text-align: center;
 }
+h2 {
+    color:AliceBlue;
+}
+h5 {
+    color:AliceBlue;
+}
 p {
     color:AliceBlue;
 }
