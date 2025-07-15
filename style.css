@@ -258,3 +258,9 @@ footer {
   margin-right: auto;
   height:170px;
 }
+
+iframe {
+    display: block;
+    border-style:none;
+    margin: 0 auto;
+}
