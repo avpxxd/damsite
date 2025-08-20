@@ -14,6 +14,11 @@ h2 {
     position: flex;
     text-align: center;
 }
+h3 {
+	color: White;
+    position: flex;
+    text-align: center;
+}
 h5 {
     color:AliceBlue;
     position: flex;
@@ -317,5 +322,5 @@ cbutton:hover {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 50%;
+  width: 25%;
 }
