@@ -7,12 +7,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"><link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css'>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css'><link rel="stylesheet" href="./style.css">
-  <!-- Tailwind CSS for styling -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- GFonts: Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">        
   <!-- Page Icon -->
   <link rel="icon" type="image/x-icon" href="picon.png">
   
@@ -85,100 +79,49 @@
 
         <!-- BLOG PAGE -->
     <div id="blog" class="tabcontent">
-      <!-- Header Section -->
-      <header class="bg-white shadow-sm">
-        <div class="container mx-auto px-6 py-8 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">DamVan Blog</h1>
-            <p class="text-gray-600 mt-2">Welcome To The Blog!</p>
-        </div>
-      </header>
-
-      <!-- Main Content: Blog Posts Grid -->
-      <main class="container mx-auto px-6 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            <!-- Blog Post 1 -->
-            <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <a href="#">
-                    <img src="logo.png" alt="Damvan Logo" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">
-                        <a href="#" class="hover:text-indigo-600 transition-colors duration-300">TEST BLOGPOST</a>
-                    </h2>
-                    <h5 class="text-sm text-gray-500 font-medium mb-4">Published on MONTH DAY, YEAR</h5>
-                    <p class="text-gray-700 leading-relaxed">
-                        PLACEHOLDER PARAGRAPH TEXT FOR HOLDING PLACES UNTIL SOMETHING IS WORTHY OF REPLACING THE PLACE HOLDER OF HOLDING PLACES.
-                    </p>
-                </div>
-            </article>
-
-            <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <a href="#">
-                    <img src="logo.png" alt="Damvan Logo" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">
-                        <a href="#" class="hover:text-indigo-600 transition-colors duration-300">TEST BLOGPOST</a>
-                    </h2>
-                    <h5 class="text-sm text-gray-500 font-medium mb-4">Published on MONTH DAY, YEAR</h5>
-                    <p class="text-gray-700 leading-relaxed">
-                        PLACEHOLDER PARAGRAPH TEXT FOR HOLDING PLACES UNTIL SOMETHING IS WORTHY OF REPLACING THE PLACE HOLDER OF HOLDING PLACES.
-                    </p>
-                </div>
-            </article>
-
-            <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <a href="#">
-                    <img src="logo.png" alt="Damvan Logo" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">
-                        <a href="#" class="hover:text-indigo-600 transition-colors duration-300">TEST BLOGPOST</a>
-                    </h2>
-                    <h5 class="text-sm text-gray-500 font-medium mb-4">Published on MONTH DAY, YEAR</h5>
-                    <p class="text-gray-700 leading-relaxed">
-                        PLACEHOLDER PARAGRAPH TEXT FOR HOLDING PLACES UNTIL SOMETHING IS WORTHY OF REPLACING THE PLACE HOLDER OF HOLDING PLACES.
-                    </p>
-                </div>
-            </article>
-
-
-            <!-- 
-            ==================================================================
-            === NEW BLOG POST TEMPLATE =======================================
-            ==================================================================
-            To add a new blog post, copy the <article> block below and
-            paste it right above this comment block. Then, change the
-            following:
-            
-            1.  Image `src`: Update the image URL in `src="..."`.
-            2.  Image `alt`: Write a good description for the image in `alt="..."`.
-            3.  Post Link: Update the link in both `<a>` tags.
-            4.  Title: Change the text inside the `<h2>` tag.
-            5.  Date: Update the date inside the `<h5>` tag.
-            6.  Paragraph: Write your post summary inside the `<p>` tag.
-            ==================================================================
-            
-            <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <a href="#">
-                    <img src="https://placehold.co/600x400/34d399/ffffff?text=New+Post" alt="A descriptive alt text for the blog post image." class="w-full h-48 object-cover">
-                </a>
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">
-                        <a href="#" class="hover:text-indigo-600 transition-colors duration-300">Your New Blog Post Title</a>
-                    </h2>
-                    <h5 class="text-sm text-gray-500 font-medium mb-4">Published on [DATE]</h5>
-                    <p class="text-gray-700 leading-relaxed">
-                        This is a small paragraph for your new blog post. Write a short, engaging summary of what the article is about here. Keep it concise and to the point.
-                    </p>
-                </div>
-            </article>
-
+      <h1>DamVan Blog!</h1>
+        <div class="row">
+          <div class="leftcolumn">
+            <div class="card">
+              <h2>New Stuff!</h2>
+              <h5>October 6, 2025</h5>
+              <div class="imgbg" style="height:200px;">
+                <img src="BlogNewStuff.png" alt="NewStuff img" class="blogimg">
+              </div>
+              <p style="text-align: center;">Another Project Has Been Added To The Cool Stuff Section!</p>
+              <p style="text-align: center;">Be Sure To Check It Out!</p>
+            </div>
+            <div class="card">
+              <h2>Website V0.2!</h2>
+              <h5>August 20, 2025</h5>
+              <div class="imgbg" style="height:200px;">
+                <img src="logo.png" alt="DamVan Logo" class="blogimg">
+              </div>
+              <p style="text-align: center;">The website is finally starting to come together! (though still buggy, and missing content.)</p>
+              <p style="text-align: center;">We also published our first lil fun project in the Cool Stuff section, so be sure to check it out!</p>
+            </div>
+            <div class="card">
+              <h2>The Website Launches!</h2>
+              <h5>July 14, 2025</h5>
+              <div class="imgbg" style="height:200px;">
+                <img src="logo.png" alt="DamVan Logo" class="blogimg">
+              </div>
+              <p style="text-align: center;">The website has launched today! (or technically yesterday, as it took a day to get the blog page up and running!)</p>
+              <p style="text-align: center;">We hope to provide some awesome content very (very) soon!</p>
+            </div>
+            <!-- BlogPost Template! (always put new posts above the old ones!)
+            <div class="card">
+              <h2>TITLE / HEADING</h2>
+              <h5>month day, 20XX</h5>
+              <div class="imgbg" style="height:200px;">
+                <img src="filename" alt="Image Title" class="blogimg">
+              </div>
+              <p style="text-align: center;">Paragraph</p>
+              <p style="text-align: center;">Paragraph 2</p>
+            </div>
             -->
-
+          </div>
         </div>
-      </main>
     </div>
 
           <!-- COOL STUFF PAGE -->
