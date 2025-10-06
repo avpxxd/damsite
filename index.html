@@ -10,7 +10,7 @@
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css'>
   
   <!-- Page Icon (Placeholder) -->
-  <link rel="icon" type="image/x-icon" href="https://placehold.co/32x32/1D3158/FFFFFF?text=DV">
+  <link rel="icon" type="image/x-icon" href="picon.png">
 
   <!-- EMBEDDED STYLES.CSS -->
   <style>
@@ -247,6 +247,29 @@
         color: AliceBlue;
     }
 
+    /* --- RESPONSIVE STYLES --- */
+    @media(min-width: 992px){
+        .navbar-expand-custom {
+            -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+            -ms-flex-pack: start;
+            justify-content: flex-start;
+        }
+        .navbar-expand-custom .navbar-nav {
+            -ms-flex-direction: row;
+            flex-direction: row;
+        }
+        .navbar-expand-custom .navbar-toggler {
+            display: none;
+        }
+        .navbar-expand-custom .navbar-collapse {
+            display: -ms-flexbox!important;
+            display: flex!important;
+            -ms-flex-preferred-size: auto;
+            flex-basis: auto;
+        }
+    }
+
     @media (max-width: 991px){
         #navbarSupportedContent ul li a{ padding: 12px 30px; }
         .hori-selector{
@@ -271,7 +294,7 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-custom navbar-mainbg">
     <a class="navbar-brand navbar-logo" href="#" onclick="openCity(event, 'home'); return false;">
-      <img src="https://placehold.co/150x50/FFFFFF/1D3158?text=DamVan" alt="DamVan Logo Placeholder" height="50">
+      <img src="logo.png" alt="DamVan Logo Placeholder" height="50">
     </a>
     <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <i class="fas fa-bars text-black"></i>
@@ -304,7 +327,7 @@
     <div id="home" class="tabcontent">
       <h1>Welcome To The Damn(Van) Website!</h1>
       <h3>This is the offical website for DodgeRamTheCaravan (DamVan)</h3>
-      <img src="https://placehold.co/200x200/FFFFFF/1D3158?text=DamVan" alt="DamVan Logo Placeholder" class="center">
+      <img src="logo.png" alt="DamVan Logo Placeholder" class="center">
       <h5>
         Here at DamVan, we are full of fun and goofy ideas, we do all kinds of things, from Make YouTube Videos, to our own Personal Coding Projects<br>
         The group consists between 3 original members, but has the occasional special guest, Andrew (AVPxxd), Dalton (TheLocalAdmin), and Will (Branchy18269)<br>
@@ -339,7 +362,7 @@
             
             <!-- Blog Post 1 -->
             <div class="card">
-                <img src="https://placehold.co/800x400/545768/FFFFFF?text=New+Project" alt="New Stuff Image Placeholder" class="blogimg">
+                <img src="BlogNewStuff.png" alt="New Stuff Image Placeholder" class="blogimg">
                 <h2 class="blog-title">New Stuff!</h2>
                 <h5 class="blog-date">October 6, 2025</h5>
                 <p class="blog-paragraph">
@@ -349,7 +372,7 @@
             
             <!-- Blog Post 2 -->
             <div class="card">
-                <img src="https://placehold.co/800x400/545768/FFFFFF?text=Website+Update" alt="Website V0.2 Placeholder" class="blogimg">
+                <img src="logo.png" alt="Website V0.2 Placeholder" class="blogimg">
                 <h2 class="blog-title">Website V0.2!</h2>
                 <h5 class="blog-date">August 20, 2025</h5>
                 <p class="blog-paragraph">
@@ -359,7 +382,7 @@
 
             <!-- Blog Post 3 -->
             <div class="card">
-                <img src="https://placehold.co/800x400/545768/FFFFFF?text=Site+Launch" alt="Website Launch Placeholder" class="blogimg">
+                <img src="logo.png" alt="Website Launch Placeholder" class="blogimg">
                 <h2 class="blog-title">The Website Launches!</h2>
                 <h5 class="blog-date">July 14, 2025</h5>
                 <p class="blog-paragraph">
@@ -397,13 +420,13 @@
           <div class="leftcolumn">
             <div class="card">
               <h2>BeatNinja</h2>
-              <img src="https://placehold.co/800x400/545768/FFFFFF?text=BeatNinja" alt="BeatNinja Logo Placeholder" class="blogimg">
+              <img src="BeatNinja.png" alt="BeatNinja Logo Placeholder" class="blogimg">
               <p style="text-align: center;">A Mix Between Fruit Ninja, And Beat Saber... Sorta.</p>
               <button class="cbutton" onclick="window.open('https://avpxxd.github.io/BeatNinja/', '_blank');"><span>Play Game</span></button>
             </div>
             <div class="card">
               <h2>I Am Not A Human</h2>
-              <img src="https://placehold.co/800x400/545768/FFFFFF?text=I+Am+Not+A+Human" alt="iamnotahuman Placeholder" class="blogimg">
+              <img src="imnotahuman.png" alt="iamnotahuman Placeholder" class="blogimg">
               <p style="text-align: center;">Alternate Universe Captchas Are Designed To Keep Us Out!</p>
               <button class="cbutton" onclick="window.open('https://avpxxd.github.io/codespace/', '_blank');"><span>Check it out!</span></button>
             </div>
