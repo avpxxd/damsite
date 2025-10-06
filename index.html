@@ -292,7 +292,7 @@
 <body>
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-custom navbar-mainbg">
-    <a class="navbar-brand navbar-logo" href="#" onclick="openCity(event, 'home'); return false;">
+    <a class="navbar-brand navbar-logo" href="#" onclick="return navigateToHome(event);">
       <img src="logo.png" alt="DamVan Logo Placeholder" height="50">
     </a>
     <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -497,10 +497,6 @@
         });
     }
 
-    $(document).ready(function(){
-        setTimeout(function(){ test(); });
-    });
-
     $(window).on('resize', function(){
         setTimeout(function(){ test(); }, 500);
     });
@@ -531,11 +527,22 @@
         setTimeout(function(){ test(); }, 10);
     }
 
-    // Set the default tab to 'home' on initial load
-    document.addEventListener("DOMContentLoaded", function() {
-        // Find the "Home" link specifically to initialize the page correctly
+    // New function to handle logo click and navigate to home
+    function navigateToHome(event) {
+        if(event) event.preventDefault();
         let homeLink = document.querySelector('a[onclick*="\'home\'"]');
-        openCity({currentTarget: homeLink}, 'home');
+        if (homeLink) {
+             openCity({ currentTarget: homeLink }, 'home');
+        }
+        return false;
+    }
+
+    // Set the default tab to 'home' on initial load, but wait for all assets (like fonts)
+    $(window).on('load', function() {
+        let homeLink = document.querySelector('a[onclick*="\'home\'"]');
+        if (homeLink) {
+            openCity({currentTarget: homeLink}, 'home');
+        }
     });
 </script>
 
