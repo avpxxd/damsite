@@ -1,42 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- Set to dark theme -->
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DamVan - Official Website</title>
     
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     
     <!-- Load Inter font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         /* Apply Inter font */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #111827; /* Dark Navy Background (gray-900) */
-            color: #d1d5db; /* Light gray text (gray-300) */
+            /* Background and text color are now handled by data-bs-theme="dark" */
         }
+        
         /* Page sections */
         .page-section {
-            margin-top: 4rem;
-            margin-bottom: 4rem;
-            background-color: #1f2937; /* Darker Gray Background (gray-800) */
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* Darker shadow */
+            /* Use Bootstrap's tertiary background color */
+            background-color: var(--bs-tertiary-bg); 
+            /* Use Bootstrap's large border radius */
+            border-radius: var(--bs-border-radius-lg);
         }
+
         /* Home section is special (no top margin) */
         #home {
-            margin-top: 0;
-            margin-bottom: 0;
-            box-shadow: none;
             background-image: url('https://moparinsiders.com/wp-content/uploads/2021/06/Chrysler-Pacifica-SRT-Hellcat-Design-by-Abimelec-Designs.-AbimelecDesigns-1-e1648584376623-780x470.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             position: relative;
             overflow: hidden;
-            border-radius: 0.5rem;
+            border-radius: var(--bs-border-radius-lg);
+            /* min-height is set inline */
         }
 
         /* Dark overlay for homepage hero */
@@ -57,31 +58,10 @@
             z-index: 2;
         }
 
-        /* Header and Footer adjusted for new theme */
-        header, footer {
-            background-color: #1f2937; /* Dark Gray (gray-800) */
-            color: #d1d5db; /* Light gray text (gray-300) */
-            border-bottom: 1px solid #374151; /* gray-700 */
-        }
-        footer {
-            border-top: 1px solid #374151; /* gray-700 */
-        }
-
-        /* Navigation links */
-        nav a {
-            color: #d1d5db; /* gray-300 */
-            transition: color 0.3s ease;
-        }
-        nav a:hover {
-            color: #93c5fd; /* blue-300 */
-        }
-        
-        /* Special contact button in nav */
-        nav a[onclick*="contact"] {
-            background-color: #002040; /* Even darker blue background */
-            color: white !important; /* Ensure white text */
-            padding: 8px 16px;
-            border-radius: 6px;
+        /* Custom "Contact Us" button for the navbar */
+        .btn-rainbow-nav {
+            background-color: #002040;
+            color: white !important;
             transition: all 0.4s ease-in-out;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             position: relative;
@@ -89,8 +69,12 @@
             background-size: 800% 100%;
             background-position: 0% 0;
             text-decoration: none;
+            /* Use Bootstrap's button padding and radius */
+            padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x); 
+            border-radius: var(--bs-btn-border-radius);
+            font-weight: var(--bs-font-weight-medium);
         }
-        nav a[onclick*="contact"]:hover {
+        .btn-rainbow-nav:hover {
             background-image: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000);
             animation: rainbow-flow 6s linear infinite;
             transform: translateY(-2px);
@@ -99,32 +83,20 @@
 
         /* Headings */
         h1, h2, h3 {
-            color: #93c5fd; /* Light Blue (blue-300) */
+            /* Use Bootstrap's primary text emphasis color */
+            color: var(--bs-primary-text-emphasis);
         }
         /* Override for homepage h1 */
         #home h1 {
-            color: #ffffff; /* White for hero */
+            color: var(--bs-white);
+            /* Custom drop shadow to mimic tailwind */
+            text-shadow: 0 4px 6px rgba(0,0,0,0.4);
+        }
+        #home p {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
-        /* Blog post articles and project cards */
-        article, .project-card, .social-card, .contact-card {
-            background-color: #374151; /* Darker card (gray-700) */
-            border: 1px solid #4b5563; /* gray-600 */
-        }
-        article h3, .project-card h3, .social-card h3, .contact-card h3 {
-            color: #93c5fd; /* light blue-300 */
-        }
-        article p.text-sm, .project-card p.text-sm, .social-card p.text-sm, .contact-card p.text-sm {
-            color: #9ca3af; /* gray-400 */
-        }
-        p, .text-gray-700 {
-            color: #d1d5db; /* gray-300 */
-        }
-        .text-gray-600 {
-            color: #9ca3af; /* gray-400 */
-        }
-
-        /* Rainbow buttons */
+        /* Custom rainbow buttons */
         .rainbow-button {
             background-color: #002040;
             background-size: 800% 100%;
@@ -140,6 +112,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            border: none; /* Ensure no default button border */
         }
         .rainbow-button:hover {
             background-image: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000);
@@ -150,15 +123,7 @@
         .rainbow-button svg {
             color: white;
         }
-
-        /* Links within content */
-        a.text-blue-400, a.text-blue-600 {
-            color: #93c5fd; /* blue-300 */
-        }
-        a.text-blue-400:hover, a.text-blue-600:hover {
-            text-decoration: underline;
-        }
-
+        
         /* Keyframes for the rainbow flow animation */
         @keyframes rainbow-flow {
             0% { background-position: 0% 50%; }
@@ -166,24 +131,18 @@
         }
     </style>
     <script>
-        // Simple mobile menu toggle
-        function toggleMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-
         // Show/hide page sections
         function showPage(pageId) {
             // Hide all page sections
             const sections = document.querySelectorAll('.page-section');
             sections.forEach(section => {
-                section.classList.add('hidden');
+                section.classList.add('d-none'); // Use Bootstrap's 'd-none'
             });
 
             // Show the selected page section
             const page = document.getElementById(pageId);
             if (page) {
-                page.classList.remove('hidden');
+                page.classList.remove('d-none'); // Use Bootstrap's 'd-none'
             }
             
             // Scroll to top of new page
@@ -193,71 +152,92 @@
         // Initialize to show the home page on load
         document.addEventListener('DOMContentLoaded', () => {
             showPage('home');
+            
+            // Add click listeners to close mobile menu on item click
+            const navbarCollapse = document.getElementById('main-navbar');
+            if (navbarCollapse) {
+                const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                    toggle: false // Initialize without toggling
+                });
+                
+                document.querySelectorAll('#main-navbar .nav-link, #main-navbar .btn-rainbow-nav').forEach(link => {
+                    link.addEventListener('click', () => {
+                        // Check if the navbar is currently shown (mobile view)
+                        if (navbarCollapse.classList.contains('show')) {
+                            bsCollapse.hide();
+                        }
+                    });
+                });
+            }
         });
     </script>
 </head>
-<body class="antialiased">
+<body>
 
     <!-- Header & Navigation Bar -->
-    <header class="shadow-lg sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
+    <header class="sticky-top z-3">
+        <!-- Bootstrap Navbar -->
+        <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom border-secondary-subtle shadow-sm">
+            <div class="container px-4 py-1">
                 
                 <!-- Logo / Brand Name -->
-                <a href="#" onclick="showPage('home')" class="text-2xl font-bold text-blue-300 transition duration-300 hover:text-blue-400">DamVan</a>
-                
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#" onclick="showPage('home')" class="hover:text-blue-300 transition duration-300 px-3 py-2 rounded-md font-medium">Home</a>
-                    <a href="#" onclick="showPage('about')" class="hover:text-blue-300 transition duration-300 px-3 py-2 rounded-md font-medium">About Us</a>
-                    <a href="#" onclick="showPage('blog')" class="hover:text-blue-300 transition duration-300 px-3 py-2 rounded-md font-medium">Blog</a>
-                    <a href="#" onclick="showPage('cool-stuff')" class="hover:text-blue-300 transition duration-300 px-3 py-2 rounded-md font-medium">Cool Stuff</a>
-                    <a href="#" onclick="showPage('socials')" class="hover:text-blue-300 transition duration-300 px-3 py-2 rounded-md font-medium">Our Socials</a>
-                    <a href="#" onclick="showPage('contact')">Contact Us</a>
-                </div>
+                <a href="#" onclick="showPage('home')" class="navbar-brand fs-4 fw-bold text-primary-emphasis text-decoration-none">DamVan</a>
                 
                 <!-- Mobile Menu Button -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" onclick="toggleMenu()" class="text-gray-300 hover:text-white focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                        </svg>
-                    </button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <!-- Desktop & Mobile Menu Wrapper -->
+                <div class="collapse navbar-collapse" id="main-navbar">
+                    <!-- ms-auto pushes menu to the right -->
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item">
+                            <a href="#" onclick="showPage('home')" class="nav-link px-3 py-2">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" onclick="showPage('about')" class="nav-link px-3 py-2">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" onclick="showPage('blog')" class="nav-link px-3 py-2">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" onclick="showPage('cool-stuff')" class="nav-link px-3 py-2">Cool Stuff</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" onclick="showPage('socials')" class="nav-link px-3 py-2">Our Socials</a>
+                        </li>
+                        <!-- Special Contact Button -->
+                        <li class="nav-item ms-md-2 mt-2 mt-md-0 mb-2 mb-md-0">
+                            <a href="#" onclick="showPage('contact')" class="btn-rainbow-nav d-block d-md-inline-block text-center text-decoration-none">Contact Us</a>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-
-            <!-- Mobile Menu (Hidden by default) -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2">
-                <a href="#" onclick="showPage('home'); toggleMenu();" class="block text-gray-300 hover:text-white transition duration-300 px-3 py-2 rounded-md font-medium">Home</a>
-                <a href="#" onclick="showPage('about'); toggleMenu();" class="block text-gray-300 hover:text-white transition duration-300 px-3 py-2 rounded-md font-medium">About Us</a>
-                <a href="#" onclick="showPage('blog'); toggleMenu();" class="block text-gray-300 hover:text-white transition duration-300 px-3 py-2 rounded-md font-medium">Blog</a>
-                <a href="#" onclick="showPage('cool-stuff'); toggleMenu();" class="block text-gray-300 hover:text-white transition duration-300 px-3 py-2 rounded-md font-medium">Cool Stuff</a>
-                <a href="#" onclick="showPage('socials'); toggleMenu();" class="block text-gray-300 hover:text-white transition duration-300 px-3 py-2 rounded-md font-medium">Our Socials</a>
-                <a href="#" onclick="showPage('contact'); toggleMenu();" class="block rainbow-button text-center w-full mt-2">Contact Us</a>
             </div>
         </nav>
     </header>
 
     <!-- Main Content Area -->
-    <main class="container mx-auto px-6 py-12">
+    <main class="container px-4 py-5">
 
         <!-- Hero Section (Home) -->
-        <section id="home" class="page-section text-center min-h-[60vh] flex flex-col items-center justify-center">
-            <h1 class="text-4xl md:text-6xl font-bold text-white drop-shadow-lg mb-4 leading-tight">
-                Welcome To The <span class="text-blue-300">Damn(Van)</span> Website!
+        <!-- Note: showPage('home') is called on load -->
+        <section id="home" class="page-section text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
+            <h1 class="display-3 fw-bold text-white mb-4 lh-tight">
+                Welcome To The <span class="text-primary-emphasis">Damn(Van)</span> Website!
             </h1>
-            <p class="text-xl md:text-2xl text-gray-200 drop-shadow-md font-light">
+            <p class="fs-4 text-light-emphasis fw-light">
                 This is the official website for DodgeRamTheCaravan (DamVan)
             </p>
         </section>
 
         <!-- About Section -->
-        <section id="about" class="page-section hidden p-8 md:p-12">
+        <section id="about" class="page-section d-none p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
             
             <!-- About Us Content -->
-            <div class="mb-16">
-                <h2 class="text-3xl font-bold mb-6 text-center">About Us</h2>
-                <div class="max-w-4xl mx-auto text-lg space-y-6 leading-relaxed">
+            <div class="mb-5">
+                <h2 class="fs-2 fw-bold mb-4 text-center">About Us</h2>
+                <div class="mx-auto fs-5" style="max-width: 80ch; line-height: 1.7;">
                     <p>
                         Here at DamVan, we are full of fun and goofy ideas. We do all kinds of things, from making YouTube Videos to our own Personal Coding Projects.
                     </p>
@@ -265,7 +245,7 @@
                         The group consists of 3 original members, but has the occasional special guest: <strong>Andrew (AVPxxd)</strong>, <strong>Dalton (TheLocalAdmin)</strong>, and <strong>Will (Branchy18269)</strong>.
                     </p>
                     <p>
-                        We all have our own YouTube channels along with <a href="https://www.youtube.com/@DodgeRamTheCaravan" class="text-blue-400 hover:underline">The DodgeRamTheCaravan YouTube Channel</a>, and we also have our own GitHub Pages linked in our Socials Page.
+                        We all have our own YouTube channels along with <a href="https://www.youtube.com/@DodgeRamTheCaravan" class="text-primary">The DodgeRamTheCaravan YouTube Channel</a>, and we also have our own GitHub Pages linked in our Socials Page.
                     </p>
                     <p>
                         Our GitHubs are the same names as our Aliases, along with our Online Gaming Account Names. We are always looking for new ideas for games!
@@ -274,9 +254,9 @@
             </div>
             
             <!-- Backstory Content -->
-            <div class="p-8 md:p-12 rounded-lg bg-gray-700">
-                <h2 class="text-3xl font-bold mb-8 text-center">The Emotional Backstory has been Written!</h2>
-                <div class="max-w-4xl mx-auto text-lg space-y-6 leading-relaxed">
+            <div class="p-4 p-md-5 rounded-3 bg-secondary-bg">
+                <h2 class="fs-2 fw-bold mb-5 text-center">The Emotional Backstory has been Written!</h2>
+                <div class="mx-auto fs-5" style="max-width: 80ch; line-height: 1.7;">
                     <p>
                         The story of how DamVan Came to be... is a very interesting one as you'll see.
                         The story starts in college, Where Will, Dalton, and Andrew got together at the newly opened E-Sports Lounge, where they played games and hatched ideas
@@ -296,197 +276,234 @@
         </section>
 
         <!-- Blog Section -->
-        <section id="blog" class="page-section hidden p-8 md:p-12">
-            <h2 class="text-3xl font-bold mb-8 text-center">DamVan Blog!</h2>
+        <section id="blog" class="page-section d-none p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
+            <h2 class="fs-2 fw-bold mb-5 text-center">DamVan Blog!</h2>
             
-            <div class="max-w-3xl mx-auto space-y-10">
+            <div class="mx-auto" style="max-width: 70ch;">
                 
                 <!-- BLOG POST TEMPLATE: Copy this block to add a new post -->
                 <!--
-                <article class="p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-semibold text-blue-300 mb-2">New Post Title</h3>
-                    <p class="text-sm text-gray-400 mb-3">Month Day, Year</p>
-                    <p class="leading-relaxed">
-                        New post content goes here...
-                    </p>
+                <article class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fs-3 fw-semibold text-primary-emphasis mb-2">New Post Title</h3>
+                        <p class="card-subtitle text-muted mb-3">Month Day, Year</p>
+                        <p class="card-text">
+                            New post content goes here...
+                        </p>
+                    </div>
                 </article>
                 -->
 
                 <!-- New Blog Post -->
-                <article class="p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-semibold text-blue-300 mb-2">We've Hit Version 1.0!</h3>
-                    <p class="text-sm text-gray-400 mb-3">October 22, 2025</p>
-                    <p class="leading-relaxed">
-                        It's official! We're calling this Version 1.0 of the DamVan website. All the core pages are up, the new dark theme is solid, the pesky social logos are finally fixed, and all the links are working. We're proud to have this as our official "complete" site. Thanks for following along!
-                    </p>
+                <article class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fs-3 fw-semibold text-primary-emphasis mb-2">We've Hit Version 1.0!</h3>
+                        <p class="card-subtitle text-muted mb-3">October 22, 2025</p>
+                        <p class="card-text">
+                            It's official! We're calling this Version 1.0 of the DamVan website. All the core pages are up, the new dark theme is solid, the pesky social logos are finally fixed, and all the links are working. We're proud to have this as our official "complete" site. Thanks for following along!
+                        </p>
+                    </div>
                 </article>
 
                 <!-- Existing Blog Posts -->
-                <article class="p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-semibold text-blue-300 mb-2">New Stuff!</h3>
-                    <p class="text-sm text-gray-400 mb-3">October 6, 2025</p>
-                    <p class="leading-relaxed">
-                        Another project has been added to the Cool Stuff section! Be sure to go check it out. We're excited to share more fun projects with you all soon.
-                    </p>
+                <article class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fs-3 fw-semibold text-primary-emphasis mb-2">New Stuff!</h3>
+                        <p class="card-subtitle text-muted mb-3">October 6, 2025</p>
+                        <p class="card-text">
+                            Another project has been added to the Cool Stuff section! Be sure to go check it out. We're excited to share more fun projects with you all soon.
+                        </p>
+                    </div>
                 </article>
 
-                <article class="p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-semibold text-blue-300 mb-2">Website V0.2!</h3>
-                    <p class="text-sm text-gray-400 mb-3">August 20, 2025</p>
-                    <p class="leading-relaxed">
-                        The website is finally starting to come together! Though it's still a bit buggy and missing some content, we've made a lot of progress. We also published our first lil fun project in the Cool Stuff section!
-                    </p>
+                <article class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fs-3 fw-semibold text-primary-emphasis mb-2">Website V0.2!</h3>
+                        <p class="card-subtitle text-muted mb-3">August 20, 2025</p>
+                        <p class="card-text">
+                            The website is finally starting to come together! Though it's still a bit buggy and missing some content, we've made a lot of progress. We also published our first lil fun project in the Cool Stuff section!
+                        </p>
+                    </div>
                 </article>
 
-                <article class="p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-semibold text-blue-300 mb-2">The Website Launches!</h3>
-                    <p class="text-sm text-gray-400 mb-3">July 14, 2025</p>
-                    <p class="leading-relaxed">
-                        The website has launched today! (Or technically yesterday, as it took a day to get the blog page up and running!) We hope to provide some awesome content very (very) soon!
-                    </p>
+                <article class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fs-3 fw-semibold text-primary-emphasis mb-2">The Website Launches!</h3>
+                        <p class="card-subtitle text-muted mb-3">July 14, 2025</p>
+                        <p class="card-text">
+                            The website has launched today! (Or technically yesterday, as it took a day to get the blog page up and running!) We hope to provide some awesome content very (very) soon!
+                        </p>
+                    </div>
                 </article>
 
             </div>
         </section>
         
         <!-- Cool Stuff Section -->
-        <section id="cool-stuff" class="page-section hidden p-8 md:p-12">
-            <h2 class="text-3xl font-bold mb-8 text-center">Our Fun Projects</h2>
+        <section id="cool-stuff" class="page-section d-none p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
+            <h2 class="fs-2 fw-bold mb-5 text-center">Our Fun Projects</h2>
             
-            <div class="max-w-3xl mx-auto space-y-8">
+            <div class="mx-auto" style="max-width: 70ch;">
                 
                 <!-- Project 1 -->
-                <div class="project-card p-6 rounded-lg shadow-lg text-center">
-                    <h3 class="text-2xl font-semibold mb-2">BeatNinja</h3>
-                    <p class="leading-relaxed mb-4">
-                        A Mix Between Fruit Ninja, And Beat Saber... Sorta.
-                    </p>
-                    <a href="https://avpxxd.github.io/BeatNinja/" target="_blank" rel="noopener noreferrer" class="rainbow-button inline-block">
-                        Play Now
-                    </a>
+                <div class="card shadow-sm text-center mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fs-3 fw-semibold mb-2">BeatNinja</h3>
+                        <p class="card-text mb-4">
+                            A Mix Between Fruit Ninja, And Beat Saber... Sorta.
+                        </p>
+                        <a href="https://avpxxd.github.io/BeatNinja/" target="_blank" rel="noopener noreferrer" class="rainbow-button">
+                            Play Now
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Project 2 -->
-                <div class="project-card p-6 rounded-lg shadow-lg text-center">
-                    <h3 class="text-2xl font-semibold mb-2">I Am Not A Human</h3>
-                    <p class="leading-relaxed mb-4">
-                        Alternate Universe Captchas Are Designed To Keep Us Out!
-                    </p>
-                    <a href="https://avpxxd.github.io/codespace/" target="_blank" rel="noopener noreferrer" class="rainbow-button inline-block">
-                        Play Now
-                    </a>
+                <div class="card shadow-sm text-center mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fs-3 fw-semibold mb-2">I Am Not A Human</h3>
+                        <p class="card-text mb-4">
+                            Alternate Universe Captchas Are Designed To Keep Us Out!
+                        </p>
+                        <a href="https://avpxxd.github.io/codespace/" target="_blank" rel="noopener noreferrer" class="rainbow-button">
+                            Play Now
+                        </a>
+                    </div>
                 </div>
 
             </div>
         </section>
         
         <!-- Socials Section -->
-        <section id="socials" class="page-section hidden p-8 md:p-12">
-             <h2 class="text-3xl font-bold mb-8 text-center">Our Socials</h2>
-             <p class="text-lg text-center max-w-2xl mx-auto mb-10">
+        <section id="socials" class="page-section d-none p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
+             <h2 class="fs-2 fw-bold mb-4 text-center">Our Socials</h2>
+             <p class="fs-5 text-center mx-auto mb-5" style="max-width: 60ch;">
                 Come hang out with us! We're most active on YouTube and Discord. You can also join our cross-play Minecraft server.
              </p>
             
-             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+             <!-- Use Bootstrap's grid system -->
+             <div class="row row-cols-1 row-cols-md-3 g-4 mx-auto" style="max-width: 1024px;">
                 
                 <!-- YouTube Card -->
-                <div class="social-card p-6 rounded-lg shadow-lg text-center flex flex-col items-center">
-                    <!-- Icon -->
-                    <svg class="w-20 h-20 text-red-500 mb-4" viewBox="0 0 28 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M27.348 3.09C27.022 1.86 26.04 0.878 24.81 0.552C22.628 0 14 0 14 0C14 0 5.372 0 3.19 0.552C1.96 0.878 0.978 1.86 0.652 3.09C0 5.272 0 10 0 10C0 10 0 14.728 0.652 16.91C0.978 18.14 1.96 19.122 3.19 19.448C5.372 20 14 20 14 20C14 20 22.628 20 24.81 19.448C26.04 19.122 26.978 18.14 27.348 16.91C28 14.728 28 10 28 10C28 10 28 5.272 27.348 3.09ZM11.2 14.286V5.714L18.48 10L11.2 14.286Z"/>
-                    </svg>
-                    <h3 class="text-2xl font-semibold mb-2">YouTube</h3>
-                    <p class="leading-relaxed mb-4 flex-grow">
-                        Check out our videos, coding projects, and other fun stuff.
-                    </p>
-                    <a href="https://www.youtube.com/@DodgeRamTheCaravan" target="_blank" rel="noopener noreferrer" class="rainbow-button w-full">
-                        Watch Videos
-                    </a>
+                <div class="col">
+                    <div class="card shadow-sm text-center h-100">
+                        <div class="card-body p-4 d-flex flex-column align-items-center">
+                            <!-- Icon -->
+                            <svg class="mb-4 text-danger" style="width: 5rem; height: 5rem;" viewBox="0 0 28 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M27.348 3.09C27.022 1.86 26.04 0.878 24.81 0.552C22.628 0 14 0 14 0C14 0 5.372 0 3.19 0.552C1.96 0.878 0.978 1.86 0.652 3.09C0 5.272 0 10 0 10C0 10 0 14.728 0.652 16.91C0.978 18.14 1.96 19.122 3.19 19.448C5.372 20 14 20 14 20C14 20 22.628 20 24.81 19.448C26.04 19.122 26.978 18.14 27.348 16.91C28 14.728 28 10 28 10C28 10 28 5.272 27.348 3.09ZM11.2 14.286V5.714L18.48 10L11.2 14.286Z"/>
+                            </svg>
+                            <h3 class="card-title fs-3 fw-semibold mb-2">YouTube</h3>
+                            <p class="card-text mb-4 flex-grow-1">
+                                Check out our videos, coding projects, and other fun stuff.
+                            </p>
+                            <a href="https://www.youtube.com/@DodgeRamTheCaravan" target="_blank" rel="noopener noreferrer" class="rainbow-button w-100 mt-auto">
+                                Watch Videos
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Discord Card -->
-                <div class="social-card p-6 rounded-lg shadow-lg text-center flex flex-col items-center">
-                    <!-- Icon -->
-                    <!-- Replaced SVG with a reliable, white PNG logo for dark mode -->
-                    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png" alt="Discord Logo" class="w-20 h-20 mb-4 object-contain">
-                    <h3 class="text-2xl font-semibold mb-2">Discord</h3>
-                    <p class="leading-relaxed mb-4 flex-grow">
-                        Join our community Discord server to hang out, chat, and get project updates.
-                    </p>
-                    <a href="https://discord.damvan.ca/" target="_blank" rel="noopener noreferrer" class="rainbow-button w-full">
-                        Join Server
-                    </a>
+                <div class="col">
+                    <div class="card shadow-sm text-center h-100">
+                        <div class="card-body p-4 d-flex flex-column align-items-center">
+                            <!-- Icon -->
+                            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png" alt="Discord Logo" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">Discord</h3>
+                            <p class="card-text mb-4 flex-grow-1">
+                                Join our community Discord server to hang out, chat, and get project updates.
+                            </p>
+                            <a href="https://discord.damvan.ca/" target="_blank" rel="noopener noreferrer" class="rainbow-button w-100 mt-auto">
+                                Join Server
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Minecraft Card -->
-                <div class="social-card p-6 rounded-lg shadow-lg text-center flex flex-col items-center">
-                    <!-- Icon -->
-                    <!-- Replaced 2D icon with 3D grass block PNG -->
-                    <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG67.png" alt="Minecraft Logo" class="w-20 h-20 mb-4 object-contain">
-                    <h3 class="text-2xl font-semibold mb-2">Minecraft Server</h3>
-                    <p class="leading-relaxed mb-4 flex-grow">
-                        Join our Bedrock & Java Crossplay server! IP: <strong>playmc.damvan.ca</strong>
-                    </p>
-                    <button id="copy-ip-button" onclick="copyIp()" class="rainbow-button w-full">
-                        Copy Server IP
-                    </button>
-                    <span id="copy-ip-feedback" class="text-sm text-green-400 mt-2 h-4"></span>
+                <div class="col">
+                    <div class="card shadow-sm text-center h-100">
+                        <div class="card-body p-4 d-flex flex-column align-items-center">
+                            <!-- Icon -->
+                            <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG67.png" alt="Minecraft Logo" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">Minecraft Server</h3>
+                            <p class="card-text mb-4 flex-grow-1">
+                                Join our Bedrock & Java Crossplay server! IP: <strong>playmc.damvan.ca</strong>
+                            </p>
+                            <button id="copy-ip-button" onclick="copyIp()" class="rainbow-button w-100 mt-auto">
+                                Copy Server IP
+                            </button>
+                            <span id="copy-ip-feedback" class="mt-2" style="height: 1.25rem; font-size: 0.875rem;"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="page-section hidden text-center p-8 md:p-12">
-            <h2 class="text-3xl font-bold mb-6">Contact Us</h2>
-            <p class="text-lg mb-6">
+        <section id="contact" class="page-section d-none text-center p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
+            <h2 class="fs-2 fw-bold mb-4">Contact Us</h2>
+            <p class="fs-5 mb-4">
                 Feel free to contact us at our main email address.
             </p>
             
-            <a href="mailto:contact@damvan.ca" class="rainbow-button inline-block mb-16">
+            <a href="mailto:contact@damvan.ca" class="rainbow-button d-inline-block mb-5">
                 Email: contact@damvan.ca
             </a>
 
             <!-- Personal Portfolios -->
-            <h2 class="text-3xl font-bold mb-10">Meet the Team</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <h2 class="fs-2 fw-bold mb-5">Meet the Team</h2>
+            <div class="row row-cols-1 row-cols-md-3 g-4 mx-auto" style="max-width: 1024px;">
                 
                 <!-- Will's Card -->
-                <div class="contact-card bg-white rounded-lg shadow-lg p-6 text-left">
-                    <!-- Image Placeholder -->
-                    <div class="w-full h-40 bg-gray-600 rounded-md flex items-center justify-center mb-4">
-                        <span class="text-gray-400">Image Placeholder</span>
+                <div class="col">
+                    <div class="card shadow-sm h-100 text-start">
+                        <div class="card-body p-4">
+                            <!-- Image Placeholder -->
+                            <div class="w-100 bg-secondary rounded d-flex align-items-center justify-content-center mb-4" style="height: 10rem;">
+                                <span class="text-muted">Image Placeholder</span>
+                            </div>
+                            <h3 class="card-title fs-3 fw-semibold mb-1">Will Hyndman</h3>
+                            <p class="text-muted mb-3">(Branchy18269)</p>
+                            <a href="https://willhyndman.ca/" target="_blank" rel="noopener noreferrer" class="fw-medium text-decoration-none">
+                                View Portfolio Here
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-1">Will Hyndman</h3>
-                    <p class="text-gray-400 mb-3">(Branchy18269)</p>
-                    <a href="https://willhyndman.ca/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline font-medium block">
-                        View Portfolio Here
-                    </a>
                 </div>
 
                 <!-- Dalton's Card -->
-                <div class="contact-card bg-white rounded-lg shadow-lg p-6 text-left">
-                    <!-- Image Placeholder -->
-                    <div class="w-full h-40 bg-gray-600 rounded-md flex items-center justify-center mb-4">
-                        <span class="text-gray-400">Image Placeholder</span>
+                <div class="col">
+                    <div class="card shadow-sm h-100 text-start">
+                        <div class="card-body p-4">
+                            <!-- Image Placeholder -->
+                            <div class="w-100 bg-secondary rounded d-flex align-items-center justify-content-center mb-4" style="height: 10rem;">
+                                <span class="text-muted">Image Placeholder</span>
+                            </div>
+                            <h3 class="card-title fs-3 fw-semibold mb-1">Dalton Goodwin-Peck</h3>
+                            <p class="text-muted mb-3">(TheLocalAdmin)</p>
+                            <a href="https://thelocalad.men/" target="_blank" rel="noopener noreferrer" class="fw-medium text-decoration-none">
+                                View Portfolio Here
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-1">Dalton Goodwin-Peck</h3>
-                    <p class="text-gray-400 mb-3">(TheLocalAdmin)</p>
-                    <a href="https://thelocalad.men/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline font-medium block">
-                        View Portfolio Here
-                    </a>
                 </div>
 
                 <!-- Andrew's Card -->
-                <div class="contact-card bg-white rounded-lg shadow-lg p-6 text-left">
-                    <!-- Image Placeholder -->
-                    <div class="w-full h-40 bg-gray-600 rounded-md flex items-center justify-center mb-4">
-                        <span class="text-gray-400">Image Placeholder</span>
+                <div class="col">
+                    <div class="card shadow-sm h-100 text-start">
+                        <div class="card-body p-4">
+                            <!-- Image Placeholder -->
+                            <div class="w-100 bg-secondary rounded d-flex align-items-center justify-content-center mb-4" style="height: 10rem;">
+                                <span class="text-muted">Image Placeholder</span>
+                            </div>
+                            <h3 class="card-title fs-3 fw-semibold mb-1">Andrew Veinotte</h3>
+                            <p class="text-muted mb-3">(AVPxxd)</p>
+                            <a href="https://avpxxd.github.io/website/" target="_blank" rel="noopener noreferrer" class="fw-medium text-decoration-none">
+                                View Portfolio Here
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="text-2xl font-semibold mb-1">Andrew Veinotte</h3>
-                    <p class="text-gray-400 mb-3">(AVPxxd)</p>
-                    <a href="https://avpxxd.github.io/website/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline font-medium block">
-                        View Portfolio Here
-                    </a>
                 </div>
 
             </div>
@@ -495,11 +512,14 @@
     </main>
 
     <!-- Footer -->
-    <footer class="mt-16">
-        <div class="container mx-auto px-6 py-6 text-center text-gray-400">
+    <footer class="mt-5">
+        <div class="container px-4 py-4 text-center text-muted">
             <p>&copy; 2025 DamVan | All rights reserved.</p>
         </div>
     </footer>
+    
+    <!-- Load Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
     <script>
         // Function to copy IP to clipboard
@@ -512,7 +532,9 @@
             textArea.style.top = 0;
             textArea.style.left = 0;
             document.body.appendChild(textArea);
+            textArea.focus();
             textArea.select();
+            
             let successful = false;
             try {
                 successful = document.execCommand('copy');
@@ -524,27 +546,28 @@
             // Show feedback
             const feedback = document.getElementById('copy-ip-feedback');
             const button = document.getElementById('copy-ip-button');
+            
+            // Clear previous states
+            feedback.classList.remove('text-success', 'text-danger');
+            button.classList.remove('btn-success-subtle'); // Use a subtle class
+
             if (successful) {
                 feedback.textContent = 'Copied!';
-                button.classList.add('bg-green-600'); // Show success
-                setTimeout(() => {
-                    feedback.textContent = '';
-                    button.classList.remove('bg-green-600');
-                }, 2000);
+                feedback.classList.add('text-success');
+                button.classList.add('btn-success-subtle'); // Add subtle success feedback
             } else {
                 feedback.textContent = 'Failed to copy';
-                 setTimeout(() => {
-                    feedback.textContent = '';
-                }, 2000);
+                feedback.classList.add('text-danger');
             }
+            
+            // Clear feedback after 2 seconds
+            setTimeout(() => {
+                feedback.textContent = '';
+                feedback.classList.remove('text-success', 'text-danger');
+                button.classList.remove('btn-success-subtle');
+            }, 2000);
         }
     </script>
 
 </body>
 </html>
-
-
-
-
-
-
