@@ -167,10 +167,12 @@
 	        flex-flow: row nowrap;
 	        -ms-flex-pack: start;
 	        justify-content: flex-start;
+            /* position: relative; */ /* Removed this */
 	    }
 	    .navbar-expand-custom .navbar-nav {
 	        -ms-flex-direction: row;
 	        flex-direction: row;
+            /* pointer-events: auto; */ /* Removed this */
 	    }
 	    .navbar-expand-custom .navbar-toggler {
 	        display: none;
@@ -180,7 +182,9 @@
 	        display: flex!important;
 	        -ms-flex-preferred-size: auto;
 	        flex-basis: auto;
+            /* Removed absolute centering styles */
 	    }
+        /* Removed .navbar-brand z-index rule */
     }
     @media (max-width: 991px){
 	    #navbarSupportedContent ul li a{
@@ -322,7 +326,8 @@
         <i class="fas fa-bars text-white"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-auto">
+          <!-- Changed to ms-auto to align right -->
+          <ul class="navbar-nav ms-auto">
             <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
             <li class="nav-item active">
                 <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'home')"><i class="fas fa-home"></i>Home</a>
@@ -522,12 +527,12 @@
                     <div class="card shadow-sm text-center h-100">
                         <div class="card-body p-4 d-flex flex-column align-items-center">
                             <!-- Icon -->
-                            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png" alt="Discord Logo" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <img src="httpsG://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png" alt="Discord Logo" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
                             <h3 class="card-title fs-3 fw-semibold mb-2">Discord</h3>
                             <p class="card-text mb-4 flex-grow-1">
                                 Join our community Discord server to hang out, chat, and get project updates.
                             </p>
-							<button class="cbutton" onclick="window.open('https://discord.gg/psrNq7w69q', '_blank');"><span>Join Server</span></button>
+							<button class="cbutton" onclick="window.open('https://discord.damvan.ca/', '_blank');"><span>Join Server</span></button>
                         </div>
                     </div>
                 </div>
