@@ -350,14 +350,14 @@
             <li class="nav-item active">
                 <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'home')"><i class="fas fa-home"></i>Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'blog')"><i class="far fa-newspaper"></i>Blog</a>
+			<li class="nav-item">
+                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'services')"><i class="fas fa-mobile-alt"></i>Services</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'stuff')"><i class="fas fa-satellite"></i>Cool Stuff</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'socials')"><i class="fas fa-mobile-alt"></i>Our Socials</a>
+                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'blog')"><i class="far fa-newspaper"></i>Blog</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'contact')"><i class="fas fa-paper-plane"></i>Contact Us</a>
@@ -465,7 +465,29 @@
         <h2 class="fs-2 fw-bold mb-5 text-center">Our Fun Projects</h2>
             
             <div class="mx-auto" style="max-width: 70ch;">
-                
+				<!-- YOUTUBE -->
+                <div class="card shadow-sm text-center mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fs-3 fw-semibold mb-2">Our YouTube Channel!</h3>
+                        <p class="card-text mb-4">
+                            Check out our videos, coding projects, and other fun stuff.
+                        </p>
+						<button class="cbutton" onclick="window.open('https://www.youtube.com/@DodgeRamTheCaravan', '_blank');"><span>Watch Videos</span></button>
+                    </div>
+                </div>
+
+				<!-- MINECRAFT -->
+                <div class="card shadow-sm text-center mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fs-3 fw-semibold mb-2">DamVan MineCraft Server</h3>
+                        <p class="card-text mb-4">
+                            Join our community Minecraft server to hang out, chat, and build amazing things.
+                        </p>
+						<button class="cbutton" onclick="window.open('https://mc.damvan.ca/', '_blank');"><span>Play Now</span></button>
+                    </div>
+                </div>
+
+				
                 <!-- Project 1 -->
                 <div class="card shadow-sm text-center mb-4">
                     <div class="card-body p-4">
@@ -489,8 +511,8 @@
                 </div>
             </div>
     </div>
-    <!-- SOCIAL MEDIA PAGE -->
-    <div id="socials" class="tabcontent d-none p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
+    <!-- SERVICES PAGE -->
+    <div id="services" class="tabcontent d-none p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
       <h2 class="fs-2 fw-bold mb-4 text-center">Our Socials</h2>
              <p class="fs-5 text-center mx-auto mb-5" style="max-width: 60ch;">
                 Come hang out with us! We're most active on YouTube and Discord. You can also join our cross-play Minecraft server.
@@ -499,52 +521,62 @@
              <!-- Use Bootstrap's grid system -->
              <div class="row row-cols-1 row-cols-md-3 g-4 mx-auto" style="max-width: 1024px;">
                 
-                <!-- YouTube Card -->
+                <!-- WEB DEVELOPMENT -->
                 <div class="col">
                     <div class="card shadow-sm text-center h-100">
                         <div class="card-body p-4 d-flex flex-column align-items-center">
                             <!-- Icon -->
-                            <svg class="mb-4 text-danger" style="width: 5rem; height: 5rem;" viewBox="0 0 28 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M27.348 3.09C27.022 1.86 26.04 0.878 24.81 0.552C22.628 0 14 0 14 0C14 0 5.372 0 3.19 0.552C1.96 0.878 0.978 1.86 0.652 3.09C0 5.272 0 10 0 10C0 10 0 14.728 0.652 16.91C0.978 18.14 1.96 19.122 3.19 19.448C5.372 20 14 20 14 20C14 20 22.628 20 24.81 19.448C26.04 19.122 26.978 18.14 27.348 16.91C28 14.728 28 10 28 10C28 10 28 5.272 27.348 3.09ZM11.2 14.286V5.714L18.48 10L11.2 14.286Z"/>
-                            </svg>
-                            <h3 class="card-title fs-3 fw-semibold mb-2">YouTube</h3>
+                            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png" alt="WEBD" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">Web Development</h3>
                             <p class="card-text mb-4 flex-grow-1">
-                                Check out our videos, coding projects, and other fun stuff.
+                                Lorem Ipsum Blah Blah Blah Placeholder Text.
                             </p>
-							<button class="cbutton" onclick="window.open('https://www.youtube.com/@DodgeRamTheCaravan', '_blank');"><span>Watch Videos</span></button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Discord Card -->
+                <!-- BACKEND DEVELOPMENT -->
                 <div class="col">
                     <div class="card shadow-sm text-center h-100">
                         <div class="card-body p-4 d-flex flex-column align-items-center">
                             <!-- Icon -->
-                            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png" alt="Discord Logo" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
-                            <h3 class="card-title fs-3 fw-semibold mb-2">Discord</h3>
+                            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png" alt="BACKEND" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">Backend Development</h3>
                             <p class="card-text mb-4 flex-grow-1">
-                                Join our community Discord server to hang out, chat, and get project updates.
-                            </p>
-							<button class="cbutton" onclick="window.open('https://discord.com/invite/psrNq7w69q/', '_blank');"><span>Join Server</span></button>
+                                Lorem Ipsum Blah Blah Blah Placeholder Text.
+							</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Minecraft Card -->
+                <!-- FIVEM SERVERS -->
                 <div class="col">
                     <div class="card shadow-sm text-center h-100">
                         <div class="card-body p-4 d-flex flex-column align-items-center">
                             <!-- Icon -->
-                            <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG67.png" alt="Minecraft Logo" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
-                            <h3 class="card-title fs-3 fw-semibold mb-2">Minecraft Server</h3>
+                            <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG67.png" alt="FIVEM" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">Minecraft Servers</h3>
                             <p class="card-text mb-4 flex-grow-1">
-                                Join our community Minecraft server to hang out, chat, and build amazing things.
+                                Lorem Ipsum Blah Blah Blah Placeholder Text.
                             </p>
-							<button class="cbutton" onclick="window.open('https://mc.damvan.ca/', '_blank');"><span>Visit Site</span></button>
                         </div>
                     </div>
                 </div>
+
+				 <!-- MINECRAFT SERVERS -->
+                <div class="col">
+                    <div class="card shadow-sm text-center h-100">
+                        <div class="card-body p-4 d-flex flex-column align-items-center">
+                            <!-- Icon -->
+                            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png" alt="MC" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">GTA FiveM Servers</h3>
+                            <p class="card-text mb-4 flex-grow-1">
+                                Lorem Ipsum Blah Blah Blah Placeholder Text.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
     </div>
 
@@ -609,6 +641,17 @@
                     </div>
                 </div>
             </div>
+		<!-- ADDED CRAP -->
+		<div class="card shadow-sm text-center mb-4">
+            <div class="card-body p-4">
+                <h3 class="card-title fs-3 fw-semibold mb-2">Discord</h3>
+                <p class="card-text mb-4">
+                    Join our community Discord server to hang out, chat, and get project updates.
+                </p>
+				<button class="cbutton" onclick="window.open('https://discord.com/invite/psrNq7w69q/', '_blank');"><span>Join Server</span></button>
+            </div>
+        </div>
+		<!-- END ADDED CRAP -->
     </div>
   </main>
   <!-- PAGE FOOTER -->
