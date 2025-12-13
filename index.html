@@ -351,7 +351,7 @@
                 <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'home')"><i class="fas fa-home"></i>Home</a>
             </li>
 			<li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'services')"><i class="fas fa-mobile-alt"></i>Services</a>
+                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'services')"><i class="fa-solid fa-box-open"></i>Services</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'stuff')"><i class="fas fa-satellite"></i>Cool Stuff</a>
@@ -459,58 +459,6 @@
                 </article>
             </div>
     </div>
-
-    <!-- COOL STUFF PAGE -->
-    <div id="stuff" class="tabcontent d-none p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
-        <h2 class="fs-2 fw-bold mb-5 text-center">Our Fun Projects</h2>
-            
-            <div class="mx-auto" style="max-width: 70ch;">
-				<!-- YOUTUBE -->
-                <div class="card shadow-sm text-center mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title fs-3 fw-semibold mb-2">Our YouTube Channel!</h3>
-                        <p class="card-text mb-4">
-                            Check out our videos, coding projects, and other fun stuff.
-                        </p>
-						<button class="cbutton" onclick="window.open('https://www.youtube.com/@DodgeRamTheCaravan', '_blank');"><span>Watch Videos</span></button>
-                    </div>
-                </div>
-
-				<!-- MINECRAFT -->
-                <div class="card shadow-sm text-center mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title fs-3 fw-semibold mb-2">DamVan MineCraft Server</h3>
-                        <p class="card-text mb-4">
-                            Join our community Minecraft server to hang out, chat, and build amazing things.
-                        </p>
-						<button class="cbutton" onclick="window.open('https://mc.damvan.ca/', '_blank');"><span>Play Now</span></button>
-                    </div>
-                </div>
-
-				
-                <!-- Project 1 -->
-                <div class="card shadow-sm text-center mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title fs-3 fw-semibold mb-2">BeatNinja</h3>
-                        <p class="card-text mb-4">
-                            A Mix Between Fruit Ninja, And Beat Saber... Sorta.
-                        </p>
-						<button class="cbutton" onclick="window.open('https://avpxxd.github.io/BeatNinja/', '_blank');"><span>Play Now</span></button>
-                    </div>
-                </div>
-
-                <!-- Project 2 -->
-                <div class="card shadow-sm text-center mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title fs-3 fw-semibold mb-2">I Am Not A Human</h3>
-                        <p class="card-text mb-4">
-                            Alternate Universe Captchas Are Designed To Keep Us Out!
-                        </p>
-						<button class="cbutton" onclick="window.open('https://avpxxd.github.io/codespace/', '_blank');"><span>Play Now</span></button>
-                    </div>
-                </div>
-            </div>
-    </div>
     <!-- SERVICES PAGE -->
     <div id="services" class="tabcontent d-none p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
       <h2 class="fs-2 fw-bold mb-4 text-center" style="color: #6EA8FE;">Our Services</h2>
@@ -580,9 +528,83 @@
             </div>
     </div>
 
+	<!-- NEW COOL STUFF PAGE -->
+	<div id="services" class="tabcontent d-none p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
+      <h2 class="fs-2 fw-bold mb-4 text-center" style="color: #6EA8FE;">Cool Stuff</h2>
+             <p class="fs-5 text-center mx-auto mb-5" style="max-width: 60ch;">
+                Our Fun Projects
+             </p>
+            
+             <!-- Use Bootstrap's grid system -->
+             <div class="row row-cols-1 row-cols-md-3 g-4 mx-auto" style="max-width: 1024px;">
+                
+                <!-- YOUTUBE -->
+                <div class="col">
+                    <div class="card shadow-sm text-center h-100">
+                        <div class="card-body p-4 d-flex flex-column align-items-center">
+                            <!-- Icon -->
+                            <img src="software.png" alt="WEBD" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">DamVan YouTube Channel</h3>
+                            <p class="card-text mb-4 flex-grow-1">
+                                Check out our videos, coding projects, and other fun stuff.
+                            </p>
+							<button class="cbutton" onclick="window.open('https://www.youtube.com/@DodgeRamTheCaravan', '_blank');"><span>Watch Videos</span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MINECRAFT -->
+                <div class="col">
+                    <div class="card shadow-sm text-center h-100">
+                        <div class="card-body p-4 d-flex flex-column align-items-center">
+                            <!-- Icon -->
+                            <img src="database.png" alt="BACKEND" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">DamVan Minecraft Server</h3>
+                            <p class="card-text mb-4 flex-grow-1">
+                                Join our community Minecraft server to hang out, chat, and build amazing things.
+							</p>
+							<button class="cbutton" onclick="window.open('https://mc.damvan.ca/', '_blank');"><span>Play Now</span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BEATNINJA -->
+                <div class="col">
+                    <div class="card shadow-sm text-center h-100">
+                        <div class="card-body p-4 d-flex flex-column align-items-center">
+                            <!-- Icon -->
+                            <img src="gta.png" alt="FIVEM" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">BeatNinja</h3>
+                            <p class="card-text mb-4 flex-grow-1">
+                                A Mix Between Fruit Ninja, And Beat Saber... Sorta.
+                            </p>
+							<button class="cbutton" onclick="window.open('https://avpxxd.github.io/BeatNinja/', '_blank');"><span>Play Now</span></button>
+                        </div>
+                    </div>
+                </div>
+
+				 <!-- IANAH -->
+                <div class="col">
+                    <div class="card shadow-sm text-center h-100">
+                        <div class="card-body p-4 d-flex flex-column align-items-center">
+                            <!-- Icon -->
+                            <img src="game.png" alt="MC" class="mb-4" style="width: 5rem; height: 5rem; object-fit: contain;">
+                            <h3 class="card-title fs-3 fw-semibold mb-2">I Am Not A Human</h3>
+                            <p class="card-text mb-4 flex-grow-1">
+                                Alternate Universe Captchas Are Designed To Keep Us Out!
+                            </p>
+							<button class="cbutton" onclick="window.open('https://avpxxd.github.io/codespace/', '_blank');"><span>Play Now</span></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+
+
     <!-- CONTACT US PAGE -->
-    <div id="contact" class="tabcontent d-none text-center p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
-      <h2 class="fs-2 fw-bold mb-4">Contact Us</h2>
+    <div id="stuff" class="tabcontent d-none text-center p-4 p-md-5 rounded-3 shadow-sm mt-5 mb-5">
+      <h2 class="fs-2 fw-bold mb-4">Cool Stuff</h2>
             <p class="fs-5 mb-4">
                 Feel free to contact us at our main email address.
             </p>
