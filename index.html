@@ -89,6 +89,42 @@
             filter: drop-shadow(0 0 10px rgba(0, 225, 255, 0.5));
         }
 
+        /* Hamburger Menu Icon */
+        .hamburger {
+            display: none; /* Hidden on desktop */
+            background: none;
+            border: none;
+            cursor: pointer;
+            pointer-events: auto;
+            z-index: 101; /* Keep above nav menu */
+            flex-direction: column;
+            gap: 6px;
+            position: absolute;
+            top: 25px;
+            right: 20px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 35px;
+            height: 4px;
+            background-color: var(--accent-blue);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px var(--accent-blue);
+        }
+
+        /* Hamburger Active State */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(10px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-10px) rotate(-45deg);
+        }
+
         /* Floating Nav Buttons */
         nav {
             display: flex;
@@ -164,11 +200,18 @@
             gap: 40px;
         }
 
+        .main-heading {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+
         .section-title {
             text-align: center;
             font-size: 2.5rem;
             text-shadow: 0 0 15px rgba(0, 225, 255, 0.4);
             margin-bottom: 20px;
+            word-wrap: break-word;
         }
 
         /* SPACE SHUTTLE PANELS (Info Boxes) */
@@ -185,6 +228,10 @@
             box-shadow: 20px 20px 40px rgba(0,0,0,0.4), inset -5px -5px 15px rgba(255,255,255,0.05);
             color: var(--text-main);
             overflow: hidden;
+            
+            /* Ensures long URLs or words break properly on mobile */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Simpler 4-corner rivets using a specific class */
@@ -274,6 +321,9 @@
             overflow: hidden;
             width: 100%;
             text-align: center;
+            /* Text Fitting */
+            word-wrap: break-word;
+            white-space: normal; 
         }
         .tech-btn:hover {
             background: var(--accent-blue);
@@ -311,25 +361,81 @@
             z-index: 10;
         }
 
+        /* MOBILE RESPONSIVENESS */
         @media (max-width: 768px) {
             header {
-                height: auto;
+                height: 80px;
                 padding: 15px;
-                flex-direction: column;
-                position: relative;
-                background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+                position: fixed; /* Keep it sticky on mobile */
+                background: linear-gradient(to bottom, rgba(5,5,5,0.95), rgba(5,5,5,0.6));
+                backdrop-filter: blur(10px);
             }
             .logo-container {
-                position: relative;
-                top: 0; left: 0;
-                margin-bottom: 20px;
-                animation: none;
+                top: 15px; 
+                left: 15px;
+                animation: none; /* Stop floating animation on mobile header to save space */
             }
+            .logo-container img {
+                height: 45px;
+            }
+
+            /* Hamburger Display */
+            .hamburger {
+                display: flex;
+            }
+
+            /* Off-Canvas Navigation Menu */
             nav {
-                flex-wrap: wrap;
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                right: -100%; /* Hide off-screen by default */
+                width: 250px;
+                height: 100vh;
+                background: rgba(30, 36, 45, 0.98);
+                border-left: 2px solid var(--accent-blue);
+                padding-top: 100px;
+                margin-top: 0;
+                transition: right 0.4s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+                align-items: center;
+                gap: 25px;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.8);
             }
+            nav.open {
+                right: 0; /* Slide in */
+            }
+
+            /* Override Nav Button Styles for vertical mobile menu */
+            .nav-btn {
+                width: 85%;
+                text-align: center;
+                transform: none !important;
+                animation: none !important;
+                --base-rot: 0deg !important;
+                font-size: 1rem;
+                padding: 15px;
+            }
+
+            /* Text & Box Fitting Fixes */
             main {
-                padding-top: 40px;
+                padding-top: 120px; /* Offset for fixed header */
+                gap: 60px;
+            }
+            .panel {
+                padding: 20px; /* Reduced padding on mobile to save space */
+            }
+            .main-heading {
+                font-size: 2rem !important; /* Scaled down header */
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            h3 {
+                font-size: 1.3rem;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr; /* Force 1 column on mobile */
             }
         }
     </style>
@@ -344,7 +450,15 @@
         <a href="#home" class="logo-container">
             <img src="logo.png" alt="DamVan Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/e/e4/Globe_icon.svg'">
         </a>
-        <nav>
+        
+        <!-- Hamburger Button -->
+        <button class="hamburger" id="hamburger-btn" aria-label="Toggle Navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav id="nav-menu">
             <a href="#home" class="nav-btn">Launchpad</a>
             <a href="#crew" class="nav-btn">The Crew</a>
             <a href="#stuff" class="nav-btn">Fun Stuff</a>
@@ -364,7 +478,7 @@
                     <div class="rivet bl"></div><div class="rivet br"></div>
                 </div>
                 
-                <h1 style="font-size: 3rem; margin-bottom: 10px;">Welcome To The <span style="color: white;">Damn(Van)</span> Website!</h1>
+                <h1 class="main-heading">Welcome To The <span style="color: white;">Damn(Van)</span> Website!</h1>
                 <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 30px;">This is the official sattelite for DodgeRamTheCaravan (DamVan)</p>
                 
                 <hr style="border-color: var(--metal-light); margin: 30px 0;">
@@ -378,7 +492,8 @@
                 </div>
             </div>
         </section>
-            <!-- Team Roster -->
+
+        <!-- Team Roster -->
         <section id="crew">
             <h2 class="section-title reveal">The Crew</h2>
             <div class="grid-3">
@@ -618,6 +733,25 @@
 
         document.querySelectorAll('.reveal').forEach(el => {
             observer.observe(el);
+        });
+
+        // 3. MOBILE HAMBURGER MENU LOGIC
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const navMenu = document.getElementById('nav-menu');
+        const navLinks = document.querySelectorAll('.nav-btn');
+
+        // Toggle menu open/close
+        hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.classList.toggle('active');
+            navMenu.classList.toggle('open');
+        });
+
+        // Close menu when a navigation link is clicked
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburgerBtn.classList.remove('active');
+                navMenu.classList.remove('open');
+            });
         });
 
     </script>
