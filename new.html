@@ -97,11 +97,14 @@
             flex-wrap: wrap;
             justify-content: center;
             padding: 0 20px;
+            margin-top: 30px;
         }
 
         .nav-btn {
-            background: linear-gradient(135deg, var(--metal-light), var(--metal-base));
-            border: 2px solid #5a6b80;
+            background: linear-gradient(135deg, rgba(67, 80, 96, 0.4), rgba(42, 51, 63, 0.5));
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 2px solid rgba(90, 107, 128, 0.6);
             color: #fff;
             padding: 10px 20px;
             font-family: 'Orbitron', sans-serif;
@@ -109,28 +112,31 @@
             font-weight: 700;
             border-radius: 4px;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 2px 5px rgba(255,255,255,0.1);
             transition: all 0.3s ease;
             position: relative;
             text-transform: uppercase;
+            --base-rot: 0deg;
+            transform: rotate(var(--base-rot));
         }
 
         .nav-btn:hover {
             border-color: var(--accent-blue);
+            background: linear-gradient(135deg, rgba(67, 80, 96, 0.7), rgba(42, 51, 63, 0.7));
             box-shadow: 0 0 15px var(--accent-blue), inset 0 2px 5px rgba(255,255,255,0.2);
             color: var(--accent-blue);
         }
 
         /* Unique slants and floating animations for each nav button */
-        .nav-btn:nth-child(1) { transform: rotate(-4deg); animation: floatBtn 4s ease-in-out infinite alternate; }
-        .nav-btn:nth-child(2) { transform: rotate(3deg); animation: floatBtn 5s ease-in-out infinite alternate-reverse; }
-        .nav-btn:nth-child(3) { transform: rotate(-2deg); animation: floatBtn 4.5s ease-in-out infinite alternate; animation-delay: 0.5s; }
-        .nav-btn:nth-child(4) { transform: rotate(5deg); animation: floatBtn 6s ease-in-out infinite alternate-reverse; animation-delay: 1s; }
-        .nav-btn:nth-child(5) { transform: rotate(-3deg); animation: floatBtn 3.5s ease-in-out infinite alternate; animation-delay: 0.2s; }
+        .nav-btn:nth-child(1) { --base-rot: -6deg; animation: floatBtn 3.2s ease-in-out infinite alternate; }
+        .nav-btn:nth-child(2) { --base-rot: 4deg; animation: floatBtn 4.5s ease-in-out infinite alternate-reverse; }
+        .nav-btn:nth-child(3) { --base-rot: -3deg; animation: floatBtn 3.8s ease-in-out infinite alternate; animation-delay: 0.5s; }
+        .nav-btn:nth-child(4) { --base-rot: 6deg; animation: floatBtn 5s ease-in-out infinite alternate-reverse; animation-delay: 1s; }
+        .nav-btn:nth-child(5) { --base-rot: -5deg; animation: floatBtn 2.9s ease-in-out infinite alternate; animation-delay: 0.2s; }
 
         @keyframes floatBtn {
-            0% { transform: translateY(0px) rotate(inherit); }
-            100% { transform: translateY(-8px) rotate(inherit); }
+            0% { transform: translateY(8px) rotate(calc(var(--base-rot) - 3deg)); }
+            100% { transform: translateY(-18px) rotate(calc(var(--base-rot) + 3deg)); }
         }
 
         @keyframes floatGently {
@@ -167,30 +173,20 @@
 
         /* SPACE SHUTTLE PANELS (Info Boxes) */
         .panel {
-            background: linear-gradient(145deg, var(--metal-base), var(--metal-dark));
-            border: 2px solid #111;
-            border-top: 2px solid #5a6b80;
-            border-left: 2px solid #5a6b80;
+            background: linear-gradient(145deg, rgba(42, 51, 63, 0.35), rgba(30, 36, 45, 0.5));
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 2px solid rgba(17, 17, 17, 0.6);
+            border-top: 2px solid rgba(90, 107, 128, 0.6);
+            border-left: 2px solid rgba(90, 107, 128, 0.6);
             border-radius: 10px;
             padding: 40px;
             position: relative;
-            box-shadow: 20px 20px 40px rgba(0,0,0,0.8), inset -5px -5px 15px rgba(0,0,0,0.5);
+            box-shadow: 20px 20px 40px rgba(0,0,0,0.4), inset -5px -5px 15px rgba(255,255,255,0.05);
             color: var(--text-main);
             overflow: hidden;
         }
 
-        /* Rivets */
-        .panel::before, .panel::after {
-            content: '';
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: radial-gradient(circle, #888, #222);
-            border-radius: 50%;
-            box-shadow: inset 1px 1px 2px #fff, 0 1px 2px #000;
-        }
-        .panel::before { top: 15px; left: 15px; box-shadow: inset 1px 1px 2px #fff, 0 1px 2px #000, calc(100% - 30px) 0 0 0 #444, 0 calc(100% - 30px) 0 0 #444; } /* Pseudo-hack for multiple rivets or just rely on CSS for simple ones */
-        
         /* Simpler 4-corner rivets using a specific class */
         .rivets {
             position: absolute;
@@ -396,7 +392,7 @@
                 </div>
                 <!-- Dalton -->
                 <div class="panel reveal">
-                    <div class="hazard-top"></div>
+                    <div class="hazard-left"></div>
                     <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
                     <img src="dalton.jpg" alt="Dalton Goodwin-Peck" class="team-img" onerror="this.style.display='none'">
                     <h3>Dalton Goodwin-Peck</h3>
@@ -467,6 +463,7 @@
                 </div>
 
                 <div class="panel reveal" style="text-align: center;">
+                    <div class="hazard-top"></div>
                     <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
                     <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG40.png" alt="MINECRAFT" class="panel-icon">
                     <h3>DamVan Minecraft</h3>
@@ -475,7 +472,7 @@
                 </div>
 
                 <div class="panel reveal" style="text-align: center;">
-                    <div class="hazard-left"></div>
+                    <div class="hazard-top"></div>
                     <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
                     <img src="BeatNinja.png" alt="BEATNINJA" class="panel-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/808/808476.png'">
                     <h3>BeatNinja</h3>
@@ -484,6 +481,7 @@
                 </div>
 
                 <div class="panel reveal" style="text-align: center;">
+                    <div class="hazard-top"></div>
                     <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
                     <img src="SoniStream.png" alt="SONISTREAM" class="panel-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/808/808476.png'">
                     <h3>SoniStream</h3>
