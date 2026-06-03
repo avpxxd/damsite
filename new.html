@@ -1,788 +1,655 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <link rel='stylesheet' href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css'>
-  
-  <!-- Changed fonts to more playful and rounded options -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Placeholder for favicon (picon.png) -->
-  <link rel="icon" type="image/png" href="https://via.placeholder.com/32x32/3b0764/ffffff?text=Icon">
-  
-  <style>
-    /* FUN THEME VARIABLES */
-    :root {
-        --bg-color: #03040b; /* Deep space black */
-        --nav-color: #3b0764; /* Deep cosmic purple */
-        --card-bg: #110c22;
-        --text-main: #f8f9fa;
-        --accent-blue: #00ddeb;
-        --accent-purple: #b026ff;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DamVan | Space Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="picon.png">
+    <style>
+        /* CSS RESET & VARIABLES */
+        :root {
+            --metal-dark: #1e242d;
+            --metal-base: #2a333f;
+            --metal-light: #435060;
+            --accent-blue: #00e1ff;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --hazard-yellow: #fbbf24;
+        }
 
-    body {
-	    font-family: 'Nunito', sans-serif;
-	    background-color: var(--bg-color);
-        /* Space background with stars and nebulae */
-        background-image: 
-            radial-gradient(1px 1px at 15% 15%, white 100%, transparent),
-            radial-gradient(1px 1px at 35% 85%, rgba(255,255,255,0.8) 100%, transparent),
-            radial-gradient(2px 2px at 65% 25%, rgba(255,255,255,0.9) 100%, transparent),
-            radial-gradient(1px 1px at 85% 75%, white 100%, transparent),
-            radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.6) 100%, transparent),
-            radial-gradient(2px 2px at 90% 10%, white 100%, transparent),
-            radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.8) 100%, transparent),
-            radial-gradient(circle at 20% 30%, rgba(176, 38, 255, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 70%, rgba(0, 221, 235, 0.15) 0%, transparent 50%);
-        background-attachment: fixed;
-		color: var(--text-main);
-    }
-    
-    * {
-	    margin: 0;
-	    padding: 0;
-    }
-    
-    i {
-	    margin-right: 10px;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
 
-    /* Headings */
-    h1, h2, h3, h4, h5 {
-        font-family: 'Fredoka', sans-serif;
-        color: var(--text-main);
-    }
+        body {
+            background-color: #050505;
+            color: var(--text-main);
+            font-family: 'Space Mono', monospace;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
 
-    /*----------bootstrap-navbar-css------------*/
-    .navbar-logo {
-	    padding: 5px;
-	    color: #fff;
-    }
-    .navbar-mainbg {
-	    background-color: var(--nav-color);
-	    padding: 0px;
-        box-shadow: 0 4px 20px rgba(176, 38, 255, 0.4); /* Cosmic purple glow */
-    }
-    #navbarSupportedContent {
-	    overflow: hidden;
-	    position: relative;
-    }
-    #navbarSupportedContent ul {
-	    padding: 0px;
-	    margin: 0px;
-    }
-    #navbarSupportedContent ul li a i {
-	    margin-right: 10px;
-    }
-    #navbarSupportedContent li {
-	    list-style-type: none;
-	    float: left;
-    }
-    #navbarSupportedContent ul li a {
-	    color: rgba(255,255,255,0.8);
-        text-decoration: none;
-        font-size: 16px;
-        font-family: 'Fredoka', sans-serif;
-        font-weight: 600;
-        display: block;
-        padding: 20px 20px;
-        transition-duration:0.6s;
-	    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        position: relative;
-    }
-    #navbarSupportedContent>ul>li.active>a {
-	    color: var(--nav-color); /* Matches navbar for inverted look */
-	    background-color: transparent;
-	    transition: all 0.7s;
-    }
-    .hori-selector {
-	    display:inline-block;
-	    position:absolute;
-	    height: 100%;
-	    top: 0px;
-	    left: 0px;
-	    transition-duration:0.6s;
-	    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-	    background-color: var(--bg-color); /* Matches body */
-	    border-top-left-radius: 20px;
-	    border-top-right-radius: 20px;
-	    margin-top: 10px;
-    }
-    .hori-selector .right,
-    .hori-selector .left {
-	    position: absolute;
-	    width: 25px;
-	    height: 25px;
-	    background-color: var(--bg-color); /* Matches body */
-	    bottom: 10px;
-    }
-    .hori-selector .right { right: -25px; }
-    .hori-selector .left { left: -25px; }
-    .hori-selector .right:before,
-    .hori-selector .left:before {
-	    content: '';
-        position: absolute;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: var(--nav-color); /* Matches navbar */
-    }
-    .hori-selector .right:before { bottom: 0; right: -25px; }
-    .hori-selector .left:before { bottom: 0; left: -25px; }
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-    .tabcontent {
-        border-radius: 30px;
-        background-color: transparent; 
-    }
-    
-    /* Home Hero Styling - FUN UPGRADE */
-    .home-hero {
-        /* Placeholder for hero background image (originally https://files.idyllic.app/...) */
-        background-image: url('https://via.placeholder.com/1200x600/03040b/ffffff?text=Deep+Space+Hero');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        position: relative;
-        overflow: hidden;
-        border-radius: 30px;
-        box-shadow: 0 10px 40px rgba(0, 221, 235, 0.2);
-        border: 4px solid var(--accent-purple);
-    }
-    .home-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(59, 7, 100, 0.7) 0%, rgba(0, 221, 235, 0.4) 100%);
-        z-index: 1;
-    }
-    .home-hero > * {
-        position: relative;
-        z-index: 2;
-    }
-    .home-hero h1 {
-        color: #fff;
-        text-shadow: 3px 3px 0px var(--accent-purple), 6px 6px 0px rgba(0,0,0,0.2);
-        font-size: 3.5rem;
-    }
-    .home-hero h1 span {
-        color: #ffeb3b; /* Fun yellow */
-        text-shadow: 3px 3px 0px #ff9800;
-        display: inline-block;
-        animation: bounce 2s infinite;
-    }
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-        40% {transform: translateY(-20px);}
-        60% {transform: translateY(-10px);}
-    }
-    .home-hero p {
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        color: #FFFFFF; 
-        font-weight: 700;
-        background: rgba(0,0,0,0.3);
-        padding: 10px 20px;
-        border-radius: 20px;
-    }
+        a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: text-shadow 0.3s;
+        }
+        
+        a:hover {
+            text-shadow: 0 0 8px var(--accent-blue);
+        }
 
-    /* Section Headings */
-    h2 {
-        color: var(--accent-blue) !important;
-        text-shadow: 2px 2px 0px var(--accent-purple);
-        font-size: 2.5rem !important;
-        letter-spacing: 1px;
-    }
+        /* BACKGROUND CANVAS */
+        #space-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at center, #111424 0%, #000000 100%);
+        }
 
-    footer {
-        background-color: var(--nav-color);
-        padding: 35px 22px;
-        text-align: center;
-        border-top-left-radius: 30px;
-        border-top-right-radius: 30px;
-        margin-top: 50px;
-    }
-    footer p {
-        color: #FFFFFF; 
-        font-family: 'Fredoka', sans-serif;
-        font-size: 1.2rem;
-    }
+        /* HEADER & NAVIGATION */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* Let clicks pass through empty space */
+        }
 
-    /* Bouncy Fun Cards */
-    .fun-card {
-        background-color: var(--card-bg) !important;
-        border: 3px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 25px !important;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
-    }
-    .fun-card:hover {
-        transform: translateY(-12px) scale(1.02) rotate(1deg);
-        border-color: var(--accent-blue) !important;
-        box-shadow: 0 15px 30px rgba(0, 221, 235, 0.3) !important;
-    }
-    
-    .fun-card h3 {
-        color: #ffeb3b !important; /* Yellow headings in cards */
-    }
+        /* Floating Logo */
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            pointer-events: auto;
+            animation: floatGently 6s ease-in-out infinite;
+        }
 
-    .fun-card .text-muted {
-        color: #ffb7d5 !important; /* Lighter pink for muted text */
-    }
+        .logo-container img {
+            height: 60px;
+            filter: drop-shadow(0 0 10px rgba(0, 225, 255, 0.5));
+        }
 
-    p, .text-gray-700 {
-        color: #e0e0e0;
-    }
+        /* Floating Nav Buttons */
+        nav {
+            display: flex;
+            gap: 15px;
+            pointer-events: auto;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 20px;
+        }
 
-    /* COOL BUTTONS - Made them rounder and bouncier */
-    .cbutton {
-        align-items: center;
-        background-image: linear-gradient(144deg, var(--accent-purple), #5b42f3 50%, var(--accent-blue));
-        border: 0;
-        border-radius: 50px; /* Fully rounded */
-        box-shadow: rgba(151, 65, 252, 0.4) 0 10px 20px -5px;
-        color: #ffffff;
-        display: flex;
-        font-family: 'Fredoka', sans-serif;
-        font-size: 18px;
-        justify-content: center;
-        line-height: 1em;
-        max-width: 100%;
-        min-width: 140px;
-        padding: 4px; /* Slightly thinner border area */
-        text-decoration: none;
-        user-select: none;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        margin: 20px auto;
-    }
-    .cbutton:hover {
-        transform: scale(1.1);
-    }
-    .cbutton span {
-        background-color: var(--bg-color);
-        padding: 16px 24px;
-        border-radius: 50px;
-        width: 100%;
-        height: 100%;
-        transition: 300ms;
-    }
-    .cbutton:hover span {
-        background: transparent;
-        color: #fff;
-    }
+        .nav-btn {
+            background: linear-gradient(135deg, var(--metal-light), var(--metal-base));
+            border: 2px solid #5a6b80;
+            color: #fff;
+            padding: 10px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            text-transform: uppercase;
+        }
 
-    /* Team Image enforcement */
-    .team-img {
-        width: 100%;
-        aspect-ratio: 4/5;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 20px !important;
-        border: 3px dashed var(--accent-purple);
-    }
+        .nav-btn:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px var(--accent-blue), inset 0 2px 5px rgba(255,255,255,0.2);
+            color: var(--accent-blue);
+        }
 
-    .icon-img {
-        width: 6rem;
-        height: 6rem;
-        object-fit: contain;
-        transition: transform 0.3s;
-    }
-    .fun-card:hover .icon-img {
-        transform: rotate(15deg) scale(1.2);
-    }
+        /* Unique slants and floating animations for each nav button */
+        .nav-btn:nth-child(1) { transform: rotate(-4deg); animation: floatBtn 4s ease-in-out infinite alternate; }
+        .nav-btn:nth-child(2) { transform: rotate(3deg); animation: floatBtn 5s ease-in-out infinite alternate-reverse; }
+        .nav-btn:nth-child(3) { transform: rotate(-2deg); animation: floatBtn 4.5s ease-in-out infinite alternate; animation-delay: 0.5s; }
+        .nav-btn:nth-child(4) { transform: rotate(5deg); animation: floatBtn 6s ease-in-out infinite alternate-reverse; animation-delay: 1s; }
+        .nav-btn:nth-child(5) { transform: rotate(-3deg); animation: floatBtn 3.5s ease-in-out infinite alternate; animation-delay: 0.2s; }
 
-    /* Responsive fixes */
-    @media(min-width: 992px){
-	    .navbar-expand-custom {
-	        -ms-flex-flow: row nowrap;
-	        flex-flow: row nowrap;
-	        -ms-flex-pack: start;
-	        justify-content: flex-start;
-	    }
-	    .navbar-expand-custom .navbar-nav {
-	        -ms-flex-direction: row;
-	        flex-direction: row;
-	    }
-	    .navbar-expand-custom .navbar-toggler {
-	        display: none;
-	    }
-	    .navbar-expand-custom .navbar-collapse {
-	        display: -ms-flexbox!important;
-	        display: flex!important;
-	        -ms-flex-preferred-size: auto;
-	        flex-basis: auto;
-	    }
-    }
-    @media (max-width: 991px){
-	    #navbarSupportedContent ul li a{
-		    padding: 12px 30px;
-	    }
-	    .hori-selector{
-		    margin-top: 0px;
-		    margin-left: 10px;
-		    border-radius: 0;
-		    border-top-left-radius: 25px;
-		    border-bottom-left-radius: 25px;
-	    }
-	    .hori-selector .left,
-	    .hori-selector .right{
-		    right: 10px;
-	    }
-	    .hori-selector .left{
-		    top: -25px;
-		    left: auto;
-	    }
-	    .hori-selector .right{
-		    bottom: -25px;
-	    }
-	    .hori-selector .left:before{
-		    left: -25px;
-		    top: -25px;
-	    }
-	    .hori-selector .right:before{
-		    bottom: -25px;
-		    left: -25px;
-	    }
-    }
-    
-    .section-container {
-        background-color: rgba(42, 27, 78, 0.7);
-        border: 2px dashed rgba(255,255,255,0.2);
-        backdrop-filter: blur(10px);
-    }
-  </style>
+        @keyframes floatBtn {
+            0% { transform: translateY(0px) rotate(inherit); }
+            100% { transform: translateY(-8px) rotate(inherit); }
+        }
+
+        @keyframes floatGently {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* MAIN CONTENT AREA */
+        main {
+            padding-top: 150px;
+            padding-bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            text-shadow: 0 0 15px rgba(0, 225, 255, 0.4);
+            margin-bottom: 20px;
+        }
+
+        /* SPACE SHUTTLE PANELS (Info Boxes) */
+        .panel {
+            background: linear-gradient(145deg, var(--metal-base), var(--metal-dark));
+            border: 2px solid #111;
+            border-top: 2px solid #5a6b80;
+            border-left: 2px solid #5a6b80;
+            border-radius: 10px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 20px 20px 40px rgba(0,0,0,0.8), inset -5px -5px 15px rgba(0,0,0,0.5);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* Rivets */
+        .panel::before, .panel::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #888, #222);
+            border-radius: 50%;
+            box-shadow: inset 1px 1px 2px #fff, 0 1px 2px #000;
+        }
+        .panel::before { top: 15px; left: 15px; box-shadow: inset 1px 1px 2px #fff, 0 1px 2px #000, calc(100% - 30px) 0 0 0 #444, 0 calc(100% - 30px) 0 0 #444; } /* Pseudo-hack for multiple rivets or just rely on CSS for simple ones */
+        
+        /* Simpler 4-corner rivets using a specific class */
+        .rivets {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+        }
+        .rivet {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #a0aec0, #2d3748);
+            border-radius: 50%;
+            box-shadow: inset 1px 1px 2px rgba(255,255,255,0.5), 1px 1px 3px rgba(0,0,0,0.8);
+        }
+        .rivet.tl { top: 15px; left: 15px; }
+        .rivet.tr { top: 15px; right: 15px; }
+        .rivet.bl { bottom: 15px; left: 15px; }
+        .rivet.br { bottom: 15px; right: 15px; }
+
+        /* Hazard Stripes */
+        .hazard-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: repeating-linear-gradient(45deg, var(--hazard-yellow), var(--hazard-yellow) 10px, #000 10px, #000 20px);
+            opacity: 0.8;
+        }
+
+        .hazard-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: repeating-linear-gradient(-45deg, var(--hazard-yellow), var(--hazard-yellow) 10px, #000 10px, #000 20px);
+            opacity: 0.8;
+        }
+
+        /* SCROLL REVEAL ANIMATION */
+        .reveal {
+            opacity: 0;
+            transform: translateY(100px) rotateX(10deg);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg);
+        }
+
+        /* SPECIFIC LAYOUTS */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Team Cards */
+        .team-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border: 2px solid var(--metal-light);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            filter: grayscale(40%) contrast(120%);
+        }
+
+        /* Tech Buttons (Replacing .cbutton) */
+        .tech-btn {
+            display: inline-block;
+            background: rgba(0, 225, 255, 0.1);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 12px 24px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            text-align: center;
+        }
+        .tech-btn:hover {
+            background: var(--accent-blue);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-blue);
+        }
+
+        /* Blog specific */
+        .blog-post {
+            border-left: 4px solid var(--accent-blue);
+        }
+        .date {
+            color: var(--hazard-yellow);
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        /* Service / Stuff Icons */
+        .panel-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--metal-light);
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: auto;
+                padding: 15px;
+                flex-direction: column;
+                position: relative;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            }
+            .logo-container {
+                position: relative;
+                top: 0; left: 0;
+                margin-bottom: 20px;
+                animation: none;
+            }
+            nav {
+                flex-wrap: wrap;
+            }
+            main {
+                padding-top: 40px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-custom navbar-mainbg">
-        <a class="navbar-brand navbar-logo" href="#" onclick="return navigateToHome(event);">
-          <!-- Placeholder for logo.png -->
-          <img src="https://via.placeholder.com/200x50/3b0764/ffffff?text=Spacey+Logo" alt="DamVan Logo Placeholder" height="50" style="border-radius: 10px;">
+
+    <!-- Space Background -->
+    <canvas id="space-canvas"></canvas>
+
+    <!-- Header / Navigation -->
+    <header>
+        <a href="#home" class="logo-container">
+            <img src="logo.png" alt="DamVan Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/e/e4/Globe_icon.svg'">
         </a>
-        <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="border: none;">
-        <i class="fas fa-bars text-white" style="font-size: 24px;"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto">
-            <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
-            <li class="nav-item active">
-                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'home')"><i class="fas fa-home"></i>Home</a>
-            </li>
-			<li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'services')"><i class="fas fa-box-open"></i>Services</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'stuff')"><i class="fas fa-rocket"></i>Cool Stuff</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'blog')"><i class="fas fa-comment-dots"></i>Blog</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);" onclick="openCity(event, 'contact')"><i class="fas fa-paper-plane"></i>Contact Us</a>
-            </li>
-        </ul>
-      </div>
-    </nav>
-    
-  <main class="container mx-auto px-6 py-12">
-    <!-- HOMEPAGE -->
-	<div id="home" class="tabcontent d-flex flex-column mt-5 mb-5">
-        <!-- Hero Section -->
-        <div class="home-hero p-4 p-md-5 mb-5 d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
-            <h1 class="fw-bold mb-4 text-center">
-                Welcome To The <span>Damn(Van)</span> Website!
-            </h1>
-            <p class="fs-4 text-center">
-                This is the official website for DodgeRamTheCaravan (DamVan) 🚀
-            </p>
-        </div>
+        <nav>
+            <a href="#home" class="nav-btn">Command Center</a>
+            <a href="#services" class="nav-btn">Operations</a>
+            <a href="#stuff" class="nav-btn">Cargo Bay</a>
+            <a href="#blog" class="nav-btn">Captain's Log</a>
+            <a href="#contact" class="nav-btn">Comms</a>
+        </nav>
+    </header>
 
-        <!-- About Section -->
-		<div class="section-container p-4 p-md-5 rounded-4 shadow-lg mb-5">
-            <h2 class="fw-bold mb-4 text-center">About Us</h2>
-                <div class="mx-auto fs-5 text-center" style="max-width: 80ch; line-height: 1.8;">
-                    <p>
-                        Here at DamVan, we are full of fun and goofy ideas. We do all kinds of things, from making YouTube Videos to our own Personal Coding Projects. 🎮
-                    </p>
-                    <p>
-                        The group consists of 3 original members, but has the occasional special guest: <strong>Andrew (AVPxxd)</strong>, <strong>Dalton (TheLocalAdmin)</strong>, and <strong>Will (Branchy18269)</strong>.
-                    </p>
-                    <p>
-                        We all have our own YouTube channels along with <a href="https://www.youtube.com/@DodgeRamTheCaravan" style="color: var(--accent-blue); font-weight: bold; text-decoration: none;">The DamVan YouTube Channel</a>, and we also have our own GitHub Pages linked in our portfolios.
-                    </p>
-                    <p>
-                        Our GitHubs are the same names as our Aliases, along with our Online Gaming Account Names. We are always looking for new ideas! 💡
-                    </p>
+    <!-- Main Scrollable Content -->
+    <main>
+        <!-- HOME / ABOUT -->
+        <section id="home">
+            <div class="panel reveal" style="text-align: center;">
+                <div class="hazard-top"></div>
+                <div class="rivets">
+                    <div class="rivet tl"></div><div class="rivet tr"></div>
+                    <div class="rivet bl"></div><div class="rivet br"></div>
                 </div>
-        </div>
+                
+                <h1 style="font-size: 3rem; margin-bottom: 10px;">Welcome To The <span style="color: white;">Damn(Van)</span> System!</h1>
+                <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 30px;">This is the official database for DodgeRamTheCaravan (DamVan)</p>
+                
+                <hr style="border-color: var(--metal-light); margin: 30px 0;">
+                
+                <h2 style="margin-bottom: 20px;">About Us</h2>
+                <div style="max-width: 800px; margin: 0 auto; text-align: left; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                    <p style="margin-bottom: 15px;">Here at DamVan, we are full of fun and goofy ideas. We do all kinds of things, from making YouTube Videos to our own Personal Coding Projects.</p>
+                    <p style="margin-bottom: 15px;">The crew consists of 3 original members, but has the occasional special guest: <strong style="color: var(--accent-blue);">Andrew (AVPxxd)</strong>, <strong style="color: var(--accent-blue);">Dalton (TheLocalAdmin)</strong>, and <strong style="color: var(--accent-blue);">Will (Branchy18269)</strong>.</p>
+                    <p style="margin-bottom: 15px;">We all have our own YouTube channels along with <a href="https://www.youtube.com/@DodgeRamTheCaravan" target="_blank">The DamVan YouTube Channel</a>, and we also have our own GitHub Pages linked in our portfolios.</p>
+                    <p>Our GitHubs are the same names as our Aliases, along with our Online Gaming Account Names. We are always looking for new ideas!</p>
+                </div>
+            </div>
+
+            <!-- Team Roster -->
+            <h2 class="section-title reveal">The Crew</h2>
+            <div class="grid-3">
+                <!-- Will -->
+                <div class="panel reveal">
+                    <div class="hazard-left"></div>
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="will.jpg" alt="Will Hyndman" class="team-img" onerror="this.style.display='none'">
+                    <h3>Will Hyndman</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 15px;">(Branchy18269)</p>
+                    <button class="tech-btn" onclick="window.open('https://willhyndman.ca/', '_blank');">Access Portfolio</button>
+                </div>
+                <!-- Dalton -->
+                <div class="panel reveal">
+                    <div class="hazard-top"></div>
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="dalton.jpg" alt="Dalton Goodwin-Peck" class="team-img" onerror="this.style.display='none'">
+                    <h3>Dalton Goodwin-Peck</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 15px;">(TheLocalAdmin)</p>
+                    <button class="tech-btn" onclick="window.open('https://thelocalad.men/', '_blank');">Access Portfolio</button>
+                </div>
+                <!-- Andrew -->
+                <div class="panel reveal">
+                    <div class="hazard-left"></div>
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="andrew.jpg" alt="Andrew Veinotte" class="team-img" onerror="this.style.display='none'">
+                    <h3>Andrew Veinotte</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 15px;">(AVPxxd)</p>
+                    <button class="tech-btn" onclick="window.open('https://avpxxd.ca/', '_blank');">Access Portfolio</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="services">
+            <h2 class="section-title reveal">Operations & Services</h2>
+            <div class="panel reveal" style="text-align: center; padding: 20px; background: transparent; box-shadow: none; border: none;">
+                <p>Looking for some server hosting? Or how about some Development? Or even just a place to have fun, Look no further!</p>
+            </div>
+            
+            <div class="grid-3">
+                <div class="panel reveal" style="text-align: center;">
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="software.png" alt="WEBD" class="panel-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1005/1005141.png'">
+                    <h3>Web Development</h3>
+                    <p style="margin-top: 15px; color: var(--text-muted);">We build responsive, user-friendly interfaces tailored to your specific parameters. From personal logs to landing coordinates, we ensure your presence is modern and accessible.</p>
+                </div>
+
+                <div class="panel reveal" style="text-align: center;">
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="database.png" alt="BACKEND" class="panel-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2162/2162985.png'">
+                    <h3>Backend Development</h3>
+                    <p style="margin-top: 15px; color: var(--text-muted);">Power your mainframe with robust server-side architecture. We specialize in databanks, API uplinks, and secure protocols to keep your systems running smoothly.</p>
+                </div>
+
+                <div class="panel reveal" style="text-align: center;">
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="gta.png" alt="FIVEM" class="panel-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/808/808476.png'">
+                    <h3>GTA FiveM Servers</h3>
+                    <p style="margin-top: 15px; color: var(--text-muted);">Elevate your roleplay simulations with high-performance hosting. Stable environments, custom module support, and optimized planetary assets.</p>
+                </div>
+
+                <div class="panel reveal" style="text-align: center;">
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="game.png" alt="MC" class="panel-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/13/13504.png'">
+                    <h3>Minecraft Servers</h3>
+                    <p style="margin-top: 15px; color: var(--text-muted);">Jump into your own block-based sector. Reliable hosting for Vanilla or Modded simulations, 24/7 uptime cycles, low latency, and easy module config.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- COOL STUFF -->
+        <section id="stuff">
+            <h2 class="section-title reveal">Cargo Bay (Cool Stuff)</h2>
+            <div class="grid-3">
+                <div class="panel reveal" style="text-align: center;">
+                    <div class="hazard-top"></div>
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="https://www.freeiconspng.com/uploads/youtube-logo-png-photo-0.png" alt="YOUTUBE" class="panel-icon">
+                    <h3>DamVan YouTube</h3>
+                    <p style="margin-top: 15px; color: var(--text-muted); flex-grow: 1;">Check out our visual broadcasts, coding experiments, and other anomalies.</p>
+                    <button class="tech-btn" onclick="window.open('https://www.youtube.com/@DodgeRamTheCaravan', '_blank');">Initiate Playback</button>
+                </div>
+
+                <div class="panel reveal" style="text-align: center;">
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG40.png" alt="MINECRAFT" class="panel-icon">
+                    <h3>DamVan Minecraft</h3>
+                    <p style="margin-top: 15px; color: var(--text-muted); flex-grow: 1;">Join our community sector to hang out, transmit comms, and construct structures.</p>
+                    <button class="tech-btn" onclick="window.open('https://mc.damvan.ca/', '_blank');">Establish Connection</button>
+                </div>
+
+                <div class="panel reveal" style="text-align: center;">
+                    <div class="hazard-left"></div>
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="BeatNinja.png" alt="BEATNINJA" class="panel-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/808/808476.png'">
+                    <h3>BeatNinja</h3>
+                    <p style="margin-top: 15px; color: var(--text-muted); flex-grow: 1;">A Mix Between Fruit Ninja, And Beat Saber... Sorta. Simulation initialized.</p>
+                    <button class="tech-btn" onclick="window.open('https://avpxxd.github.io/BeatNinja/', '_blank');">Run Program</button>
+                </div>
+
+                <div class="panel reveal" style="text-align: center;">
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="SoniStream.png" alt="SONISTREAM" class="panel-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/808/808476.png'">
+                    <h3>SoniStream</h3>
+                    <p style="margin-top: 15px; color: var(--text-muted); flex-grow: 1;">Audio frequency analyzer! Upload sound files (or SoundCloud link) and vibe!</p>
+                    <button class="tech-btn" onclick="window.open('https://avpxxd.github.io/SoniStream/', '_blank');">Run Program</button>
+                </div>
+
+                <div class="panel reveal" style="text-align: center;">
+                    <div class="hazard-top"></div>
+                    <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                    <img src="imnotahuman.png" alt="IANAH" class="panel-icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/808/808476.png'">
+                    <h3>I Am Not A Human</h3>
+                    <p style="margin-top: 15px; color: var(--text-muted); flex-grow: 1;">Alternate Universe Captchas Are Designed To Keep Us Out! Bypass protocols.</p>
+                    <button class="tech-btn" onclick="window.open('https://avpxxd.github.io/codespace/', '_blank');">Run Program</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOG -->
+        <section id="blog">
+            <h2 class="section-title reveal">Captain's Log (Blog)</h2>
+            
+            <div class="panel blog-post reveal">
+                <div class="rivets"><div class="rivet tr"></div><div class="rivet br"></div></div>
+                <h3>Website V1.1</h3>
+                <div class="date">Stardate: December 16, 2025</div>
+                <p>We've done some slight re-arranging of the database to make things look as good as they can! We've also added a new Operations section, as well as a new project in the Cargo Bay! Check It Out! 😁 Oh, and have a great solar cycle! We look forward to seeing you in 2026! 🥳</p>
+            </div>
+
+            <div class="panel blog-post reveal">
+                <div class="rivets"><div class="rivet tr"></div><div class="rivet br"></div></div>
+                <h3>We've Hit Version 1.0!</h3>
+                <div class="date">Stardate: October 23, 2025</div>
+                <p>It's official! 🥳 We're calling this Version 1.0 of the DamVan hub. All the core sectors are online, the new dark theme is solid, 😎 the pesky social icons are fixed, and all uplinks are working. We're proud to have this as our official "complete" site. Thanks for tracking our orbit!</p>
+            </div>
+
+            <div class="panel blog-post reveal">
+                <div class="rivets"><div class="rivet tr"></div><div class="rivet br"></div></div>
+                <h3>New Stuff!</h3>
+                <div class="date">Stardate: October 6, 2025</div>
+                <p>Another module has been added to the Cargo Bay! 😮 Be sure to run a scan. We're excited to share more fun anomalies with you all soon.</p>
+            </div>
+
+            <div class="panel blog-post reveal">
+                <div class="rivets"><div class="rivet tr"></div><div class="rivet br"></div></div>
+                <h3>Website V0.2!</h3>
+                <div class="date">Stardate: August 20, 2025</div>
+                <p>The network is finally starting to come together! 😁 Though it's still generating errors and missing some files, we've made a lot of progress. We also published our first lil fun simulation in the Cargo Bay!</p>
+            </div>
+
+            <div class="panel blog-post reveal">
+                <div class="rivets"><div class="rivet tr"></div><div class="rivet br"></div></div>
+                <h3>The Network Launches!</h3>
+                <div class="date">Stardate: July 14, 2025</div>
+                <p>The database has launched today! 🥳 (Or technically yesterday, as it took a rotation to get the log module up and running! 😒) We hope to transmit some awesome data very (very) soon!</p>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact">
+            <h2 class="section-title reveal">Comms (Contact Us)</h2>
+            <div class="panel reveal" style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <div class="hazard-top"></div>
+                <div class="rivets"><div class="rivet tl"></div><div class="rivet tr"></div><div class="rivet bl"></div><div class="rivet br"></div></div>
+                
+                <p style="margin-bottom: 20px;">Open a frequency to our main data terminal.</p>
+                <a href="mailto:contact@damvan.ca">
+                    <button class="tech-btn" style="margin-bottom: 30px;">contact@damvan.ca</button>
+                </a>
+
+                <p style="margin-bottom: 20px;">Or transmit an audio signal:</p>
+                <a href="tel:1-902-920-0180">
+                    <button class="tech-btn" style="margin-bottom: 40px;">+1-902-920-0180</button>
+                </a>
+
+                <hr style="border-color: #4a5568; margin-bottom: 40px;">
+
+                <h3 style="margin-bottom: 15px;">Discord Channel</h3>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Join our community comms server to hang out, chat, and intercept project updates.</p>
+                <button class="tech-btn" onclick="window.open('https://discord.com/invite/psrNq7w69q/', '_blank');">Initiate Warp Sequence</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>MISSION CLOCK: &copy; 2026 DamVan | All sectors secure.</p>
+    </footer>
+
+    <!-- INTERACTIVE SCRIPTS -->
+    <script>
+        // 1. STARFIELD CANVAS ANIMATION
+        const canvas = document.getElementById('space-canvas');
+        const ctx = canvas.getContext('2d');
         
-		<!-- Personal Portfolios -->
-		<div class="text-center p-4 p-md-5 mt-2 mb-5">
-            <h2 class="fw-bold mb-5">Meet the Team</h2>
-            <div class="row row-cols-1 row-cols-md-3 g-4 mx-auto" style="max-width: 1024px;">
-                
-                <!-- Will's Card -->
-                <div class="col">
-                    <div class="card fun-card shadow-lg h-100 text-center">
-                        <div class="card-body p-4">
-                            <!-- Placeholder for will.jpg -->
-                            <img src="https://via.placeholder.com/400x500/af40ff/ffffff?text=Will's+Photo" class="w-100 mb-4 team-img" alt="Will Hyndman">
-                            <h3 class="card-title fs-3 fw-bold mb-1">Will Hyndman</h3>
-                            <p class="text-muted mb-3 fw-bold">(Branchy18269)</p>
-                            <button class="cbutton" onclick="window.open('https://willhyndman.ca/', '_blank');"><span>Personal Portfolio</span></button>
-                        </div>
-                    </div>
-                </div>
+        let width, height, stars = [];
 
-                <!-- Dalton's Card -->
-                <div class="col">
-                    <div class="card fun-card shadow-lg h-100 text-center">
-                        <div class="card-body p-4">
-                            <!-- Placeholder for dalton.jpg -->
-                            <img src="https://via.placeholder.com/400x500/00ddeb/ffffff?text=Dalton's+Photo" class="w-100 mb-4 team-img" alt="Dalton Goodwin-Peck">
-                            <h3 class="card-title fs-3 fw-bold mb-1">Dalton Goodwin-Peck</h3>
-                            <p class="text-muted mb-3 fw-bold">(TheLocalAdmin)</p>
-                            <button class="cbutton" onclick="window.open('https://thelocalad.men/', '_blank');"><span>Personal Portfolio</span></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Andrew's Card -->
-                <div class="col">
-                    <div class="card fun-card shadow-lg h-100 text-center">
-                        <div class="card-body p-4">
-                            <!-- Placeholder for andrew.jpg -->
-                            <img src="https://via.placeholder.com/400x500/b026ff/ffffff?text=Andrew's+Photo" class="w-100 mb-4 team-img" alt="Andrew Veinotte">
-                            <h3 class="card-title fs-3 fw-bold mb-1">Andrew Veinotte</h3>
-                            <p class="text-muted mb-3 fw-bold">(AVPxxd)</p>
-                            <button class="cbutton" onclick="window.open('https://avpxxd.ca/', '_blank');"><span>Personal Portfolio</span></button>
-                        </div>
-                    </div>
-                </div>
-			</div>
-		</div>
-	</div>
-	
-	  
-    <!-- BLOG PAGE -->
-    <div id="blog" class="tabcontent d-none p-4 p-md-5 mt-5 mb-5 section-container rounded-4">
-      <h2 class="fw-bold mb-5 text-center">DamVan Blog! 📝</h2>
-            <div class="mx-auto" style="max-width: 70ch;">
-				<!-- New Blog Post -->
-                <article class="card fun-card mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title fs-3 fw-bold mb-2">Website V1.1</h3>
-                        <p class="card-subtitle text-muted mb-3 fw-bold">December 16, 2025</p>
-                        <p class="card-text fs-5">
-                            We've done some slight re-arranging of the website to make things look as good as they can! We've also added a new Services section, as well as a new project in Cool Stuff! Check It Out! 😁 Oh, and have a great holiday season! We look forward to seeing you in 2026! 🥳
-                        </p>
-                    </div>
-                </article>
-				
-                <!-- Existing Blog Posts -->
-                <article class="card fun-card mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title fs-3 fw-bold mb-2">We've Hit Version 1.0!</h3>
-                        <p class="card-subtitle text-muted mb-3 fw-bold">October 23, 2025</p>
-                        <p class="card-text fs-5">
-                            It's official! 🥳 We're calling this Version 1.0 of the DamVan website. All the core pages are up, the new dark theme is solid, 😎 the pesky social logos are finally fixed, and all the links are working. We're proud to have this as our official "complete" site. Thanks for following along!
-                        </p>
-                    </div>
-                </article>
-
-                <article class="card fun-card mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title fs-3 fw-bold mb-2">New Stuff!</h3>
-                        <p class="card-subtitle text-muted mb-3 fw-bold">October 6, 2025</p>
-                        <p class="card-text fs-5">
-                            Another project has been added to the Cool Stuff section! 😮 Be sure to go check it out. We're excited to share more fun projects with you all soon.
-                        </p>
-                    </div>
-                </article>
-            </div>
-    </div>
-
-    <!-- SERVICES PAGE -->
-    <div id="services" class="tabcontent d-none p-4 p-md-5 mt-5 mb-5">
-      <h2 class="fw-bold mb-4 text-center">Our Services 🛠️</h2>
-             <p class="fs-4 text-center mx-auto mb-5" style="max-width: 60ch;">
-                Looking for some server hosting? Or how about some Development? Or even just a place to have fun, Look no further!
-             </p>
-            
-             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mx-auto">
-                
-                <!-- WEB DEVELOPMENT -->
-                <div class="col">
-                    <div class="card fun-card text-center h-100">
-                        <div class="card-body p-4 d-flex flex-column align-items-center">
-                            <!-- Placeholder for software.png -->
-                            <img src="https://via.placeholder.com/150x150/b026ff/ffffff?text=Web+Dev" alt="WEBD" class="mb-4 icon-img rounded-circle">
-                            <h3 class="card-title fs-4 fw-bold mb-3">Web Development</h3>
-                            <p class="card-text mb-4 flex-grow-1">
-                                We build responsive, user-friendly websites tailored to your specific needs. From personal portfolios to landing pages!
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BACKEND DEVELOPMENT -->
-                <div class="col">
-                    <div class="card fun-card text-center h-100">
-                        <div class="card-body p-4 d-flex flex-column align-items-center">
-                            <!-- Placeholder for database.png -->
-                            <img src="https://via.placeholder.com/150x150/00ddeb/ffffff?text=Database" alt="BACKEND" class="mb-4 icon-img rounded-circle">
-                            <h3 class="card-title fs-4 fw-bold mb-3">Backend Development</h3>
-                            <p class="card-text mb-4 flex-grow-1">
-                                Power your applications with robust server-side architecture. We specialize in database management and APIs.
-							</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FIVEM SERVERS -->
-                <div class="col">
-                    <div class="card fun-card text-center h-100">
-                        <div class="card-body p-4 d-flex flex-column align-items-center">
-                            <!-- Placeholder for gta.png -->
-                            <img src="https://via.placeholder.com/150x150/ffeb3b/000000?text=FiveM" alt="FIVEM" class="mb-4 icon-img rounded-circle">
-                            <h3 class="card-title fs-4 fw-bold mb-3">GTA FiveM Servers</h3>
-                            <p class="card-text mb-4 flex-grow-1">
-                                Elevate your roleplay experience with high-performance hosting. Stable environments & custom script support.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-				 <!-- MINECRAFT SERVERS -->
-                <div class="col">
-                    <div class="card fun-card text-center h-100">
-                        <div class="card-body p-4 d-flex flex-column align-items-center">
-                            <!-- Placeholder for game.png -->
-                            <img src="https://via.placeholder.com/150x150/4caf50/ffffff?text=Minecraft" alt="MC" class="mb-4 icon-img rounded-circle">
-                            <h3 class="card-title fs-4 fw-bold mb-3">Minecraft Servers</h3>
-                            <p class="card-text mb-4 flex-grow-1">
-                                Jump into your own blocky world without the technical hassle. 24/7 uptime for Vanilla or Modded gameplay.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-    </div>
-
-	<!-- NEW COOL STUFF PAGE -->
-	<div id="stuff" class="tabcontent d-none p-4 p-md-5 mt-5 mb-5">
-      <h2 class="fw-bold mb-4 text-center">Cool Stuff 🛸</h2>
-             <p class="fs-4 text-center mx-auto mb-5" style="max-width: 60ch;">
-                Check out all our super fun projects!
-             </p>
-            
-             <div class="row row-cols-1 row-cols-md-3 g-4 mx-auto" style="max-width: 1024px;">
-                
-                <!-- YOUTUBE -->
-                <div class="col">
-                    <div class="card fun-card text-center h-100">
-                        <div class="card-body p-4 d-flex flex-column align-items-center">
-                            <!-- Placeholder for YouTube Logo -->
-                            <img src="https://via.placeholder.com/150x150/ff0000/ffffff?text=YouTube" alt="YOUTUBE" class="mb-4 icon-img rounded-3">
-                            <h3 class="card-title fs-4 fw-bold mb-2">DamVan YouTube Channel</h3>
-                            <p class="card-text mb-4 flex-grow-1">
-                                Check out our videos, coding projects, and other fun stuff.
-                            </p>
-							<button class="cbutton" onclick="window.open('https://www.youtube.com/@DodgeRamTheCaravan', '_blank');"><span>Watch Videos</span></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MINECRAFT -->
-                <div class="col">
-                    <div class="card fun-card text-center h-100">
-                        <div class="card-body p-4 d-flex flex-column align-items-center">
-                            <!-- Placeholder for Minecraft Logo -->
-                            <img src="https://via.placeholder.com/150x150/8b4513/ffffff?text=MC+Server" alt="MINECRAFT" class="mb-4 icon-img rounded-3">
-                            <h3 class="card-title fs-4 fw-bold mb-2">DamVan Minecraft Server</h3>
-                            <p class="card-text mb-4 flex-grow-1">
-                                Join our community Minecraft server to hang out, chat, and build amazing things.
-							</p>
-							<button class="cbutton" onclick="window.open('https://mc.damvan.ca/', '_blank');"><span>Play Now</span></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BEATNINJA -->
-                <div class="col">
-                    <div class="card fun-card text-center h-100">
-                        <div class="card-body p-4 d-flex flex-column align-items-center">
-                            <!-- Placeholder for BeatNinja.png -->
-                            <img src="https://via.placeholder.com/150x150/000000/00ff00?text=BeatNinja" alt="BEATNINJA" class="mb-4 icon-img rounded-3">
-                            <h3 class="card-title fs-4 fw-bold mb-2">BeatNinja</h3>
-                            <p class="card-text mb-4 flex-grow-1">
-                                A Mix Between Fruit Ninja, And Beat Saber... Sorta.
-                            </p>
-							<button class="cbutton" onclick="window.open('https://avpxxd.github.io/BeatNinja/', '_blank');"><span>Play Now</span></button>
-                        </div>
-                    </div>
-                </div>
-				
-				<!-- SoniStream -->
-                <div class="col">
-                    <div class="card fun-card text-center h-100">
-                        <div class="card-body p-4 d-flex flex-column align-items-center">
-                            <!-- Placeholder for SoniStream.png -->
-                            <img src="https://via.placeholder.com/150x150/b026ff/ffffff?text=SoniStream" alt="SONISTREAM" class="mb-4 icon-img rounded-3">
-                            <h3 class="card-title fs-4 fw-bold mb-2">SoniStream</h3>
-                            <p class="card-text mb-4 flex-grow-1">
-                                A Cool Music Visualizer! Upload your Audio Files (or use a soundcloud link) and Vibe!
-                            </p>
-							<button class="cbutton" onclick="window.open('https://avpxxd.github.io/SoniStream/', '_blank');"><span>Play Now</span></button>
-                        </div>
-                    </div>
-                </div>
-
-				 <!-- IANAH -->
-                <div class="col">
-                    <div class="card fun-card text-center h-100">
-                        <div class="card-body p-4 d-flex flex-column align-items-center">
-                            <!-- Placeholder for imnotahuman.png -->
-                            <img src="https://via.placeholder.com/150x150/607d8b/ffffff?text=No+Humans" alt="IANAH" class="mb-4 icon-img rounded-3">
-                            <h3 class="card-title fs-4 fw-bold mb-2">I Am Not A Human</h3>
-                            <p class="card-text mb-4 flex-grow-1">
-                                Alternate Universe Captchas Are Designed To Keep Us Out!
-                            </p>
-							<button class="cbutton" onclick="window.open('https://avpxxd.github.io/codespace/', '_blank');"><span>Play Now</span></button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-    </div>
-
-    <!-- CONTACT US PAGE -->
-    <div id="contact" class="tabcontent d-none text-center p-4 p-md-5 mt-5 mb-5">
-      <h2 class="fw-bold mb-4 fs-1">Contact Us 📞</h2>
-            <p class="fs-4 mb-4">
-                Feel free to contact us at our main email address.
-            </p>
-            
-            <a href="mailto:contact@damvan.ca" style="text-decoration: none;">
-                <button class="cbutton"><span>contact@damvan.ca</span></button>
-            </a>
-
-			<p class="fs-4 mt-5 mb-4">
-                Or give us a ring at:
-            </p>
-
-			<a href="tel:1-902-920-0180" style="text-decoration: none;">
-                <button class="cbutton"><span>+1-902-920-0180</span></button>
-            </a>
-
-			<div class="row row-cols-1 g-4 mx-auto mt-4" style="max-width: 600px;">
-    			<div class="col">
-        			<div class="card fun-card text-center mb-4">
-            			<div class="card-body p-5">
-                			<h3 class="card-title fs-2 fw-bold mb-3"><i class="fab fa-discord" style="color:#7289da;"></i> Discord</h3>
-                			<p class="card-text fs-5 mb-4">
-                    			Join our community Discord server to hang out, chat, and get project updates.
-                			</p>
-                			<button class="cbutton" onclick="window.open('https://discord.com/invite/psrNq7w69q/', '_blank');">
-                    			<span>Join Server</span>
-                			</button>
-            			</div>
-        			</div>
-    			</div>
-			</div>
-    </div>
-  </main>
-  
-  <!-- PAGE FOOTER -->
-  <footer>
-    <p>&copy; 2026 DamVan | All rights reserved.</p>
-  </footer>
-
-  <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script>
-    // ---------Responsive-navbar-active-animation-----------
-    function test(){
-	    var tabsNewAnim = $('#navbarSupportedContent');
-	    var selectorNewAnim = $('#navbarSupportedContent').find('li').length;
-	    var activeItemNewAnim = tabsNewAnim.find('.active');
-	    if (activeItemNewAnim.length === 0) {
-                return;
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            stars = [];
+            // Generate stars based on screen size
+            const numStars = Math.floor((width * height) / 2000); 
+            for (let i = 0; i < numStars; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 1.5,
+                    speed: Math.random() * 0.5 + 0.1,
+                    alpha: Math.random()
+                });
             }
-	    var activeWidthNewAnimHeight = activeItemNewAnim.innerHeight();
-	    var activeWidthNewAnimWidth = activeItemNewAnim.innerWidth();
-	    var itemPosNewAnimTop = activeItemNewAnim.position();
-	    var itemPosNewAnimLeft = activeItemNewAnim.position();
-	    $(".hori-selector").css({
-		    "top":itemPosNewAnimTop.top + "px", 
-		    "left":itemPosNewAnimLeft.left + "px",
-		    "height": activeWidthNewAnimHeight + "px",
-		    "width": activeWidthNewAnimWidth + "px"
-	    });
-	    $("#navbarSupportedContent").on("click","li",function(e){
-		    $('#navbarSupportedContent ul li').removeClass("active");
-		    $(this).addClass('active');
-		    var activeWidthNewAnimHeight = $(this).innerHeight();
-		    var activeWidthNewAnimWidth = $(this).innerWidth();
-		    var itemPosNewAnimTop = $(this).position();
-		    var itemPosNewAnimLeft = $(this).position();
-		    $(".hori-selector").css({
-			    "top":itemPosNewAnimTop.top + "px", 
-			    "left":itemPosNewAnimLeft.left + "px",
-			    "height": activeWidthNewAnimHeight + "px",
-			    "width": activeWidthNewAnimWidth + "px"
-		    });
-	    });
-    }
-    
-    $(document).ready(function(){
-        setTimeout(function(){ test(); });
-    });
-    $(window).on('resize', function(){
-        setTimeout(function(){ test(); }, 500);
-    });
-    $(".navbar-toggler").click(function(){
-        $(".navbar-collapse").slideToggle(300);
-        setTimeout(function(){ test(); });
-    });
+        }
 
-    // --- Tab Switching Logic ---
-    function openCity(evt, cityName) {
-      var i, tabcontent;
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].classList.add("d-none");
-        tabcontent[i].classList.remove("d-flex");
-      }
+        function animateStars() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw a deep space gradient (handled by CSS, but keeping canvas clear makes it show)
+            
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+                ctx.fill();
 
-      var activeTab = document.getElementById(cityName);
-      if (activeTab) {
-          activeTab.classList.remove("d-none");
-          if (cityName === 'home') {
-            activeTab.classList.add("d-flex");
-          }
-      }
-    }
+                // Move star slowly upwards to simulate falling or flying forward
+                star.y -= star.speed;
+                
+                // Twinkle effect
+                star.alpha += (Math.random() - 0.5) * 0.05;
+                if(star.alpha < 0.2) star.alpha = 0.2;
+                if(star.alpha > 1) star.alpha = 1;
 
-    document.addEventListener("DOMContentLoaded", function() {
-        openCity(null, 'home');
-    });
+                // Reset star if it goes off screen
+                if (star.y < 0) {
+                    star.y = height;
+                    star.x = Math.random() * width;
+                }
+            });
 
-    function navigateToHome(e) {
-        if(e) e.preventDefault();
-        openCity(e, 'home');
-        // Visually update the navbar pill to home
-        $('#navbarSupportedContent ul li').removeClass("active");
-        $('#navbarSupportedContent ul li:first-child').addClass("active");
-        setTimeout(function(){ test(); }, 100);
-    }
-  </script>
+            requestAnimationFrame(animateStars);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        animateStars();
+
+        // 2. SCROLL REVEAL ANIMATION (Intersection Observer)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15 // Trigger when 15% of the element is visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Unobserve after revealing to keep it visible
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+    </script>
 </body>
 </html>
