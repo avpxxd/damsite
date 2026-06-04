@@ -461,6 +461,7 @@
             border-right: 3px solid white;
             width: 0;
             letter-spacing: 2px;
+            box-sizing: content-box; /* Prevent the cursor border from shrinking the text area */
         }
 
         /* Active Animations */
@@ -486,7 +487,7 @@
         }
         @keyframes typeWriter {
             from { width: 0; }
-            to { width: 25ch; }
+            to { width: calc(25ch + 50px); } /* Account for the 2px letter-spacing over 25 chars */
         }
         @keyframes blinkCursor {
             50% { border-color: transparent; }
