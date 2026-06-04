@@ -6,6 +6,7 @@
     <title>Damvan.ca</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="picon.png">
+    
     <style>
         /* CSS RESET & VARIABLES */
         :root {
@@ -351,7 +352,9 @@
         }
 
         footer {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 40px;
             color: var(--text-muted);
             border-top: 1px solid var(--metal-light);
@@ -359,6 +362,134 @@
             background: rgba(0,0,0,0.5);
             position: relative;
             z-index: 10;
+        }
+
+        /* AMONG US EJECT BUTTON & ANIMATION */
+        .eject-btn {
+            position: absolute;
+            right: 40px;
+            background: #c51111;
+            color: white;
+            border: 2px solid #ed1c24;
+            padding: 8px 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(197, 17, 17, 0.4);
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .eject-btn:hover {
+            background: #ed1c24;
+            box-shadow: 0 0 20px rgba(237, 28, 36, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* Eject Scene Container */
+        .eject-scene {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: none;
+            overflow: hidden;
+            pointer-events: none; /* Let animations run without blocking completely */
+        }
+        .eject-scene.active {
+            display: block;
+        }
+
+        /* Pure CSS Crewmate */
+        .crewmate-wrapper {
+            position: absolute;
+            top: 40%;
+            left: -20%; /* Start off-screen */
+            transform: translateY(-50%);
+        }
+
+        .crewmate {
+            position: relative;
+            width: 60px;
+            height: 80px;
+        }
+        .cm-backpack {
+            position: absolute; left: -15px; top: 15px; width: 25px; height: 45px;
+            background: #c51111; border: 4px solid #000; border-radius: 12px;
+        }
+        .cm-body {
+            position: absolute; left: 0; top: 0; width: 50px; height: 70px;
+            background: #ed1c24; border: 4px solid #000; border-radius: 25px 25px 0 0; z-index: 2;
+        }
+        .cm-leg {
+            position: absolute; bottom: -18px; width: 20px; height: 20px;
+            background: #ed1c24; border: 4px solid #000; border-top: none;
+        }
+        .cm-left-leg { left: -4px; border-radius: 0 0 10px 10px; }
+        .cm-right-leg { right: -4px; border-radius: 0 0 10px 10px; }
+        .cm-gap-cover {
+            position: absolute; bottom: -4px; left: 16px; width: 14px; height: 4px;
+            background: #000; z-index: 3;
+        }
+        .cm-visor {
+            position: absolute; right: -15px; top: 15px; width: 40px; height: 25px;
+            background: #99ccff; border: 4px solid #000; border-radius: 15px; z-index: 3;
+        }
+        .cm-highlight {
+            position: absolute; right: 5px; top: 4px; width: 20px; height: 8px;
+            background: #fff; border-radius: 10px; transform: rotate(-5deg);
+        }
+
+        /* Eject Typography */
+        .eject-text-container {
+            position: absolute;
+            top: 55%;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .eject-text {
+            font-family: 'Space Mono', monospace;
+            color: white;
+            font-size: 1.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid white;
+            width: 0;
+            letter-spacing: 2px;
+        }
+
+        /* Active Animations */
+        .eject-scene.active .crewmate-wrapper {
+            animation: floatAcross 7s linear forwards;
+        }
+        .eject-scene.active .crewmate {
+            animation: spinSlowly 7s linear forwards;
+        }
+        .eject-scene.active .eject-text {
+            /* 25ch matches "DRTC was not the imposter" */
+            animation: typeWriter 3s steps(25) 1.5s forwards, blinkCursor 0.5s step-end infinite;
+        }
+
+        /* Keyframes */
+        @keyframes floatAcross {
+            0% { left: -10%; top: 40%; }
+            100% { left: 110%; top: 45%; }
+        }
+        @keyframes spinSlowly {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(720deg); } /* Two full spins */
+        }
+        @keyframes typeWriter {
+            from { width: 0; }
+            to { width: 25ch; }
+        }
+        @keyframes blinkCursor {
+            50% { border-color: transparent; }
         }
 
         /* MOBILE RESPONSIVENESS */
@@ -436,6 +567,11 @@
             }
             .grid-3 {
                 grid-template-columns: 1fr; /* Force 1 column on mobile */
+            }
+
+            /* Hide Eject Button on Mobile */
+            .eject-btn {
+                display: none !important;
             }
         }
     </style>
@@ -680,7 +816,32 @@
 
     <footer>
         <p>MISSION CLOCK: &copy; 2026 DamVan | All sectors secure.</p>
+        
+        <!-- AMONG US EJECT BUTTON (Hidden on Mobile via CSS) -->
+        <button id="eject-btn" class="eject-btn">Eject</button>
     </footer>
+
+    <!-- AMONG US EJECT SCENE (Hidden until activated) -->
+    <div id="eject-scene" class="eject-scene">
+        <div class="crewmate-wrapper">
+            <!-- Pure CSS Crewmate -->
+            <div class="crewmate">
+                <div class="cm-backpack"></div>
+                <div class="cm-body">
+                    <div class="cm-visor">
+                        <div class="cm-highlight"></div>
+                    </div>
+                    <div class="cm-gap-cover"></div>
+                    <div class="cm-leg cm-left-leg"></div>
+                    <div class="cm-leg cm-right-leg"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="eject-text-container">
+            <div class="eject-text">DRTC was not the imposter</div>
+        </div>
+    </div>
 
     <!-- INTERACTIVE SCRIPTS -->
     <script>
@@ -779,6 +940,25 @@
             });
         });
 
+        // 4. AMONG US EJECT LOGIC
+        const ejectBtn = document.getElementById('eject-btn');
+        const ejectScene = document.getElementById('eject-scene');
+
+        if (ejectBtn && ejectScene) {
+            ejectBtn.addEventListener('click', () => {
+                // Activate the scene
+                ejectScene.classList.add('active');
+                
+                // Disable button so they don't spam it
+                ejectBtn.disabled = true;
+
+                // Remove the active class after the animation completes (~7.5 seconds)
+                setTimeout(() => {
+                    ejectScene.classList.remove('active');
+                    ejectBtn.disabled = false;
+                }, 7500);
+            });
+        }
     </script>
 </body>
 </html>
