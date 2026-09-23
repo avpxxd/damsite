@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grand Royale: Infinite Wheel</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --felt: #0a4d2a;
+            --felt-dark: #051f13;
+            --gold: #fcc200;
+            --gold-light: #ffd700;
+            --wood: #3d1f14;
+            --wood-light: #5a2d1a;
+            --chip-white: radial-gradient(circle at 30% 30%, #fff 0%, #e8e8e8 50%, #d0d0d0 100%);
+            --accent: #ff1744;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at 20% 50%, #1a1a2e, #0f0f1e);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Premium Header */
+        .header {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(252,194,0,0.1) 50%, rgba(0,0,0,0.95) 100%);
+            border-bottom: 3px solid var(--gold);
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            font-size: 1.6rem;
+            font-weight: 600;
+            z-index: 100;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(252,194,0,0.2);
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover .stat-val {
+            text-shadow: 0 0 30px rgba(252,194,0,0.8);
+            transform: scale(1.05);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-val { 
+            color: var(--gold); 
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            text-shadow: 0 0 20px rgba(252,194,0,0.4);
+            transition: all 0.3s;
+        }
+
+        /* Balance Editor Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 500;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(252,194,0,0.05));
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            text-align: center;
+            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h2 {
+            font-family: 'Cinzel', serif;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+        }
+
+        .modal-content input {
+            width: 200px;
+            padding: 12px;
+            font-size: 1.2rem;
+            border: 2px solid var(--gold);
+            background: rgba(252,194,0,0.1);
+            color: var(--gold);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(252,194,0,0.5);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+        }
+
+        .modal-btn.confirm {
+            background: linear-gradient(135deg, var(--gold), #ffd700);
+            color: #1a1a1a;
+        }
+
+        .modal-btn.confirm:hover {
+            box-shadow: 0 0 20px rgba(252,194,0,0.5);
+        }
+
+        .modal-btn.cancel {
+            background: #666;
+            color: white;
+        }
+
+        .modal-btn.cancel:hover {
+            background: #777;
+        }
+
+        /* 3D Perspective Viewport */
+        #viewport {
+            position: relative;
+            width: 100vw;
+            height: 85vh;
+            perspective: 1500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, rgba(252,194,0,0.02), transparent);
+        }
+
+        /* Roulette Table */
+        #table-container {
+            position: absolute;
+            transform: rotateX(32deg) translateY(60px);
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: linear-gradient(135deg, var(--felt) 0%, var(--felt-dark) 100%);
+            padding: 40px;
+            border: 20px solid var(--wood);
+            border-radius: 30px;
+            box-shadow: 
+                0 80px 120px rgba(0,0,0,0.9),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 60px rgba(0,0,0,0.7);
+            display: grid;
+            grid-template-columns: 90px repeat(12, 70px);
+            grid-template-rows: repeat(3, 70px) 80px;
+            gap: 5px;
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 35px, rgba(255,255,255,0.02) 35px, rgba(255,255,255,0.02) 40px),
+                linear-gradient(135deg, var(--felt) 0%, var(--felt-dark) 100%);
+        }
+
+        .cell {
+            border: 2px solid rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-weight: 700;
+            position: relative;
+            transition: all 0.15s;
+            border-radius: 8px;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            box-shadow: 
+                inset 0 1px 2px rgba(255,255,255,0.1),
+                0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .cell:hover {
+            transform: scale(1.08);
+            box-shadow: 
+                inset 0 1px 2px rgba(255,255,255,0.2),
+                0 0 15px rgba(252,194,0,0.4);
+            border-color: var(--gold);
+        }
+
+        .cell:active { 
+            transform: scale(0.92);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .zero { 
+            grid-row: 1 / span 3;
+            background: linear-gradient(135deg, #1b7a3a, #0d4620);
+            border-radius: 50px 0 0 50px;
+            border-left: 3px solid var(--gold);
+            font-size: 1.8rem;
+        }
+
+        .red { 
+            background: linear-gradient(135deg, #d32f2f, #b01a1a);
+            box-shadow: 
+                inset 0 1px 2px rgba(255,255,255,0.1),
+                0 4px 8px rgba(0,0,0,0.3),
+                0 0 20px rgba(211,47,47,0.3);
+        }
+
+        .black { 
+            background: linear-gradient(135deg, #2a2a2a, #0f0f0f);
+            box-shadow: 
+                inset 0 1px 2px rgba(255,255,255,0.1),
+                0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .outside { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            border: 2px dashed rgba(255,255,255,0.2);
+        }
+
+        /* Wheel Container */
+        #wheel-container {
+            position: absolute;
+            top: -120%;
+            transform: scale(0.05) rotateX(0deg);
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
+            filter: drop-shadow(0 40px 80px rgba(0,0,0,0.7));
+        }
+
+        #wheel-container.active {
+            top: 12%;
+            transform: scale(1) rotateX(8deg);
+            opacity: 1;
+        }
+
+        #wheel-svg {
+            width: 520px;
+            height: 520px;
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.8));
+        }
+
+        /* Light Bar Container */
+        #light-bar-container {
+            position: absolute;
+            width: 520px;
+            height: 520px;
+            top: 12%;
+            left: 50%;
+            margin-left: -260px;
+            z-index: 51;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #light-bar-container {
+            display: none !important;
+        }
+
+        #light-bar-container.active {
+            display: none !important;
+        }
+
+        /* Arrow Pointer */
+        #wheel-pointer {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 35px solid var(--gold);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            z-index: 52;
+        }
+
+        #light-bar {
+            position: absolute;
+            width: 40px;
+            height: 220px;
+            top: 0;
+            left: 50%;
+            margin-left: -20px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,235,59,0.7) 20%, rgba(255,235,59,1) 50%, rgba(255,235,59,0.7) 80%, transparent 100%);
+            box-shadow: 
+                0 0 40px rgba(255,235,59,1),
+                0 0 80px rgba(255,235,59,0.6),
+                inset 0 0 15px rgba(255,255,255,0.4);
+            border-radius: 20px;
+            filter: drop-shadow(0 0 20px rgba(255,235,59,0.9));
+            transform-origin: 20px 260px;
+        }
+
+        /* Chips */
+        .chip {
+            position: absolute;
+            width: 42px;
+            height: 42px;
+            background: var(--chip-white);
+            border: 4px ridge var(--gold);
+            border-radius: 50%;
+            color: #1a1a1a;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            box-shadow: 
+                0 6px 0 rgba(0,0,0,0.3),
+                0 8px 12px rgba(0,0,0,0.5),
+                inset -2px -2px 4px rgba(0,0,0,0.2);
+            pointer-events: none;
+            animation: dropChip 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            z-index: 40;
+        }
+
+        @keyframes dropChip {
+            0% { 
+                transform: scale(0) translateY(-30px);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.15) translateY(5px);
+            }
+            100% { 
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Controls */
+        .ui-tray {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 25px;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(252,194,0,0.05));
+            border-radius: 120px;
+            border: 2px solid var(--gold);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.7),
+                0 0 40px rgba(252,194,0,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            z-index: 100;
+            align-items: center;
+        }
+
+        .chip-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        #chip-val {
+            width: 80px;
+            background: rgba(252,194,0,0.1);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            text-align: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+
+        #chip-val:focus {
+            outline: none;
+            box-shadow: 
+                inset 0 2px 4px rgba(0,0,0,0.3),
+                0 0 15px rgba(252,194,0,0.4);
+            border-color: var(--gold-light);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold), #ffd700);
+            color: #1a1a1a;
+            border: none;
+            padding: 14px 40px;
+            font-weight: 900;
+            border-radius: 60px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 
+                0 10px 25px rgba(252,194,0,0.3),
+                0 0 20px rgba(252,194,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 15px 35px rgba(252,194,0,0.4),
+                0 0 30px rgba(252,194,0,0.2);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 5px 15px rgba(252,194,0,0.3),
+                inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .btn.clear {
+            background: linear-gradient(135deg, #666, #444);
+            box-shadow: 
+                0 10px 25px rgba(0,0,0,0.3),
+                0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .btn.clear:hover {
+            background: linear-gradient(135deg, #777, #555);
+            box-shadow: 
+                0 15px 35px rgba(0,0,0,0.4),
+                0 0 30px rgba(0,0,0,0.2);
+        }
+
+        /* Result Banner */
+        #result-banner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 12rem;
+            font-weight: 900;
+            color: var(--gold);
+            text-shadow: 
+                0 0 40px rgba(252,194,0,0.8),
+                0 0 80px rgba(252,194,0,0.4),
+                0 10px 30px rgba(0,0,0,0.8);
+            display: none;
+            z-index: 200;
+            font-family: 'Cinzel', serif;
+            letter-spacing: -3px;
+            animation: resultPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes resultPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotateZ(-20deg);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2) rotateZ(5deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotateZ(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Win Animation */
+        @keyframes winPulse {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 40px rgba(252,194,0,0.8),
+                    0 0 80px rgba(252,194,0,0.4);
+            }
+            50% { 
+                text-shadow: 
+                    0 0 60px rgba(252,194,0,1),
+                    0 0 120px rgba(252,194,0,0.6),
+                    0 0 180px rgba(252,194,0,0.2);
+            }
+        }
+
+        #result-banner.winning {
+            animation: resultPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), winPulse 0.6s ease-in-out infinite;
+        }
+
+        /* Confetti Particles */
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotateZ(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="stat-box" onclick="openBalanceModal()">
+            <div class="stat-label">Bank</div>
+            <div class="stat-val" id="balance">$1000</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Total Stake</div>
+            <div class="stat-val" id="total-bet">$0</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Spins</div>
+            <div class="stat-val" id="spin-count">0</div>
+        </div>
+    </div>
+
+    <div id="viewport">
+        <div id="table-container">
+            <div class="cell zero" onclick="placeBet('0')">0</div>
+        </div>
+
+        <div id="wheel-container">
+            <div id="wheel-pointer"></div>
+            <svg id="wheel-svg" viewBox="0 0 500 500"></svg>
+        </div>
+
+        <div id="light-bar-container">
+            <div id="light-bar"></div>
+        </div>
+        
+        <div id="result-banner">0</div>
+    </div>
+
+    <div class="ui-tray">
+        <div class="chip-control">
+            <span style="text-transform: uppercase;">Chip Value:</span>
+            <input type="number" id="chip-val" value="25" step="25">
+        </div>
+        <button class="btn" onclick="spin()">🎡 Spin Wheel</button>
+        <button class="btn clear" onclick="clearBets()">Clear Bets</button>
+    </div>
+
+    <!-- Balance Editor Modal -->
+    <div id="balanceModal" class="modal">
+        <div class="modal-content">
+            <h2>Set Bank Balance</h2>
+            <input type="number" id="balanceInput" placeholder="Enter amount" min="0">
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" onclick="confirmBalance()">Confirm</button>
+                <button class="modal-btn cancel" onclick="closeBalanceModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    let bank = 1000;
+    let displayedBank = 1000;
+    let currentBets = {};
+    let spinCount = 0;
+    const wheelNums = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+    const reds = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+    let isSpinning = false;
+    const angleStep = 360 / 37;
+
+    // --- Balance Modal Functions ---
+    function openBalanceModal() {
+        document.getElementById('balanceModal').classList.add('active');
+        document.getElementById('balanceInput').value = bank;
+        document.getElementById('balanceInput').focus();
+    }
+
+    function closeBalanceModal() {
+        document.getElementById('balanceModal').classList.remove('active');
+    }
+
+    function confirmBalance() {
+        const newBalance = parseInt(document.getElementById('balanceInput').value);
+        if (newBalance >= 0) {
+            bank = newBalance;
+            displayedBank = bank;
+            animateBalance();
+            closeBalanceModal();
+        }
+    }
+
+    document.getElementById('balanceInput')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') confirmBalance();
+        if (e.key === 'Escape') closeBalanceModal();
+    });
+
+    // --- Initialize Table ---
+    const table = document.getElementById('table-container');
+    for (let i = 1; i <= 36; i++) {
+        const row = 3 - ((i - 1) % 3);
+        const col = Math.floor((i - 1) / 3) + 2;
+        const div = document.createElement('div');
+        div.className = `cell ${reds.includes(i) ? 'red' : 'black'}`;
+        div.style.gridRow = row;
+        div.style.gridColumn = col;
+        div.innerText = i;
+        div.onclick = () => placeBet(i.toString());
+        table.appendChild(div);
+    }
+
+    // Add color bets
+    [['Red', 'red', 4, '2/span 6', 'linear-gradient(135deg, #d32f2f, #b01a1a)'], 
+     ['Black', 'black', 4, '8/span 6', 'linear-gradient(135deg, #2a2a2a, #0f0f0f)']].forEach(b => {
+        const div = document.createElement('div');
+        div.className = 'cell outside';
+        div.style.gridRow = b[2];
+        div.style.gridColumn = b[3];
+        div.style.background = b[4];
+        div.innerText = b[0];
+        div.onclick = () => placeBet(b[1]);
+        table.appendChild(div);
+    });
+
+    // --- Draw Fancy SVG Wheel ---
+    const svg = document.getElementById('wheel-svg');
+    wheelNums.forEach((num, i) => {
+        const angle = i * angleStep;
+        let color = '#27ae60';
+        if (num !== 0) color = reds.includes(num) ? '#d32f2f' : '#1a1a1a';
+        
+        const slice = `
+            <defs>
+                <radialGradient id="grad${i}">
+                    <stop offset="0%" style="stop-color:${color};stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:${color};stop-opacity:0.8" />
+                </radialGradient>
+            </defs>
+            <path d="M 250,250 L ${250 + 240 * Math.cos(Math.PI * (angle - angleStep/2 - 90)/180)},${250 + 240 * Math.sin(Math.PI * (angle - angleStep/2 - 90)/180)} 
+                     A 240,240 0 0,1 ${250 + 240 * Math.cos(Math.PI * (angle + angleStep/2 - 90)/180)},${250 + 240 * Math.sin(Math.PI * (angle + angleStep/2 - 90)/180)} Z" 
+                  fill="url(#grad${i})" stroke="#111" stroke-width="2"/>
+            <text x="250" y="35" transform="rotate(${angle}, 250, 250)" 
+                  fill="white" font-size="18" font-weight="bold" text-anchor="middle" font-family="Cinzel, serif">${num}</text>
+        `;
+        svg.innerHTML += slice;
+    });
+
+    // Center cap
+    svg.innerHTML += `
+        <defs>
+            <radialGradient id="capGrad">
+                <stop offset="0%" style="stop-color:#5a2d1a;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#2d1709;stop-opacity:1" />
+            </radialGradient>
+            <filter id="capShadow">
+                <feDropShadow dx="0" dy="4" stdDeviation="3" flood-opacity="0.4"/>
+            </filter>
+        </defs>
+        <circle cx="250" cy="250" r="45" fill="url(#capGrad)" stroke="#fcc200" stroke-width="4" filter="url(#capShadow)"/>
+        <circle cx="250" cy="250" r="28" fill="#1a1a1a" opacity="0.3"/>
+    `;
+
+    // --- Game Logic ---
+    function placeBet(id) {
+        if (isSpinning) return;
+        const val = parseInt(document.getElementById('chip-val').value);
+        if (bank < val) {
+            alert('Insufficient funds!');
+            return;
+        }
+
+        bank -= val;
+        currentBets[id] = (currentBets[id] || 0) + val;
+        animateBalance();
+        renderChips();
+    }
+
+    function animateBalance() {
+        if (displayedBank === bank) return;
+        const step = (bank - displayedBank) > 0 ? 5 : -5;
+        displayedBank += step;
+        if (Math.abs(bank - displayedBank) < 5) displayedBank = bank;
+        document.getElementById('balance').innerText = `$${displayedBank}`;
+        document.getElementById('total-bet').innerText = `$${Object.values(currentBets).reduce((a,b)=>a+b, 0)}`;
+        requestAnimationFrame(animateBalance);
+    }
+
+    function renderChips() {
+        document.querySelectorAll('.chip').forEach(c => c.remove());
+        for (let id in currentBets) {
+            const cells = Array.from(document.querySelectorAll('.cell'));
+            const target = cells.find(c => c.innerText.toLowerCase() === id.toLowerCase());
+            if (target) {
+                const chip = document.createElement('div');
+                chip.className = 'chip';
+                chip.innerText = currentBets[id];
+                target.appendChild(chip);
+            }
+        }
+    }
+
+    function clearBets() {
+        if (isSpinning) return;
+        bank += Object.values(currentBets).reduce((a,b)=>a+b, 0);
+        currentBets = {};
+        animateBalance();
+        renderChips();
+    }
+
+    let wheelRotation = 0;
+    let currentLightBarRotation = 0;
+    
+    // Perfectly synced light bar animation
+    function animateLightBarSweep(winIdx) {
+        const lightBar = document.getElementById('light-bar');
+        const wheel = document.getElementById('wheel-svg');
+        const startTime = Date.now();
+        const duration = 6000; // Match wheel spin duration
+        const extraSpins = 12; // Match wheel spins
+        const targetAngle = (360 - (winIdx * angleStep)); // Match wheel target
+
+        function animate() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Cubic ease-out deceleration (matches wheel cubic-bezier(0.05, 0.3, 0.15, 1))
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+            
+            // Calculate exact rotation matching wheel
+            const fullRotation = (extraSpins * 360) + targetAngle;
+            const currentAngle = fullRotation * easeProgress;
+            
+            // Update light bar rotation
+            currentLightBarRotation = currentAngle;
+            lightBar.style.transform = `rotate(${currentAngle}deg)`;
+            
+            // Dynamic glow fade as it slows
+            const glowOpacity = Math.max(0.4, 1 - (progress * 0.6));
+            const glowIntensity = Math.max(20, 80 * (1 - progress * 0.75));
+            lightBar.style.boxShadow = `
+                0 0 ${glowIntensity}px rgba(255,235,59,${glowOpacity}),
+                0 0 ${glowIntensity * 2}px rgba(255,235,59,${glowOpacity * 0.6}),
+                inset 0 0 15px rgba(255,255,255,0.4)`;
+            
+            // Snap to slice at end (pixel-aligned snapping)
+            if (progress > 0.85) {
+                const sliceAngle = Math.round(currentAngle / angleStep) * angleStep;
+                lightBar.style.transform = `rotate(${sliceAngle}deg)`;
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        animate();
+    }
+
+    function createConfetti() {
+        const colors = ['#fcc200', '#ffd700', '#ff1744', '#d32f2f'];
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.top = '50%';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.width = Math.random() * 10 + 5 + 'px';
+            confetti.style.height = confetti.style.width;
+            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            confetti.style.animation = `confetti-fall ${2 + Math.random() * 2}s ease-out forwards`;
+            confetti.style.transform = `translateX(${(Math.random() - 0.5) * 200}px) rotateZ(${Math.random() * 360}deg)`;
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 4000);
+        }
+    }
+
+    function spin() {
+        if (isSpinning || Object.keys(currentBets).length === 0) return;
+        isSpinning = true;
+        spinCount++;
+        document.getElementById('spin-count').innerText = spinCount;
+
+        const winIdx = Math.floor(Math.random() * 37);
+        const winNum = wheelNums[winIdx];
+        
+        // Transition to wheel
+        document.getElementById('table-container').style.opacity = '0';
+        document.getElementById('table-container').style.transform = 'rotateX(35deg) translateY(500px)';
+        document.getElementById('wheel-container').classList.add('active');
+        document.getElementById('light-bar-container').classList.add('active');
+
+        // Calculate exact rotation to land winning number under arrow (at top)
+        // Arrow points at 0deg, so we need to rotate wheel so winIdx is at 0deg
+        const extraSpins = 360 * 12;
+        const targetAngle = winIdx * angleStep;
+        wheelRotation += extraSpins + targetAngle;
+        
+        // 6 second spin with matching easing
+        document.getElementById('wheel-svg').style.transition = 'transform 6s cubic-bezier(0.05, 0.3, 0.15, 1)';
+        document.getElementById('wheel-svg').style.transform = `rotate(${wheelRotation}deg)`;
+
+        // Start light bar sweep
+        animateLightBarSweep(winIdx);
+
+        setTimeout(() => {
+            const banner = document.getElementById('result-banner');
+            banner.innerText = winNum;
+            banner.style.display = 'block';
+            
+            // Calculate winnings
+            let won = 0;
+            let isWinner = false;
+
+            for (let id in currentBets) {
+                if (id == winNum) {
+                    won += currentBets[id] * 36;
+                    isWinner = true;
+                }
+                if (id == 'red' && reds.includes(winNum)) {
+                    won += currentBets[id] * 2;
+                    isWinner = true;
+                }
+                if (id == 'black' && !reds.includes(winNum) && winNum !== 0) {
+                    won += currentBets[id] * 2;
+                    isWinner = true;
+                }
+            }
+
+            bank += won;
+
+            if (isWinner) {
+                banner.classList.add('winning');
+                createConfetti();
+            }
+
+            setTimeout(() => {
+                banner.style.display = 'none';
+                banner.classList.remove('winning');
+                document.getElementById('table-container').style.opacity = '1';
+                document.getElementById('table-container').style.transform = 'rotateX(32deg) translateY(60px)';
+                document.getElementById('wheel-container').classList.remove('active');
+                document.getElementById('light-bar-container').classList.remove('active');
+                isSpinning = false;
+                currentBets = {};
+                animateBalance();
+                renderChips();
+            }, 3500);
+        }, 6500);
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+            e.preventDefault();
+            spin();
+        }
+    });
+</script>
+</body>
+</html>

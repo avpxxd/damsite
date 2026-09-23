@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>BeatNinja+: Custom Rhythm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; overflow: hidden; touch-action: none; background: #111827; }
+        canvas { display: block; width: 100%; height: 100%; }
+        
+        /* Custom styles for progress bar */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: #06b6d4; cursor: pointer; border: 2px solid white;
+        }
+        
+        .menu-card {
+            background: rgba(31, 41, 55, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .diff-btn { transition: all 0.2s; }
+        .diff-btn.active { transform: scale(1.1); border-color: #22d3ee; box-shadow: 0 0 15px rgba(34, 211, 238, 0.5); }
+        
+        .hud-text { text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        
+        @keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+        .grade-pop { animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        /* Toggle Switch CSS */
+        input:checked + .toggle-bg { background-color: #06b6d4; }
+        input:checked + .toggle-bg::after { transform: translateX(26px); }
+        .toggle-bg::after { content: ''; position: absolute; top: 2px; left: 2px; width: 28px; height: 28px; background: white; border-radius: 50%; transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); }
+    </style>
+</head>
+<body class="text-white select-none m-0 p-0 w-full h-full">
+
+    <div id="game-container" class="relative w-full h-screen overflow-hidden">
+        <canvas id="gameCanvas" class="absolute inset-0 z-0"></canvas>
+
+        <!-- HUD -->
+        <div id="hud" class="absolute top-0 left-0 right-0 p-4 sm:p-6 flex flex-col items-center pointer-events-none hidden z-10">
+            <div id="lifeBarContainer" class="w-full max-w-xs md:max-w-sm h-3 flex gap-1.5 mb-3">
+                <div class="life-segment h-full w-1/4 rounded bg-green-500 transition-colors" id="life-1"></div>
+                <div class="life-segment h-full w-1/4 rounded bg-green-500 transition-colors" id="life-2"></div>
+                <div class="life-segment h-full w-1/4 rounded bg-green-500 transition-colors" id="life-3"></div>
+                <div class="life-segment h-full w-1/4 rounded bg-green-500 transition-colors" id="life-4"></div>
+            </div>
+
+            <div class="w-full flex justify-between items-center text-3xl sm:text-4xl font-bold">
+                <div class="w-1/3 text-left">
+                    <button id="pauseButton" class="w-12 h-12 rounded-full bg-gray-800 bg-opacity-80 flex items-center justify-center transition-transform transform hover:scale-110 pointer-events-auto border border-gray-600">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                </div>
+                <div class="w-1/3 text-center hud-text text-cyan-400 text-5xl">
+                    <span id="score">0</span>
+                </div>
+                <div class="w-1/3 text-right hud-text flex flex-col items-end">
+                     <span id="multiplier" class="text-2xl sm:text-3xl font-bold text-yellow-400">1x</span>
+                     <span id="accuracyHud" class="text-lg text-gray-300">100%</span>
+                </div>
+            </div>
+            
+            <!-- Combo popup text -->
+            <div id="comboText" class="absolute top-32 text-4xl font-black text-yellow-300 opacity-0 transition-opacity duration-200 pointer-events-none"></div>
+        </div>
+
+        <!-- 1. START MENU -->
+        <div id="startMenu" class="absolute inset-0 flex justify-center items-center z-20">
+            <div class="menu-card p-8 sm:p-12 text-center rounded-2xl w-11/12 max-w-2xl">
+                <h1 class="text-6xl sm:text-8xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">BeatNinja</h1>
+                <p class="text-xl mb-8 text-gray-300 font-semibold tracking-wider">Custom Rhythm Edition</p>
+                
+                <p class="text-md sm:text-lg mb-6 text-gray-400">Slice the blocks in the correct direction matching the beat. The closer to the middle, the better! Avoid bombs!</p>
+                
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-gray-300 mb-3 uppercase tracking-widest">Select Difficulty</h3>
+                    <div class="flex justify-center gap-4">
+                        <button class="diff-btn active border-2 border-transparent bg-green-900/50 hover:bg-green-800 text-green-400 font-bold py-2 px-6 rounded-lg" data-diff="easy">Easy</button>
+                        <button class="diff-btn border-2 border-transparent bg-yellow-900/50 hover:bg-yellow-800 text-yellow-400 font-bold py-2 px-6 rounded-lg" data-diff="medium">Medium</button>
+                        <button class="diff-btn border-2 border-transparent bg-red-900/50 hover:bg-red-800 text-red-400 font-bold py-2 px-6 rounded-lg" data-diff="hard">Hard</button>
+                    </div>
+                </div>
+
+                <!-- Auto-Slice Toggle in Main Menu -->
+                <div class="flex items-center justify-center gap-4 mb-8">
+                    <label for="autoSliceMenu" class="text-lg text-gray-300 font-bold uppercase tracking-wide" title="Hover to slice without clicking">Hover-Slice Mode</label>
+                    <div class="relative w-14 h-8">
+                        <input type="checkbox" id="autoSliceMenu" class="hidden"/>
+                        <label for="autoSliceMenu" class="toggle-bg block w-14 h-8 rounded-full bg-gray-600 cursor-pointer absolute inset-0"></label>
+                    </div>
+                </div>
+
+                <button id="btnGotoCalibrate" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black py-4 px-8 rounded-full text-2xl transition-transform transform hover:scale-105 shadow-[0_0_20px_rgba(34,211,238,0.4)]">
+                    Load Custom Song
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. CALIBRATION MENU -->
+        <div id="calibrationMenu" class="absolute inset-0 hidden items-center justify-center p-4 z-30 bg-gray-900 bg-opacity-95">
+            <div class="menu-card p-8 md:p-12 rounded-xl shadow-2xl max-w-3xl w-full border-4 border-cyan-900 relative">
+                <p class="text-center text-cyan-400 font-bold text-lg mb-8 uppercase tracking-wider">The numbers should align with the beats of your song.</p>
+
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-12 gap-4">
+                    <div class="relative group w-full sm:w-auto">
+                        <input type="file" id="fileUpload" accept="audio/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                        <button class="w-full bg-gray-800 flex items-center justify-center gap-2 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg border-2 border-gray-600 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                            <span id="uploadText">Select MP3...</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-black text-white px-8 py-3 rounded-lg border-2 border-gray-700 shadow-inner text-center w-full sm:w-auto">
+                        <div class="text-sm text-gray-400 font-bold uppercase tracking-wider">Tempo</div>
+                        <div class="text-4xl font-black text-cyan-400"><span id="bpmDisplay">120</span> <span class="text-xl font-bold text-gray-500">BPM</span></div>
+                    </div>
+                </div>
+
+                <!-- Metronome Visualizer -->
+                <div class="flex justify-center items-center gap-4 sm:gap-8 mb-16 h-32" id="circlesContainer"></div>
+
+                <!-- Progress Bar -->
+                <div class="flex items-center gap-4 mb-16">
+                    <span id="calibCurrentTime" class="text-gray-400 font-bold font-mono w-12 text-right">0:00</span>
+                    <div class="flex-1 relative flex items-center">
+                        <input type="range" id="calibProgress" min="0" max="100" value="0" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer z-10" style="background: linear-gradient(to right, #06b6d4 0%, #374151 0%);" />
+                    </div>
+                    <span id="calibDuration" class="text-gray-400 font-bold font-mono w-12">0:00</span>
+                </div>
+
+                <div class="flex justify-between items-center px-4">
+                    <button id="btnSlower" class="group flex flex-col items-center gap-2 active:transform active:scale-95 transition-transform cursor-pointer">
+                        <div class="w-0 h-0 border-t-[20px] border-t-transparent border-r-[35px] border-r-gray-400 border-b-[20px] border-b-transparent group-hover:border-r-cyan-400 transition-colors"></div>
+                        <span class="text-gray-300 font-bold uppercase text-sm mt-2">Slower</span>
+                    </button>
+
+                    <div class="flex items-center justify-center gap-4 relative">
+                        <button id="btnResetCalib" class="absolute -left-16 sm:-left-20 w-12 h-12 rounded-full flex items-center justify-center border-2 border-gray-600 bg-gray-800 text-white hover:bg-gray-700 hover:scale-105 transition-all shadow-md active:scale-95" title="Restart Track">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v6h6"></path><path d="M3 13a9 9 0 1 0 3-7.7L3 8"></path></svg>
+                        </button>
+
+                        <button id="btnPlayPauseCalib" class="w-20 h-20 rounded-full flex items-center justify-center border-4 shadow-xl transition-all bg-green-500 border-green-700 text-white hover:bg-green-400 hover:scale-105">
+                            <svg id="iconPlay" class="w-10 h-10 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg>
+                            <svg id="iconPause" class="w-10 h-10 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+                        </button>
+                    </div>
+
+                    <button id="btnFaster" class="group flex flex-col items-center gap-2 active:transform active:scale-95 transition-transform cursor-pointer">
+                        <div class="w-0 h-0 border-t-[20px] border-t-transparent border-l-[35px] border-l-gray-400 border-b-[20px] border-b-transparent group-hover:border-l-cyan-400 transition-colors"></div>
+                        <span class="text-gray-300 font-bold uppercase text-sm mt-2">Faster</span>
+                    </button>
+                </div>
+
+                <div class="absolute -bottom-6 right-8">
+                    <button id="btnFinishCalib" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-black uppercase tracking-widest py-3 px-8 rounded-full border-4 border-gray-900 shadow-[0_10px_20px_rgba(6,182,212,0.5)] hover:translate-y-1 transition-all opacity-50 cursor-not-allowed" disabled>
+                        Start Level
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. PAUSE MENU -->
+        <div id="pauseMenu" class="absolute inset-0 hidden flex-col justify-center items-center bg-black bg-opacity-80 z-40">
+            <div class="menu-card p-8 sm:p-12 text-center rounded-2xl w-11/12 max-w-lg">
+                <h1 class="text-5xl sm:text-7xl font-black mb-8 text-cyan-400 tracking-wider">Paused</h1>
+                <div class="flex flex-col gap-4 justify-center mb-8">
+                    <button id="resumeButton" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold py-4 px-8 rounded-full text-2xl transition-transform transform hover:scale-105">
+                        Resume
+                    </button>
+                    <button id="quitButton" class="bg-gray-700 hover:bg-red-600 text-white font-bold py-4 px-8 rounded-full text-2xl transition-transform transform hover:scale-105">
+                        Quit to Menu
+                    </button>
+                </div>
+
+                <!-- Auto-Slice Toggle in Pause Menu -->
+                <div class="flex items-center justify-center gap-4 mb-8">
+                    <label for="autoSlicePause" class="text-lg text-gray-300 font-bold uppercase tracking-wide">Hover-Slice</label>
+                    <div class="relative w-14 h-8">
+                        <input type="checkbox" id="autoSlicePause" class="hidden"/>
+                        <label for="autoSlicePause" class="toggle-bg block w-14 h-8 rounded-full bg-gray-600 cursor-pointer absolute inset-0"></label>
+                    </div>
+                </div>
+
+                <!-- Volume Slider -->
+                <div class="flex items-center gap-4 justify-center">
+                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                    <input id="volumeSlider" type="range" min="0" max="100" value="50" class="w-48 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+        </div>
+        
+        <!-- 4. RESULTS MENU -->
+        <div id="resultsMenu" class="absolute inset-0 hidden flex-col justify-center items-center bg-black bg-opacity-90 z-50">
+            <div class="menu-card p-8 sm:p-12 text-center rounded-2xl w-11/12 max-w-2xl relative overflow-hidden">
+                <h1 id="resultsTitle" class="text-5xl sm:text-6xl font-black mb-2 text-cyan-400">Level Cleared!</h1>
+                
+                <div class="flex flex-col md:flex-row justify-between items-center mt-8 mb-8 gap-8">
+                    <div class="flex-1 flex flex-col items-center justify-center border-r border-gray-700 pr-0 md:pr-8">
+                        <p class="text-gray-400 uppercase tracking-widest font-bold mb-2">Final Grade</p>
+                        <div id="finalGrade" class="text-8xl md:text-9xl font-black text-yellow-400 drop-shadow-[0_0_20px_rgba(250,204,21,0.6)] grade-pop">S</div>
+                    </div>
+                    
+                    <div class="flex-1 flex flex-col gap-4 text-left w-full">
+                        <div class="flex justify-between items-end border-b border-gray-700 pb-2">
+                            <span class="text-gray-400 uppercase font-bold">Score</span>
+                            <span id="finalScoreDisplay" class="text-3xl font-black text-white">0</span>
+                        </div>
+                        <div class="flex justify-between items-end border-b border-gray-700 pb-2">
+                            <span class="text-gray-400 uppercase font-bold">Accuracy</span>
+                            <span id="finalAccuracyDisplay" class="text-2xl font-black text-white">100%</span>
+                        </div>
+                        <div class="flex justify-between items-end pb-2">
+                            <span class="text-green-400 uppercase font-bold text-sm">Perfects</span>
+                            <span id="statPerfect" class="font-bold text-white">0</span>
+                        </div>
+                        <div class="flex justify-between items-end pb-2">
+                            <span class="text-yellow-400 uppercase font-bold text-sm">Goods</span>
+                            <span id="statGood" class="font-bold text-white">0</span>
+                        </div>
+                        <div class="flex justify-between items-end pb-2">
+                            <span class="text-red-400 uppercase font-bold text-sm">Misses</span>
+                            <span id="statMiss" class="font-bold text-white">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="resultsMenuBtn" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold py-4 px-12 rounded-full text-2xl transition-transform transform hover:scale-105 shadow-[0_0_20px_rgba(6,182,212,0.4)] w-full">
+                    Return to Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Audio Player to ensure no invisible control blocking occurs -->
+    <audio id="audioPlayer" style="display: none;"></audio>
+
+    <script>
+        // ==========================================
+        // STATE & VARIABLES
+        // ==========================================
+        const STATES = { MENU: 0, CALIBRATE: 1, PLAYING: 2, PAUSED: 3, RESULTS: 4 };
+        let currentState = STATES.MENU;
+        
+        let difficulty = 'easy';
+        let diffConfig = {
+            easy: { spawnIntervalBeats: 2, speedMultiplier: 1, maxBombs: 0.1 },
+            medium: { spawnIntervalBeats: 1, speedMultiplier: 1.5, maxBombs: 0.2 },
+            hard: { spawnIntervalBeats: 0.5, speedMultiplier: 2.2, maxBombs: 0.3 }
+        };
+
+        // Audio & Rhythm
+        let audioContext = null;
+        let audioPlayer = document.getElementById('audioPlayer');
+        let bpm = 120;
+        let audioLoaded = false;
+        let songDuration = 0;
+        
+        // Lead-In Audio Sync Engine
+        let gameStartContextTime = 0;
+        let audioStarted = false;
+        let currentVirtualTime = 0;
+
+        // Game Engine Variables
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationFrameId = null;
+        let lastFrameTime = 0;
+        let autoSliceEnabled = false;
+        
+        // Entities
+        let blocks = [];
+        let particles = [];
+        let sliceTrail = [];
+        let isSlicing = false;
+
+        // Player Stats
+        const MAX_LIVES = 4;
+        let lives = MAX_LIVES;
+        let score = 0;
+        let combo = 0;
+        let multiplier = 1;
+        let stats = { perfect: 0, good: 0, miss: 0, total: 0 };
+        
+        // Hit Zone Math
+        let hitZoneY = 0; 
+        let travelTimeSeconds = 2.0;
+
+        // Input Tracking
+        let touchPaths = new Map();
+
+        // ==========================================
+        // DOM ELEMENTS
+        // ==========================================
+        const views = {
+            hud: document.getElementById('hud'),
+            start: document.getElementById('startMenu'),
+            calibrate: document.getElementById('calibrationMenu'),
+            pause: document.getElementById('pauseMenu'),
+            results: document.getElementById('resultsMenu')
+        };
+        
+        const ui = {
+            diffBtns: document.querySelectorAll('.diff-btn'),
+            btnGotoCalibrate: document.getElementById('btnGotoCalibrate'),
+            fileUpload: document.getElementById('fileUpload'),
+            uploadText: document.getElementById('uploadText'),
+            bpmDisplay: document.getElementById('bpmDisplay'),
+            btnSlower: document.getElementById('btnSlower'),
+            btnFaster: document.getElementById('btnFaster'),
+            btnPlayPauseCalib: document.getElementById('btnPlayPauseCalib'),
+            btnResetCalib: document.getElementById('btnResetCalib'),
+            btnFinishCalib: document.getElementById('btnFinishCalib'),
+            calibProgress: document.getElementById('calibProgress'),
+            calibCurrentTime: document.getElementById('calibCurrentTime'),
+            calibDuration: document.getElementById('calibDuration'),
+            iconPlay: document.getElementById('iconPlay'),
+            iconPause: document.getElementById('iconPause'),
+            score: document.getElementById('score'),
+            multiplier: document.getElementById('multiplier'),
+            accuracyHud: document.getElementById('accuracyHud'),
+            comboText: document.getElementById('comboText'),
+            pauseButton: document.getElementById('pauseButton'),
+            resumeButton: document.getElementById('resumeButton'),
+            quitButton: document.getElementById('quitButton'),
+            resultsMenuBtn: document.getElementById('resultsMenuBtn'),
+            finalGrade: document.getElementById('finalGrade'),
+            finalScoreDisplay: document.getElementById('finalScoreDisplay'),
+            finalAccuracyDisplay: document.getElementById('finalAccuracyDisplay'),
+            statPerfect: document.getElementById('statPerfect'),
+            statGood: document.getElementById('statGood'),
+            statMiss: document.getElementById('statMiss'),
+            resultsTitle: document.getElementById('resultsTitle'),
+            autoSliceMenu: document.getElementById('autoSliceMenu'),
+            autoSlicePause: document.getElementById('autoSlicePause'),
+            volumeSlider: document.getElementById('volumeSlider')
+        };
+
+        // ==========================================
+        // INITIALIZATION & RESIZING
+        // ==========================================
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            hitZoneY = canvas.height / 2; // Hit line is now precisely in the middle of the screen
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function switchState(newState) {
+            currentState = newState;
+            Object.values(views).forEach(v => {
+                v.classList.add('hidden');
+                v.style.display = ''; // Clear inline flex
+            });
+            
+            if (newState === STATES.MENU) views.start.classList.remove('hidden');
+            else if (newState === STATES.CALIBRATE) views.calibrate.classList.remove('hidden', 'flex'); 
+            else if (newState === STATES.PLAYING) views.hud.classList.remove('hidden');
+            else if (newState === STATES.PAUSED) { views.hud.classList.remove('hidden'); views.pause.classList.remove('hidden'); views.pause.classList.add('flex'); }
+            else if (newState === STATES.RESULTS) views.results.classList.remove('hidden', 'flex');
+            
+            if(newState === STATES.CALIBRATE) views.calibrate.style.display = 'flex';
+            if(newState === STATES.RESULTS) views.results.style.display = 'flex';
+        }
+
+        // ==========================================
+        // START MENU & GLOBAL INPUTS
+        // ==========================================
+        ui.diffBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                ui.diffBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                difficulty = e.target.getAttribute('data-diff');
+            });
+        });
+
+        ui.btnGotoCalibrate.addEventListener('click', () => {
+            switchState(STATES.CALIBRATE);
+            initCalibCircles();
+        });
+
+        // Toggle Sync
+        ui.autoSliceMenu.addEventListener('change', (e) => {
+            autoSliceEnabled = e.target.checked;
+            ui.autoSlicePause.checked = autoSliceEnabled;
+        });
+        ui.autoSlicePause.addEventListener('change', (e) => {
+            autoSliceEnabled = e.target.checked;
+            ui.autoSliceMenu.checked = autoSliceEnabled;
+        });
+
+        // Volume Logic
+        ui.volumeSlider.addEventListener('input', (e) => {
+            audioPlayer.volume = e.target.value / 100;
+        });
+        audioPlayer.volume = ui.volumeSlider.value / 100;
+
+        // Escape to Pause/Resume
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (currentState === STATES.PLAYING) ui.pauseButton.click();
+                else if (currentState === STATES.PAUSED) ui.resumeButton.click();
+            }
+        });
+
+        // ==========================================
+        // CALIBRATION LOGIC (Metronome + Upload)
+        // ==========================================
+        let calibIsPlaying = false;
+        let calibBeatIndex = -1;
+        let calibTimeoutId = null;
+        let calibNextNoteTime = 0;
+        let calibQuarterNote = 0;
+
+        function initCalibCircles() {
+            const container = document.getElementById('circlesContainer');
+            container.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                const circle = document.createElement('div');
+                circle.id = `circle-${i}`;
+                circle.className = 'flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 rounded-full border-[4px] text-2xl sm:text-4xl font-black transition-all duration-[50ms] ease-out border-gray-500 text-gray-500';
+                circle.textContent = i + 1;
+                container.appendChild(circle);
+            }
+        }
+
+        ui.fileUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                audioPlayer.src = url;
+                ui.uploadText.textContent = file.name.substring(0, 20) + (file.name.length > 20 ? '...' : '');
+                
+                audioPlayer.onloadedmetadata = () => {
+                    audioLoaded = true;
+                    songDuration = audioPlayer.duration;
+                    ui.calibDuration.textContent = formatTime(songDuration);
+                    ui.calibProgress.max = songDuration;
+                    
+                    ui.btnFinishCalib.classList.remove('opacity-50', 'cursor-not-allowed');
+                    ui.btnFinishCalib.disabled = false;
+                };
+            }
+        });
+
+        function scheduleCalibNote(beatNumber, time) {
+            if (!audioContext) return;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.frequency.value = (beatNumber === 3) ? 880 : 440;
+            osc.start(time);
+            osc.stop(time + 0.1);
+            gain.gain.setValueAtTime(1, time);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+
+            const timeToWait = (time - audioContext.currentTime) * 1000;
+            setTimeout(() => {
+                if (calibIsPlaying) {
+                    for (let i = 0; i < 4; i++) {
+                        const circle = document.getElementById(`circle-${i}`);
+                        if (i === beatNumber) {
+                            circle.className = 'flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 rounded-full border-[4px] text-2xl sm:text-4xl font-black transition-all duration-[50ms] ease-out border-cyan-400 text-cyan-400 transform -translate-y-4 scale-110 shadow-[0_10px_20px_rgba(6,182,212,0.4)]';
+                        } else {
+                            circle.className = 'flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 rounded-full border-[4px] text-2xl sm:text-4xl font-black transition-all duration-[50ms] ease-out border-gray-500 text-gray-500';
+                        }
+                    }
+                }
+            }, Math.max(0, timeToWait));
+        }
+
+        function calibScheduler() {
+            if (!calibIsPlaying || !audioContext) return;
+            const secondsPerBeat = 60.0 / bpm;
+            while (calibNextNoteTime < audioContext.currentTime + 0.1) {
+                scheduleCalibNote(calibQuarterNote, calibNextNoteTime);
+                calibNextNoteTime += secondsPerBeat;
+                calibQuarterNote = (calibQuarterNote + 1) % 4;
+            }
+            calibTimeoutId = setTimeout(calibScheduler, 25);
+        }
+
+        function toggleCalibPlay() {
+            if(!audioLoaded) return;
+            calibIsPlaying = !calibIsPlaying;
+            
+            if(!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            if (calibIsPlaying) {
+                ui.iconPlay.classList.add('hidden');
+                ui.iconPause.classList.remove('hidden');
+                ui.btnPlayPauseCalib.classList.replace('bg-green-500', 'bg-red-500');
+                ui.btnPlayPauseCalib.classList.replace('border-green-700', 'border-red-700');
+                
+                if (audioContext.state === 'suspended') audioContext.resume();
+                audioPlayer.play();
+                
+                calibNextNoteTime = audioContext.currentTime + 0.1;
+                calibQuarterNote = 0;
+                calibScheduler();
+            } else {
+                ui.iconPause.classList.add('hidden');
+                ui.iconPlay.classList.remove('hidden');
+                ui.btnPlayPauseCalib.classList.replace('bg-red-500', 'bg-green-500');
+                ui.btnPlayPauseCalib.classList.replace('border-red-700', 'border-green-700');
+                
+                audioPlayer.pause();
+                clearTimeout(calibTimeoutId);
+                initCalibCircles();
+            }
+        }
+
+        ui.btnPlayPauseCalib.addEventListener('click', toggleCalibPlay);
+        
+        ui.btnResetCalib.addEventListener('click', () => {
+            if(!audioLoaded) return;
+            audioPlayer.currentTime = 0;
+            if (calibIsPlaying) {
+                clearTimeout(calibTimeoutId);
+                calibNextNoteTime = audioContext.currentTime + 0.1;
+                calibQuarterNote = 0;
+                calibScheduler();
+            }
+        });
+
+        function updateBpm(amt) {
+            bpm = Math.max(30, Math.min(300, bpm + amt));
+            ui.bpmDisplay.textContent = bpm;
+        }
+        ui.btnSlower.addEventListener('click', () => updateBpm(-1));
+        ui.btnFaster.addEventListener('click', () => updateBpm(1));
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            if(currentState !== STATES.CALIBRATE) return;
+            const current = audioPlayer.currentTime;
+            ui.calibCurrentTime.textContent = formatTime(current);
+            ui.calibProgress.value = current;
+            const perc = (current / songDuration) * 100;
+            ui.calibProgress.style.background = `linear-gradient(to right, #06b6d4 ${perc}%, #374151 ${perc}%)`;
+        });
+
+        ui.calibProgress.addEventListener('input', (e) => {
+            const time = parseFloat(e.target.value);
+            audioPlayer.currentTime = time;
+        });
+
+        ui.btnFinishCalib.addEventListener('click', () => {
+            if (calibIsPlaying) toggleCalibPlay();
+            startGame();
+        });
+
+        function formatTime(secs) {
+            if (isNaN(secs)) return "0:00";
+            const m = Math.floor(secs / 60);
+            const s = Math.floor(secs % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        // ==========================================
+        // RHYTHM GAME LOGIC (VIRTUAL TIMING)
+        // ==========================================
+        let nextSpawnBeatTime = 0;
+        
+        function startGame() {
+            switchState(STATES.PLAYING);
+            
+            lives = MAX_LIVES;
+            score = 0;
+            combo = 0;
+            multiplier = 1;
+            stats = { perfect: 0, good: 0, miss: 0, total: 0 };
+            blocks = [];
+            particles = [];
+            sliceTrail = [];
+            touchPaths.clear();
+            updateHUD();
+            
+            if(!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if(audioContext.state === 'suspended') audioContext.resume();
+            
+            audioPlayer.currentTime = 0;
+            
+            // Setup Lead-in Time (Give player time to see first blocks before music plays)
+            travelTimeSeconds = 2.0 / diffConfig[difficulty].speedMultiplier;
+            gameStartContextTime = audioContext.currentTime; 
+            audioStarted = false;
+            currentVirtualTime = -travelTimeSeconds;
+            nextSpawnBeatTime = 0; // Track starts at 0
+            
+            lastFrameTime = performance.now();
+            if(animationFrameId) cancelAnimationFrame(animationFrameId);
+            gameLoop();
+        }
+
+        function spawnBlockLogic() {
+            if(currentState !== STATES.PLAYING) return;
+            
+            const lookahead = travelTimeSeconds + 1.0; 
+            const secondsPerBeat = 60.0 / bpm;
+            const spawnInterval = secondsPerBeat * diffConfig[difficulty].spawnIntervalBeats;
+
+            while (nextSpawnBeatTime < currentVirtualTime + lookahead) {
+                if (nextSpawnBeatTime > songDuration) break; // Reached end of song
+
+                if (Math.random() > 0.2 || difficulty === 'hard') {
+                    const rand = Math.random();
+                    let type = 'note';
+                    if (rand < diffConfig[difficulty].maxBombs) type = 'bomb';
+                    else if (rand < diffConfig[difficulty].maxBombs + 0.05) type = 'life';
+
+                    const dirs = ['up', 'down', 'left', 'right'];
+                    const direction = type === 'note' ? dirs[Math.floor(Math.random() * 4)] : 'any';
+                    
+                    const margin = canvas.width * 0.15;
+                    const x = margin + Math.random() * (canvas.width - margin * 2);
+
+                    blocks.push({
+                        id: Math.random().toString(36).substr(2, 9),
+                        x: x, y: -100,
+                        size: canvas.width > 600 ? 80 : 60,
+                        direction: direction, type: type,
+                        targetTime: nextSpawnBeatTime,
+                        hit: false, missed: false
+                    });
+                    
+                    if(type === 'note' || type === 'bomb') stats.total++;
+                }
+                nextSpawnBeatTime += spawnInterval;
+            }
+        }
+
+        function updatePositions() {
+            blocks.forEach(block => {
+                if(block.hit || block.missed) return;
+
+                const timeRemaining = block.targetTime - currentVirtualTime;
+                const startY = -block.size;
+                const distance = hitZoneY - startY;
+                const pixelsPerSecond = distance / travelTimeSeconds;
+                
+                block.y = hitZoneY - (timeRemaining * pixelsPerSecond);
+
+                if (block.y > canvas.height + block.size) { 
+                    block.missed = true;
+                    if(block.type === 'note') registerMiss();
+                }
+            });
+
+            blocks = blocks.filter(b => !b.hit && !b.missed && b.y < canvas.height + 200);
+            
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                p.life -= 0.02;
+                p.size *= 0.95;
+            });
+            particles = particles.filter(p => p.life > 0);
+        }
+
+        function drawGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Glowing Hit Line (Now dynamically placed in the exact center)
+            const gradLine = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradLine.addColorStop(0, 'rgba(6, 182, 212, 0)');
+            gradLine.addColorStop(0.2, 'rgba(6, 182, 212, 0.5)');
+            gradLine.addColorStop(0.8, 'rgba(6, 182, 212, 0.5)');
+            gradLine.addColorStop(1, 'rgba(6, 182, 212, 0)');
+
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = '#06b6d4';
+            ctx.strokeStyle = gradLine;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(0, hitZoneY);
+            ctx.lineTo(canvas.width, hitZoneY);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Draw Blocks
+            blocks.forEach(block => {
+                if(block.hit || block.missed) return;
+                
+                ctx.save();
+                ctx.translate(block.x, block.y);
+                
+                if(block.type === 'note') {
+                    ctx.fillStyle = getDirectionColor(block.direction);
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = ctx.fillStyle;
+                } else if (block.type === 'bomb') {
+                    ctx.fillStyle = '#ef4444';
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = '#ef4444';
+                } else if (block.type === 'life') {
+                    ctx.fillStyle = '#10b981';
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = '#10b981';
+                }
+
+                ctx.beginPath();
+                ctx.roundRect(-block.size/2, -block.size/2, block.size, block.size, 10);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = 'white';
+                if(block.type === 'note') {
+                    drawArrow(ctx, block.direction, block.size * 0.4);
+                } else if (block.type === 'bomb') {
+                    ctx.font = `${block.size * 0.5}px sans-serif`;
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText('💣', 0, 0);
+                } else if (block.type === 'life') {
+                    ctx.font = `${block.size * 0.5}px sans-serif`;
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText('❤️', 0, 0);
+                }
+                ctx.restore();
+            });
+
+            particles.forEach(p => {
+                ctx.save();
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            drawSlices();
+        }
+
+        function drawArrow(ctx, dir, s) {
+            ctx.beginPath();
+            if(dir === 'up') { ctx.moveTo(0,-s); ctx.lineTo(-s/2,0); ctx.lineTo(s/2,0); }
+            else if(dir === 'down') { ctx.moveTo(0,s); ctx.lineTo(-s/2,0); ctx.lineTo(s/2,0); }
+            else if(dir === 'left') { ctx.moveTo(-s,0); ctx.lineTo(0,-s/2); ctx.lineTo(0,s/2); }
+            else if(dir === 'right') { ctx.moveTo(s,0); ctx.lineTo(0,-s/2); ctx.lineTo(0,s/2); }
+            ctx.fill();
+        }
+
+        function getDirectionColor(dir) {
+            switch(dir) {
+                case 'up': return '#3b82f6';
+                case 'down': return '#eab308';
+                case 'left': return '#ec4899';
+                case 'right': return '#a855f7';
+                default: return '#fff';
+            }
+        }
+
+        function drawSlices() {
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = '#06b6d4';
+            
+            const allPaths = Array.from(touchPaths.values());
+            if (sliceTrail.length > 0) allPaths.push(sliceTrail);
+
+            allPaths.forEach(path => {
+                if (path.length < 2) return;
+                ctx.beginPath();
+                ctx.moveTo(path[0].x, path[0].y);
+                for(let i=1; i<path.length; i++) {
+                    ctx.lineTo(path[i].x, path[i].y);
+                }
+                
+                ctx.lineWidth = 12;
+                ctx.strokeStyle = 'rgba(6, 182, 212, 0.8)';
+                ctx.stroke();
+                
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+            });
+            ctx.shadowBlur = 0;
+        }
+
+        function gameLoop() {
+            if(currentState !== STATES.PLAYING) return;
+            
+            // Advance time
+            if (!audioStarted) {
+                // Game loop runs while we wait for blocks to fall into the play area
+                currentVirtualTime = (audioContext.currentTime - gameStartContextTime) - travelTimeSeconds;
+                if (currentVirtualTime >= 0) {
+                    audioPlayer.play();
+                    audioStarted = true;
+                    currentVirtualTime = audioPlayer.currentTime;
+                }
+            } else {
+                // Audio is now playing, sync perfectly to it
+                currentVirtualTime = audioPlayer.currentTime;
+                if(audioPlayer.ended || (songDuration > 0 && currentVirtualTime >= songDuration - 0.5)) {
+                    endGame(true);
+                    return;
+                }
+            }
+
+            spawnBlockLogic();
+            updatePositions();
+            checkSlices(); 
+            
+            const now = performance.now();
+            sliceTrail = sliceTrail.filter(p => now - p.time < 120);
+            
+            touchPaths.forEach((path, id) => {
+                const newPath = path.filter(p => now - p.time < 120);
+                if(newPath.length === 0) touchPaths.delete(id);
+                else touchPaths.set(id, newPath);
+            });
+
+            drawGame();
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        // ==========================================
+        // SLICING & COLLISION MATH
+        // ==========================================
+        function addSlicePoint(id, x, y) {
+            let path = id === 'mouse' ? sliceTrail : touchPaths.get(id);
+            if (!path) {
+                path = [];
+                if(id === 'mouse') sliceTrail = path;
+                else touchPaths.set(id, path);
+            }
+            path.push({x, y, time: performance.now()});
+            if(path.length > 25) path.shift();
+        }
+
+        function checkSlices() {
+            const allPaths = Array.from(touchPaths.values());
+            if (sliceTrail.length > 1) allPaths.push(sliceTrail);
+
+            allPaths.forEach(path => {
+                if (path.length < 2) return;
+
+                const pStart = path[0];
+                const pEnd = path[path.length - 1];
+
+                const dx = pEnd.x - pStart.x;
+                const dy = pEnd.y - pStart.y;
+                const sliceLength = Math.hypot(dx, dy);
+
+                if (sliceLength < 15) return;
+
+                const sliceAngle = Math.atan2(dy, dx);
+
+                blocks.forEach(block => {
+                    if (block.hit || block.missed) return;
+
+                    const half = block.size / 2;
+                    let hit = false;
+                    
+                    let l2 = dx * dx + dy * dy;
+                    if (l2 > 0) {
+                        let t = ((block.x - pStart.x) * dx + (block.y - pStart.y) * dy) / l2;
+                        t = Math.max(0, Math.min(1, t));
+                        let projX = pStart.x + t * dx;
+                        let projY = pStart.y + t * dy;
+                        let distToLine = Math.hypot(block.x - projX, block.y - projY);
+
+                        if (distToLine < half * 1.5) { 
+                            hit = true;
+                        }
+                    }
+
+                    if (hit) {
+                        processHit(block, sliceAngle);
+                    }
+                });
+            });
+        }
+
+        function processHit(block, sliceAngle) {
+            block.hit = true;
+            createParticles(block.x, block.y, block.type === 'note' ? getDirectionColor(block.direction) : '#ffffff');
+
+            if (block.type === 'life') {
+                if(lives < MAX_LIVES) lives++;
+                showComboText("+1 Life!", '#10b981');
+                updateHUD();
+                return;
+            }
+
+            if (block.type === 'bomb') {
+                registerMiss(true); 
+                return;
+            }
+
+            let targetAngle = 0;
+            if(block.direction === 'right') targetAngle = 0;
+            else if(block.direction === 'down') targetAngle = Math.PI / 2;
+            else if(block.direction === 'left') targetAngle = Math.PI;
+            else if(block.direction === 'up') targetAngle = -Math.PI / 2;
+
+            let angleDiff = sliceAngle - targetAngle;
+            while (angleDiff <= -Math.PI) angleDiff += Math.PI * 2;
+            while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+
+            if (Math.abs(angleDiff) <= Math.PI / 3) {
+                // ACCURACY BY DISTANCE: How close did they cut it to the perfect center line?
+                const distanceToHitZone = Math.abs(block.y - hitZoneY);
+
+                if (distanceToHitZone <= block.size) {
+                    stats.perfect++; addScore(100); showComboText("Perfect!", '#3b82f6');
+                } else if (distanceToHitZone <= block.size * 2.5) {
+                    stats.good++; addScore(50); showComboText("Good", '#eab308');
+                } else {
+                    // They sliced it correctly, but off the target line
+                    stats.good++; addScore(10);
+                    showComboText(block.y < hitZoneY ? "Early" : "Late", '#9ca3af');
+                }
+            } else {
+                // Sliced the wrong way
+                registerMiss(false, false);
+            }
+        }
+
+        function registerMiss(isBomb = false, isTimingMiss = false) {
+            stats.miss++; combo = 0; multiplier = 1; lives--;
+            updateHUD();
+            
+            if (isBomb) showComboText("BOOM!", '#ef4444');
+            else if (!isTimingMiss) showComboText("Miss!", '#ef4444');
+            // If it is a timing miss, the showComboText is handled by processHit
+            
+            canvas.style.transform = `translate(${Math.random()*10-5}px, ${Math.random()*10-5}px)`;
+            setTimeout(() => canvas.style.transform = 'none', 100);
+
+            if (lives <= 0) endGame(false);
+        }
+
+        function addScore(base) {
+            combo++;
+            if (combo > 20) multiplier = 4;
+            else if (combo > 10) multiplier = 3;
+            else if (combo > 5) multiplier = 2;
+            
+            score += base * multiplier;
+            updateHUD();
+        }
+
+        function updateHUD() {
+            ui.score.textContent = score;
+            ui.multiplier.textContent = `${multiplier}x`;
+            
+            for(let i=1; i<=MAX_LIVES; i++) {
+                const seg = document.getElementById(`life-${i}`);
+                if(i <= lives) seg.className = `life-segment h-full w-1/4 rounded transition-colors duration-300 ${lives===1?'bg-red-500':'bg-green-500'}`;
+                else seg.className = 'life-segment h-full w-1/4 rounded transition-colors duration-300 bg-gray-700';
+            }
+
+            let acc = 100;
+            const attempted = stats.perfect + stats.good + stats.miss;
+            if (attempted > 0) acc = Math.round(((stats.perfect + (stats.good * 0.5)) / attempted) * 100);
+            ui.accuracyHud.textContent = `${acc}%`;
+        }
+
+        let comboTimeout;
+        function showComboText(text, color) {
+            ui.comboText.textContent = text;
+            ui.comboText.style.color = color;
+            ui.comboText.style.opacity = 1;
+            ui.comboText.style.transform = 'scale(1.2)';
+            
+            clearTimeout(comboTimeout);
+            comboTimeout = setTimeout(() => {
+                ui.comboText.style.opacity = 0;
+                ui.comboText.style.transform = 'scale(1)';
+            }, 500);
+        }
+
+        function createParticles(x, y, color) {
+            for(let i=0; i<10; i++) {
+                particles.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 15, vy: (Math.random() - 0.5) * 15,
+                    life: 1, size: Math.random() * 6 + 2, color: color
+                });
+            }
+        }
+
+        // ==========================================
+        // INPUT EVENT LISTENERS (Canvas)
+        // ==========================================
+        canvas.addEventListener('mousedown', (e) => { 
+            isSlicing = true; 
+            sliceTrail = []; 
+            addSlicePoint('mouse', e.clientX, e.clientY); 
+        });
+        
+        canvas.addEventListener('mousemove', (e) => { 
+            if (isSlicing || autoSliceEnabled) {
+                addSlicePoint('mouse', e.clientX, e.clientY); 
+            }
+        });
+        
+        canvas.addEventListener('mouseup', () => { 
+            isSlicing = false; 
+        });
+        
+        canvas.addEventListener('mouseleave', () => { 
+            isSlicing = false; 
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            for(let i=0; i<e.changedTouches.length; i++) {
+                touchPaths.set(e.changedTouches[i].identifier, []);
+                addSlicePoint(e.changedTouches[i].identifier, e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+            }
+        }, {passive: false});
+        
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            for(let i=0; i<e.changedTouches.length; i++) {
+                addSlicePoint(e.changedTouches[i].identifier, e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+            }
+        }, {passive: false});
+        
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+        }, {passive: false});
+
+        // ==========================================
+        // PAUSE & RESULTS MENUS
+        // ==========================================
+        ui.pauseButton.addEventListener('click', () => {
+            if(currentState === STATES.PLAYING) {
+                switchState(STATES.PAUSED);
+                audioPlayer.pause();
+                if(audioContext && audioContext.state === 'running') audioContext.suspend();
+                cancelAnimationFrame(animationFrameId);
+            }
+        });
+
+        ui.resumeButton.addEventListener('click', () => {
+            switchState(STATES.PLAYING);
+            if(audioContext && audioContext.state === 'suspended') audioContext.resume();
+            if(audioStarted) audioPlayer.play();
+            lastFrameTime = performance.now();
+            gameLoop();
+        });
+
+        ui.quitButton.addEventListener('click', () => {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            switchState(STATES.MENU);
+        });
+
+        function endGame(completed) {
+            audioPlayer.pause();
+            cancelAnimationFrame(animationFrameId);
+            switchState(STATES.RESULTS);
+
+            ui.resultsTitle.textContent = completed ? "Level Cleared!" : "Failed";
+            ui.resultsTitle.className = completed ? "text-5xl sm:text-6xl font-black mb-2 text-cyan-400" : "text-5xl sm:text-6xl font-black mb-2 text-red-500";
+
+            ui.finalScoreDisplay.textContent = score;
+            
+            let acc = 0;
+            const attempted = stats.perfect + stats.good + stats.miss;
+            if (attempted > 0) acc = Math.round(((stats.perfect + (stats.good * 0.5)) / attempted) * 100);
+            
+            ui.finalAccuracyDisplay.textContent = `${acc}%`;
+            ui.statPerfect.textContent = stats.perfect;
+            ui.statGood.textContent = stats.good;
+            ui.statMiss.textContent = stats.miss;
+
+            let grade = 'F'; let color = 'text-gray-500';
+            if (!completed) { grade = 'F'; color = 'text-red-600'; }
+            else if (acc >= 95) { grade = 'S'; color = 'text-yellow-300'; }
+            else if (acc >= 85) { grade = 'A'; color = 'text-green-400'; }
+            else if (acc >= 75) { grade = 'B'; color = 'text-blue-400'; }
+            else if (acc >= 65) { grade = 'C'; color = 'text-purple-400'; }
+            else { grade = 'D'; color = 'text-orange-500'; }
+
+            ui.finalGrade.textContent = grade;
+            ui.finalGrade.className = `text-8xl md:text-9xl font-black drop-shadow-xl grade-pop ${color}`;
+        }
+
+        ui.resultsMenuBtn.addEventListener('click', () => {
+            switchState(STATES.MENU);
+        });
+
+    </script>
+</body>
+</html>

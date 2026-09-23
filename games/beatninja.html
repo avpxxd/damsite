@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>BeatNinja</title>
+    <link rel="icon" type="image/x-icon" href="BeatNinja.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="beatninjastyles.css">
+</head>
+<body class="bg-gray-900 text-white select-none">
+
+    <div id="game-container" class="relative w-full h-screen overflow-hidden">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="hud" class="absolute top-0 left-0 right-0 p-4 sm:p-6 flex flex-col items-center pointer-events-none hidden">
+            <div id="lifeBarContainer" class="w-full max-w-xs md:max-w-sm h-3 flex gap-1.5 mb-3">
+                <div class="life-segment h-full w-1/4 rounded bg-gray-600"></div>
+                <div class="life-segment h-full w-1/4 rounded bg-gray-600"></div>
+                <div class="life-segment h-full w-1/4 rounded bg-gray-600"></div>
+                <div class="life-segment h-full w-1/4 rounded bg-gray-600"></div>
+            </div>
+
+            <div class="w-full flex justify-between items-center text-3xl sm:text-4xl font-bold">
+                <div class="w-1/3 text-left">
+                    <button id="pauseButton" class="w-12 h-12 rounded-full bg-gray-800 bg-opacity-50 flex items-center justify-center transition-transform transform hover:scale-110 pointer-events-auto">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                </div>
+                <div class="w-1/3 text-center hud-text">
+                    <span id="score">0</span>
+                </div>
+                <div class="w-1/3 text-right hud-text">
+                     <span id="multiplier" class="text-2xl sm:text-3xl font-bold transition-colors duration-300"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="startMenu" class="absolute inset-0 flex justify-center items-center">
+            <div class="menu-card bg-gray-800 bg-opacity-50 p-8 sm:p-12 text-center rounded-2xl w-11/12 max-w-2xl">
+                <h1 class="text-5xl sm:text-7xl font-extrabold mb-4 text-cyan-400">BeatNinja</h1>
+                <p class="text-lg sm:text-xl mb-4 text-gray-300">Slice the blocks in the correct direction before they reach the bottom.</p>
+                <p class="text-lg sm:text-xl mb-4 text-gray-300">Avoid Bombs, (Yellow) and Collect lives. (Pink)</p>
+                <p class="text-lg sm:text-xl mb-4 text-gray-300">Get combos to increase your score multiplier.</p>
+                <p class="text-lg sm:text-xl mb-8 text-gray-300">Best Played On Devices With A Touchscreen.</p>
+                <button id="startButton" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold py-3 px-8 rounded-full text-2xl transition-transform transform hover:scale-105 shadow-lg">
+                    Start Game
+                </button>
+            </div>
+        </div>
+
+        <div id="pauseMenu" class="absolute inset-0 flex-col justify-center items-center hidden bg-black bg-opacity-50">
+            <div class="menu-card bg-gray-800 bg-opacity-50 p-8 sm:p-12 text-center rounded-2xl w-11/12 max-w-lg">
+                <h1 class="text-5xl sm:text-7xl font-extrabold mb-8 text-cyan-400">Paused</h1>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                    <button id="resumeButton" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold py-3 px-8 rounded-full text-2xl transition-transform transform hover:scale-105 shadow-lg">
+                        Resume
+                    </button>
+                    <button id="restartFromPauseButton" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-8 rounded-full text-2xl transition-transform transform hover:scale-105 shadow-lg">
+                        Restart
+                    </button>
+                </div>
+                
+                <!-- **FIXED: Auto-slice toggle HTML** -->
+                <div class="flex items-center justify-center gap-4 mb-8">
+                    <label for="autoSliceSwitch" class="text-lg text-gray-300">Auto-Slice</label>
+                    <div class="relative">
+                        <input type="checkbox" id="autoSliceSwitch" class="hidden"/>
+                        <label for="autoSliceSwitch" class="toggle-bg block w-14 h-8 rounded-full bg-gray-600 cursor-pointer"></label>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                    <input id="volumeSlider" type="range" min="0" max="100" value="50">
+                </div>
+            </div>
+        </div>
+        
+        <div id="gameOverMenu" class="absolute inset-0 flex justify-center items-center hidden">
+            <div class="menu-card bg-gray-800 bg-opacity-50 p-8 sm:p-12 text-center rounded-2xl w-11/12 max-w-lg">
+                <h1 class="text-5xl sm:text-7xl font-extrabold mb-2 text-red-500">Game Over</h1>
+                <p class="text-2xl sm:text-3xl mb-4 text-gray-200">Final Score: <span id="finalScore">0</span></p>
+                <p class="text-lg sm:text-xl mb-8 text-gray-300">High Score: <span id="highScoreMenu">0</span></p>
+                <button id="restartButton" class="bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold py-3 px-8 rounded-full text-2xl transition-transform transform hover:scale-105 shadow-lg">
+                    Play Again
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Audio source is now set dynamically in the script -->
+    <audio id="backgroundMusic" loop></audio>
+    <script src="beatninjascripts.js"></script>
+</body>
+</html>

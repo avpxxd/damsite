@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon One-Button Arcade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #050510;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            overflow: hidden;
+            touch-action: none; /* Prevent scroll on mobile */
+            margin: 0;
+            padding: 0;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(20, 0, 40, 0.5), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 40, 40, 0.5), transparent 25%);
+        }
+        
+        /* Custom scrollbar for menu if needed */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #f0f; border-radius: 4px; }
+
+        .neon-text-pink {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+        }
+        .neon-text-blue {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #00ffff, 0 0 40px #00ffff;
+        }
+        .neon-text-gold {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ffcc00, 0 0 40px #ffcc00;
+        }
+
+        .arcade-card {
+            background: linear-gradient(145deg, #1a1a2e, #111122);
+            border: 2px solid #333;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .arcade-card:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            transform: translateY(-5px);
+        }
+
+        #game-container {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(5, 5, 16, 0.95);
+            z-index: 50;
+        }
+
+        canvas {
+            background: #000;
+            border: 4px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .ticket-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffcc00;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global Ticket Counter -->
+    <div class="ticket-counter text-yellow-400">
+        TICKETS: <span id="global-tickets">0</span>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="w-full h-screen flex flex-col items-center justify-center p-4">
+        <h1 class="text-4xl md:text-6xl text-center mb-12 text-white neon-text-pink leading-tight">
+            VIRTUAL<br>ARCADE
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+            <!-- Quik Drop -->
+            <div class="arcade-card rounded-xl p-6 flex flex-col items-center text-center" onclick="startGame('quikdrop')">
+                <div class="w-24 h-24 mb-4 rounded-full border-4 border-cyan-400 flex items-center justify-center shadow-[0_0_15px_#00ffff]">
+                    <span class="text-3xl">⏱️</span>
+                </div>
+                <h2 class="text-xl text-cyan-400 mb-2">Quik Drop</h2>
+                <p class="text-xs text-gray-400 leading-relaxed">Drop 50 balls into the rotating buckets before time runs out!</p>
+            </div>
+
+            <!-- Monster Drop -->
+            <div class="arcade-card rounded-xl p-6 flex flex-col items-center text-center" onclick="startGame('monsterdrop')">
+                <div class="w-24 h-24 mb-4 rounded-full border-4 border-purple-500 flex items-center justify-center shadow-[0_0_15px_#a855f7]">
+                    <span class="text-3xl">👾</span>
+                </div>
+                <h2 class="text-xl text-purple-400 mb-2">Monster Drop</h2>
+                <p class="text-xs text-gray-400 leading-relaxed">Time your drop through the pegs to hit the moving Jackpot!</p>
+            </div>
+
+            <!-- Cyclone -->
+            <div class="arcade-card rounded-xl p-6 flex flex-col items-center text-center" onclick="startGame('cyclone')">
+                <div class="w-24 h-24 mb-4 rounded-full border-4 border-green-500 flex items-center justify-center shadow-[0_0_15px_#22c55e]">
+                    <span class="text-3xl">🌪️</span>
+                </div>
+                <h2 class="text-xl text-green-400 mb-2">Cyclone</h2>
+                <p class="text-xs text-gray-400 leading-relaxed">Stop the spinning light exactly on the Jackpot zone.</p>
+            </div>
+
+            <!-- Stacker -->
+            <div class="arcade-card rounded-xl p-6 flex flex-col items-center text-center" onclick="startGame('stacker')">
+                <div class="w-24 h-24 mb-4 rounded-full border-4 border-red-500 flex items-center justify-center shadow-[0_0_15px_#ef4444]">
+                    <span class="text-3xl">🧱</span>
+                </div>
+                <h2 class="text-xl text-red-400 mb-2">Stacker</h2>
+                <p class="text-xs text-gray-400 leading-relaxed">Stack the moving blocks perfectly to reach the Major Prize!</p>
+            </div>
+
+            <!-- Lock Pick -->
+            <div class="arcade-card rounded-xl p-6 flex flex-col items-center text-center" onclick="startGame('lockpick')">
+                <div class="w-24 h-24 mb-4 rounded-full border-4 border-yellow-400 flex items-center justify-center shadow-[0_0_15px_#facc15]">
+                    <span class="text-3xl">🔓</span>
+                </div>
+                <h2 class="text-xl text-yellow-400 mb-2">Lock Pick</h2>
+                <p class="text-xs text-gray-400 leading-relaxed">Tap when the dot enters the target zone to pick the lock!</p>
+            </div>
+
+            <!-- Power Smash -->
+            <div class="arcade-card rounded-xl p-6 flex flex-col items-center text-center" onclick="startGame('smash')">
+                <div class="w-24 h-24 mb-4 rounded-full border-4 border-orange-500 flex items-center justify-center shadow-[0_0_15px_#f97316]">
+                    <span class="text-3xl">🔨</span>
+                </div>
+                <h2 class="text-xl text-orange-400 mb-2">Power Smash</h2>
+                <p class="text-xs text-gray-400 leading-relaxed">Time your hit to stop the meter at maximum power to ring the bell.</p>
+            </div>
+        </div>
+        
+        <p class="mt-12 text-xs text-gray-500 animate-pulse">Select a machine to play</p>
+    </div>
+
+    <!-- Game Canvas Area -->
+    <div id="game-container">
+        <div class="w-full max-w-[600px] flex justify-between items-center mb-4 px-4">
+            <button onclick="returnToMenu()" class="bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded text-xs border border-gray-600">
+                &larr; LEAVE
+            </button>
+            <div class="text-xs text-gray-400">1 BUTTON PLAY (SPACE/TAP)</div>
+        </div>
+        <canvas id="gameCanvas" width="600" height="800"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let globalTickets = parseInt(localStorage.getItem('arcadeTickets')) || 0;
+        document.getElementById('global-tickets').innerText = globalTickets;
+
+        let activeGameInstance = null;
+        let animationFrameId = null;
+        let lastTime = 0;
+
+        function addTickets(amount) {
+            globalTickets += amount;
+            document.getElementById('global-tickets').innerText = globalTickets;
+            localStorage.setItem('arcadeTickets', globalTickets);
+        }
+
+        // View switching
+        function startGame(gameId) {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('game-container').style.display = 'flex';
+            
+            if (activeGameInstance) activeGameInstance.destroy();
+
+            if (gameId === 'quikdrop') activeGameInstance = new QuikDrop(ctx, canvas);
+            else if (gameId === 'monsterdrop') activeGameInstance = new MonsterDrop(ctx, canvas);
+            else if (gameId === 'cyclone') activeGameInstance = new Cyclone(ctx, canvas);
+            else if (gameId === 'stacker') activeGameInstance = new Stacker(ctx, canvas);
+            else if (gameId === 'lockpick') activeGameInstance = new LockPicker(ctx, canvas);
+            else if (gameId === 'smash') activeGameInstance = new PowerSmash(ctx, canvas);
+
+            activeGameInstance.init();
+            lastTime = performance.now();
+            loop(lastTime);
+        }
+
+        function returnToMenu() {
+            cancelAnimationFrame(animationFrameId);
+            if (activeGameInstance) {
+                activeGameInstance.destroy();
+                activeGameInstance = null;
+            }
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'flex';
+        }
+
+        // Main Game Loop
+        function loop(timestamp) {
+            if (!activeGameInstance) return;
+            let dt = timestamp - lastTime;
+            lastTime = timestamp;
+            if (dt > 100) dt = 16; // Cap dt for tab switching
+
+            activeGameInstance.update(dt);
+            activeGameInstance.draw(ctx, canvas);
+
+            animationFrameId = requestAnimationFrame(loop);
+        }
+
+        // Global Input Handlers routed to active game
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (activeGameInstance) activeGameInstance.handleInput();
+            }
+        });
+        canvas.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            if (activeGameInstance) activeGameInstance.handleInput();
+        });
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (activeGameInstance) activeGameInstance.handleInput();
+        }, {passive: false});
+
+        // Utility classes
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y;
+                this.vx = (Math.random() - 0.5) * 10;
+                this.vy = (Math.random() - 0.5) * 10;
+                this.life = 1.0;
+                this.color = color;
+            }
+            update(dt) {
+                this.x += this.vx * (dt/16);
+                this.y += this.vy * (dt/16);
+                this.life -= 0.03 * (dt/16);
+            }
+            draw(ctx) {
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, 4, 4);
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        class QuikDrop {
+            constructor(ctx, canvas) {
+                this.w = canvas.width; this.h = canvas.height;
+                this.state = 'START'; // START, PLAY, END
+                this.TOTAL_BALLS = 50;
+                this.TIME_LIMIT = 25;
+                this.GRAVITY = 0.5;
+                this.WHEEL_R = 200;
+                this.CX = this.w / 2;
+                this.CY = 500;
+                this.DROP_Y = 120;
+                this.particles = [];
+                this.balls = [];
+            }
+
+            init() {
+                this.score = 0;
+                this.ballsRemaining = this.TOTAL_BALLS;
+                this.timeLeft = this.TIME_LIMIT;
+                this.wheelAngle = 0;
+                this.balls = [];
+                this.particles = [];
+                this.lastDropTime = 0;
+                this.state = 'START';
+                canvas.style.borderColor = '#00ffff';
+            }
+
+            destroy() {}
+
+            handleInput() {
+                if (this.state === 'START' || this.state === 'END') {
+                    if (this.state === 'END') addTickets(this.score * 2); // Payout
+                    this.state = 'PLAY';
+                    this.init();
+                    this.state = 'PLAY'; // re-set after init
+                } else if (this.state === 'PLAY') {
+                    const now = performance.now();
+                    if (this.ballsRemaining > 0 && now - this.lastDropTime > 100) {
+                        this.balls.push({ x: this.CX, y: this.DROP_Y, vy: 0, caught: false });
+                        this.ballsRemaining--;
+                        this.lastDropTime = now;
+                    }
+                }
+            }
+
+            update(dt) {
+                if (this.state !== 'PLAY') return;
+
+                this.timeLeft -= dt / 1000;
+                if (this.timeLeft <= 0) {
+                    this.timeLeft = 0;
+                    if (this.balls.length === 0) this.state = 'END';
+                }
+
+                this.wheelAngle += 0.015 * (dt / 16);
+
+                const buckets = [];
+                for (let i = 0; i < 6; i++) {
+                    const angle = this.wheelAngle + (i * Math.PI * 2 / 6);
+                    buckets.push({
+                        x: this.CX + Math.cos(angle) * this.WHEEL_R,
+                        y: this.CY + Math.sin(angle) * this.WHEEL_R
+                    });
+                }
+
+                for (let i = this.balls.length - 1; i >= 0; i--) {
+                    let b = this.balls[i];
+                    b.vy += this.GRAVITY * (dt / 16);
+                    b.y += b.vy * (dt / 16);
+
+                    if (!b.caught && b.y > this.CY - this.WHEEL_R - 30 && b.y < this.CY + this.WHEEL_R) {
+                        for (let bucket of buckets) {
+                            const dist = Math.hypot(b.x - bucket.x, b.y - bucket.y);
+                            if (b.y < bucket.y + 10 && dist < 30) {
+                                b.caught = true;
+                                this.score++;
+                                for(let k=0; k<15; k++) this.particles.push(new Particle(bucket.x, bucket.y, '#00ffff'));
+                                this.balls.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                    if (!b.caught && b.y > this.h + 20) this.balls.splice(i, 1);
+                }
+
+                if (this.ballsRemaining === 0 && this.balls.length === 0) this.state = 'END';
+
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    this.particles[i].update(dt);
+                    if (this.particles[i].life <= 0) this.particles.splice(i, 1);
+                }
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = '#050510';
+                ctx.fillRect(0, 0, this.w, this.h);
+
+                // Grid background
+                ctx.strokeStyle = '#112';
+                ctx.lineWidth = 1;
+                for(let i=0; i<this.w; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,this.h); ctx.stroke(); }
+                for(let i=0; i<this.h; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(this.w,i); ctx.stroke(); }
+
+                // Dropper
+                ctx.fillStyle = '#ff00ff';
+                ctx.fillRect(this.CX - 40, this.DROP_Y - 50, 80, 50);
+                ctx.beginPath();
+                ctx.moveTo(this.CX - 40, this.DROP_Y);
+                ctx.lineTo(this.CX + 40, this.DROP_Y);
+                ctx.lineTo(this.CX + 20, this.DROP_Y + 20);
+                ctx.lineTo(this.CX - 20, this.DROP_Y + 20);
+                ctx.fill();
+
+                // Wheel
+                ctx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
+                ctx.lineWidth = 5;
+                ctx.beginPath(); ctx.arc(this.CX, this.CY, this.WHEEL_R, 0, Math.PI * 2); ctx.stroke();
+
+                for (let i = 0; i < 6; i++) {
+                    const angle = this.wheelAngle + (i * Math.PI * 2 / 6);
+                    const bx = this.CX + Math.cos(angle) * this.WHEEL_R;
+                    const by = this.CY + Math.sin(angle) * this.WHEEL_R;
+
+                    ctx.strokeStyle = 'rgba(0, 255, 255, 0.5)';
+                    ctx.beginPath(); ctx.moveTo(this.CX, this.CY); ctx.lineTo(bx, by); ctx.stroke();
+
+                    ctx.fillStyle = '#00ffff';
+                    ctx.beginPath(); ctx.arc(bx, by, 30, 0, Math.PI); 
+                    ctx.lineTo(bx - 30, by - 20); ctx.lineTo(bx + 30, by - 20); ctx.fill();
+                }
+
+                // Balls
+                ctx.fillStyle = '#ffcc00';
+                for (let b of this.balls) {
+                    ctx.beginPath(); ctx.arc(b.x, b.y, 10, 0, Math.PI * 2); ctx.fill();
+                }
+
+                for (let p of this.particles) p.draw(ctx);
+
+                // UI
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(0, 0, this.w, 60);
+                ctx.fillStyle = '#fff';
+                ctx.font = '16px "Press Start 2P"';
+                ctx.textAlign = 'left'; ctx.fillText(`SCORE:${this.score}`, 20, 38);
+                ctx.textAlign = 'center'; 
+                ctx.fillStyle = this.timeLeft <= 5 && this.state === 'PLAY' ? '#ff00ff' : '#00ffff';
+                ctx.fillText(`TIME:${Math.ceil(this.timeLeft)}`, this.w / 2, 38);
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'right'; ctx.fillText(`BALLS:${this.ballsRemaining}`, this.w - 20, 38);
+
+                this.drawOverlays(ctx);
+            }
+
+            drawOverlays(ctx) {
+                if (this.state === 'START') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#00ffff'; ctx.textAlign = 'center';
+                    ctx.font = '30px "Press Start 2P"'; ctx.fillText('QUIK DROP', this.w/2, this.h/2 - 20);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO START', this.w/2, this.h/2 + 30);
+                } else if (this.state === 'END') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#ff00ff'; ctx.textAlign = 'center';
+                    ctx.font = '30px "Press Start 2P"'; ctx.fillText('GAME OVER', this.w/2, this.h/2 - 40);
+                    ctx.fillStyle = '#ffcc00'; ctx.font = '16px "Press Start 2P"'; ctx.fillText(`TICKETS WON: ${this.score * 2}`, this.w/2, this.h/2 + 10);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO REPLAY', this.w/2, this.h/2 + 60);
+                }
+            }
+        }
+
+        class MonsterDrop {
+            constructor(ctx, canvas) {
+                this.w = canvas.width; this.h = canvas.height;
+                this.state = 'START';
+                this.DROPS_TOTAL = 3;
+                this.particles = [];
+                this.balls = [];
+                this.pegs = [];
+                this.zones = [
+                    {val: 10, color: '#22c55e'}, {val: 50, color: '#3b82f6'}, 
+                    {val: 'JACKPOT', color: '#ff00ff', valNum: 500}, 
+                    {val: 50, color: '#3b82f6'}, {val: 10, color: '#22c55e'}
+                ];
+                this.zoneWidth = this.w / this.zones.length;
+                this.zoneOffset = 0;
+                this.zoneSpeed = 2; // sliding speed
+                
+                // Build Pyramid Pegs
+                let startY = 250;
+                let rows = 7;
+                for(let r=0; r<rows; r++) {
+                    let cols = r + 3;
+                    let spacing = 60;
+                    let startX = this.w/2 - ((cols-1)*spacing)/2;
+                    for(let c=0; c<cols; c++) {
+                        // slightly jitter pegs for randomness
+                        let jx = (Math.random()-0.5)*10;
+                        let jy = (Math.random()-0.5)*10;
+                        this.pegs.push({x: startX + c*spacing + jx, y: startY + r*spacing + jy, r: 8});
+                    }
+                }
+            }
+
+            init() {
+                this.dropsLeft = this.DROPS_TOTAL;
+                this.ticketsWon = 0;
+                this.balls = [];
+                this.particles = [];
+                this.state = 'START';
+                canvas.style.borderColor = '#a855f7';
+            }
+
+            destroy() {}
+
+            handleInput() {
+                if (this.state === 'START' || this.state === 'END') {
+                    if(this.state === 'END') addTickets(this.ticketsWon);
+                    this.init();
+                    this.state = 'PLAY';
+                } else if (this.state === 'PLAY') {
+                    if (this.dropsLeft > 0 && this.balls.length === 0) {
+                        this.balls.push({ x: this.w/2 + (Math.random()-0.5), y: 80, vx: 0, vy: 0, r: 12 });
+                        this.dropsLeft--;
+                    }
+                }
+            }
+
+            update(dt) {
+                if (this.state !== 'PLAY') return;
+
+                // Move sliding zones
+                this.zoneOffset += this.zoneSpeed * (dt/16);
+                if (this.zoneOffset > this.zoneWidth) {
+                    this.zoneOffset -= this.zoneWidth;
+                    this.zones.unshift(this.zones.pop()); // Shift array to wrap visually
+                }
+
+                // Physics for ball
+                for (let i = this.balls.length - 1; i >= 0; i--) {
+                    let b = this.balls[i];
+                    b.vy += 0.4 * (dt/16); // Gravity
+                    
+                    // Air friction
+                    b.vx *= 0.99;
+                    b.vy *= 0.99;
+
+                    b.x += b.vx * (dt/16);
+                    b.y += b.vy * (dt/16);
+
+                    // Wall collision
+                    if (b.x < b.r) { b.x = b.r; b.vx *= -0.6; }
+                    if (b.x > this.w - b.r) { b.x = this.w - b.r; b.vx *= -0.6; }
+
+                    // Peg collision (Circle vs Circle)
+                    for (let peg of this.pegs) {
+                        let dx = b.x - peg.x;
+                        let dy = b.y - peg.y;
+                        let dist = Math.hypot(dx, dy);
+                        let minDist = b.r + peg.r;
+                        
+                        if (dist < minDist) {
+                            // Resolve penetration
+                            let overlap = minDist - dist;
+                            let nx = dx / dist;
+                            let ny = dy / dist;
+                            b.x += nx * overlap;
+                            b.y += ny * overlap;
+                            
+                            // Bounce (Velocity reflection)
+                            let p = 2 * (b.vx * nx + b.vy * ny);
+                            b.vx -= p * nx;
+                            b.vy -= p * ny;
+                            
+                            // Add elasticity/energy loss and slight randomness
+                            b.vx = b.vx * 0.7 + (Math.random()-0.5)*2;
+                            b.vy = b.vy * 0.7;
+                        }
+                    }
+
+                    // Bottom Zone collision
+                    if (b.y > this.h - 60) {
+                        // Determine which zone it landed in
+                        // Calculate visual x position relative to scrolling zones
+                        let relX = (b.x - this.zoneOffset + this.zoneWidth) % this.w;
+                        if(relX < 0) relX += this.w;
+                        let zoneIdx = Math.floor(relX / this.zoneWidth);
+                        let landedZone = this.zones[zoneIdx];
+                        
+                        let winVal = landedZone.valNum || landedZone.val;
+                        this.ticketsWon += winVal;
+                        
+                        for(let k=0; k<30; k++) this.particles.push(new Particle(b.x, b.y, landedZone.color));
+                        this.balls.splice(i, 1);
+                    }
+                }
+
+                if (this.dropsLeft === 0 && this.balls.length === 0) {
+                    setTimeout(() => this.state = 'END', 1000); // slight delay
+                }
+
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    this.particles[i].update(dt);
+                    if (this.particles[i].life <= 0) this.particles.splice(i, 1);
+                }
+            }
+
+            draw(ctx) {
+                // BG
+                let grad = ctx.createLinearGradient(0,0,0,this.h);
+                grad.addColorStop(0, '#1a0b2e'); grad.addColorStop(1, '#050510');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, this.w, this.h);
+
+                // Dropper chute
+                ctx.fillStyle = '#a855f7';
+                ctx.fillRect(this.w/2 - 20, 0, 40, 80);
+
+                // Pegs
+                ctx.fillStyle = '#fff';
+                for (let peg of this.pegs) {
+                    ctx.beginPath();
+                    ctx.arc(peg.x, peg.y, peg.r, 0, Math.PI*2);
+                    ctx.fill();
+                    // Glow
+                    ctx.shadowBlur = 10; ctx.shadowColor = '#00ffff';
+                    ctx.fill(); ctx.shadowBlur = 0;
+                }
+
+                // Scrolling Zones at bottom
+                let yStart = this.h - 80;
+                for(let i=0; i<this.zones.length + 1; i++) {
+                    let zIndex = i % this.zones.length;
+                    let z = this.zones[zIndex];
+                    let xPos = this.zoneOffset + (i-1)*this.zoneWidth;
+                    
+                    ctx.fillStyle = z.color;
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillRect(xPos, yStart, this.zoneWidth, 80);
+                    ctx.globalAlpha = 1.0;
+                    ctx.strokeStyle = z.color;
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(xPos, yStart, this.zoneWidth, 80);
+
+                    ctx.fillStyle = '#fff';
+                    ctx.font = z.val === 'JACKPOT' ? '12px "Press Start 2P"' : '18px "Press Start 2P"';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(z.val, xPos + this.zoneWidth/2, yStart + 45);
+                }
+
+                // Balls
+                ctx.fillStyle = '#ff00ff';
+                for (let b of this.balls) {
+                    ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fill();
+                }
+
+                for (let p of this.particles) p.draw(ctx);
+
+                // UI Top
+                ctx.fillStyle = 'rgba(0,0,0,0.8)';
+                ctx.fillRect(0,0,this.w, 40);
+                ctx.fillStyle = '#fff'; ctx.font = '14px "Press Start 2P"';
+                ctx.textAlign = 'left'; ctx.fillText(`DROPS:${this.dropsLeft}`, 10, 26);
+                ctx.textAlign = 'right'; ctx.fillText(`WIN:${this.ticketsWon}`, this.w-10, 26);
+
+                this.drawOverlays(ctx);
+            }
+
+            drawOverlays(ctx) {
+                if (this.state === 'START') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#a855f7'; ctx.textAlign = 'center';
+                    ctx.font = '28px "Press Start 2P"'; ctx.fillText('MONSTER DROP', this.w/2, this.h/2 - 20);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO DROP BALL', this.w/2, this.h/2 + 30);
+                } else if (this.state === 'END') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#a855f7'; ctx.textAlign = 'center';
+                    ctx.font = '30px "Press Start 2P"'; ctx.fillText('GAME OVER', this.w/2, this.h/2 - 40);
+                    ctx.fillStyle = '#ffcc00'; ctx.font = '16px "Press Start 2P"'; ctx.fillText(`TICKETS WON: ${this.ticketsWon}`, this.w/2, this.h/2 + 10);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO REPLAY', this.w/2, this.h/2 + 60);
+                }
+            }
+        }
+
+        class Cyclone {
+            constructor(ctx, canvas) {
+                this.w = canvas.width; this.h = canvas.height;
+                this.state = 'START';
+                this.ROUNDS = 5;
+                this.NUM_LIGHTS = 48;
+                this.RADIUS = 220;
+                this.CX = this.w/2;
+                this.CY = this.h/2 + 30;
+                
+                this.lights = Array(this.NUM_LIGHTS).fill({val: 2, color: '#22c55e'}); // Default Green 2
+                
+                const jpIdx = 0; // Top dead center
+                this.lights[jpIdx] = {val: 100, color: '#ff00ff', text: 'JP!'}; // Jackpot Pink
+                this.lights[jpIdx+1] = {val: 20, color: '#ffaa00'}; // Orange 20
+                this.lights[this.NUM_LIGHTS-1] = {val: 20, color: '#ffaa00'};
+                
+                [5, 11, 17, 23, 29, 35, 41, 47].forEach(i => {
+                    if(this.lights[i].val === 2) this.lights[i] = {val: 10, color: '#3b82f6'}; // Blue 10
+                });
+            }
+
+            init() {
+                this.roundsLeft = this.ROUNDS;
+                this.totalTickets = 0;
+                this.activeIdx = this.NUM_LIGHTS / 2;
+                this.speed = 0.3; // indices per ms
+                this.accumulator = 0;
+                this.particles = [];
+                this.state = 'START';
+                this.flashTimer = 0;
+                this.gambleTimer = 0;
+                this.currentPrize = 0;
+                this.gambleTarget = 0;
+                this.gambleSuccess = false;
+                canvas.style.borderColor = '#22c55e';
+            }
+
+            destroy() {}
+
+            handleInput() {
+                if (this.state === 'START' || this.state === 'END') {
+                    if(this.state === 'END') addTickets(this.totalTickets);
+                    this.init();
+                    this.state = 'PLAY';
+                } else if (this.state === 'PLAY' || this.state === 'GAMBLE_PLAY') {
+                    let isGamble = this.state === 'GAMBLE_PLAY';
+                    this.state = 'STOPPED';
+                    this.flashTimer = 100;
+                    
+                    let hitVal = this.lights[this.activeIdx].val;
+                    
+                    if (isGamble) {
+                        if (hitVal >= this.gambleTarget) {
+                            this.currentPrize *= 2; // Double it!
+                            this.gambleSuccess = true;
+                            this.gambleTarget = hitVal;
+                        } else {
+                            this.currentPrize = 0; // Lost everything
+                            this.gambleSuccess = false;
+                        }
+                    } else {
+                        this.currentPrize = hitVal;
+                        this.gambleSuccess = true;
+                    }
+                    
+                    // Particles
+                    let angle = (this.activeIdx / this.NUM_LIGHTS) * Math.PI * 2 - Math.PI/2;
+                    let lx = this.CX + Math.cos(angle) * this.RADIUS;
+                    let ly = this.CY + Math.sin(angle) * this.RADIUS;
+                    for(let k=0; k<40; k++) this.particles.push(new Particle(lx, ly, this.lights[this.activeIdx].color));
+                    
+                } else if (this.state === 'GAMBLE_PROMPT') {
+                    // Chose to Double or Nothing
+                    this.state = 'GAMBLE_PLAY';
+                    this.speed *= 1.3; // Faster
+                }
+            }
+
+            update(dt) {
+                if (this.state === 'PLAY' || this.state === 'GAMBLE_PLAY') {
+                    this.accumulator += dt;
+                    let step = 1000 / (this.speed * 100); 
+                    if (this.accumulator > step) {
+                        this.activeIdx = (this.activeIdx + 1) % this.NUM_LIGHTS;
+                        this.accumulator = 0;
+                    }
+                } else if (this.state === 'STOPPED') {
+                    if(this.flashTimer > 0) {
+                        this.flashTimer -= dt/16;
+                    } else {
+                        if (this.currentPrize > 2 && this.gambleSuccess) {
+                            this.state = 'GAMBLE_PROMPT';
+                            this.gambleTimer = 3000; // 3 seconds to decide
+                        } else {
+                            this.totalTickets += this.currentPrize;
+                            this.roundsLeft--;
+                            this.state = this.roundsLeft > 0 ? 'PLAY' : 'END';
+                            this.speed = 0.3; // Reset speed
+                        }
+                    }
+                } else if (this.state === 'GAMBLE_PROMPT') {
+                    this.gambleTimer -= dt;
+                    if (this.gambleTimer <= 0) {
+                        // Waited and Banked
+                        this.totalTickets += this.currentPrize;
+                        this.roundsLeft--;
+                        this.state = this.roundsLeft > 0 ? 'PLAY' : 'END';
+                        this.speed = 0.3;
+                    }
+                }
+
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    this.particles[i].update(dt);
+                    if (this.particles[i].life <= 0) this.particles.splice(i, 1);
+                }
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = '#0a100a';
+                ctx.fillRect(0, 0, this.w, this.h);
+
+                // Central Marquee
+                ctx.fillStyle = '#111';
+                ctx.beginPath(); ctx.arc(this.CX, this.CY, this.RADIUS - 40, 0, Math.PI*2); ctx.fill();
+                ctx.strokeStyle = '#333'; ctx.lineWidth = 10; ctx.stroke();
+
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#ff00ff';
+                ctx.font = '24px "Press Start 2P"';
+                ctx.fillText('JACKPOT', this.CX, this.CY - 30);
+                ctx.fillStyle = '#fff';
+                ctx.font = '40px "Press Start 2P"';
+                ctx.fillText('100', this.CX, this.CY + 20);
+
+                // Draw Lights
+                for (let i = 0; i < this.NUM_LIGHTS; i++) {
+                    let angle = (i / this.NUM_LIGHTS) * Math.PI * 2 - Math.PI/2; 
+                    let lx = this.CX + Math.cos(angle) * this.RADIUS;
+                    let ly = this.CY + Math.sin(angle) * this.RADIUS;
+                    let lightInfo = this.lights[i];
+
+                    let isActive = (i === this.activeIdx);
+                    if (this.state === 'STOPPED' && isActive && this.flashTimer > 0) {
+                        isActive = Math.floor(this.flashTimer / 5) % 2 === 0;
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(lx, ly, 12, 0, Math.PI*2);
+                    
+                    if (isActive) {
+                        ctx.fillStyle = '#fff';
+                        ctx.shadowBlur = 20; ctx.shadowColor = '#fff';
+                    } else {
+                        ctx.fillStyle = lightInfo.color;
+                        ctx.globalAlpha = 0.3;
+                        ctx.shadowBlur = 0;
+                    }
+                    ctx.fill();
+                    ctx.globalAlpha = 1.0; ctx.shadowBlur = 0;
+                }
+
+                for (let p of this.particles) p.draw(ctx);
+
+                // UI Top
+                ctx.fillStyle = 'rgba(0,0,0,0.8)';
+                ctx.fillRect(0,0,this.w, 40);
+                ctx.fillStyle = '#fff'; ctx.font = '14px "Press Start 2P"';
+                ctx.textAlign = 'left'; ctx.fillText(`ROUND:${this.ROUNDS - this.roundsLeft + 1}/${this.ROUNDS}`, 10, 26);
+                ctx.textAlign = 'right'; ctx.fillText(`WIN:${this.totalTickets}`, this.w-10, 26);
+
+                this.drawOverlays(ctx);
+            }
+
+            drawOverlays(ctx) {
+                if (this.state === 'START') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#22c55e'; ctx.textAlign = 'center';
+                    ctx.font = '36px "Press Start 2P"'; ctx.fillText('CYCLONE', this.w/2, this.h/2 - 20);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO STOP THE LIGHT', this.w/2, this.h/2 + 30);
+                } else if (this.state === 'GAMBLE_PROMPT') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#ffcc00'; ctx.textAlign = 'center';
+                    ctx.font = '20px "Press Start 2P"'; ctx.fillText('DOUBLE OR NOTHING!', this.w/2, this.h/2 - 40);
+                    ctx.fillStyle = '#fff'; ctx.font = '16px "Press Start 2P"'; ctx.fillText(`POT: ${this.currentPrize} TICKETS`, this.w/2, this.h/2);
+                    ctx.fillStyle = '#00ffff'; ctx.font = '10px "Press Start 2P"'; ctx.fillText(`TAP TO GAMBLE (MUST HIT ${this.gambleTarget}+)`, this.w/2, this.h/2 + 40);
+                    ctx.fillStyle = '#ff00ff'; ctx.fillText(`OR WAIT ${Math.ceil(this.gambleTimer/1000)}s TO BANK`, this.w/2, this.h/2 + 70);
+                } else if (this.state === 'END') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#22c55e'; ctx.textAlign = 'center';
+                    ctx.font = '30px "Press Start 2P"'; ctx.fillText('GAME OVER', this.w/2, this.h/2 - 40);
+                    ctx.fillStyle = '#ffcc00'; ctx.font = '16px "Press Start 2P"'; ctx.fillText(`TICKETS WON: ${this.totalTickets}`, this.w/2, this.h/2 + 10);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO REPLAY', this.w/2, this.h/2 + 60);
+                }
+            }
+        }
+
+        class Stacker {
+            constructor(ctx, canvas) {
+                this.w = canvas.width; this.h = canvas.height;
+                this.COLS = 7;
+                this.ROWS = 15;
+                this.MINOR_LINE = 10;
+                this.BLOCK_SIZE = Math.min((this.w - 100) / this.COLS, (this.h - 150) / this.ROWS);
+                this.GRID_X = (this.w - (this.COLS * this.BLOCK_SIZE)) / 2;
+                this.GRID_Y = this.h - 50 - (this.ROWS * this.BLOCK_SIZE);
+            }
+
+            init() {
+                this.state = 'START';
+                this.grid = Array.from({length: this.ROWS}, () => Array(this.COLS).fill(0));
+                this.currentRow = 0;
+                this.activeBlocks = 3;
+                this.xIndex = 0;
+                this.dir = 1;
+                this.moveTimer = 0;
+                this.baseSpeed = 160; // Slower base speed
+                this.ticketsWon = 0;
+                this.fallingBlocks = []; // For dropped blocks
+                canvas.style.borderColor = '#ef4444';
+            }
+
+            destroy() {}
+
+            handleInput() {
+                if (this.state === 'START' || this.state === 'END' || this.state === 'WIN') {
+                    if(this.state === 'END' || this.state === 'WIN') addTickets(this.ticketsWon);
+                    this.init();
+                    this.state = 'PLAY';
+                } else if (this.state === 'PLAY') {
+                    let overlapCount = 0;
+                    for (let i = 0; i < this.activeBlocks; i++) {
+                        let col = this.xIndex + i;
+                        if (col >= 0 && col < this.COLS) {
+                            if (this.currentRow === 0 || this.grid[this.currentRow - 1][col] === 1) {
+                                this.grid[this.currentRow][col] = 1;
+                                overlapCount++;
+                            } else {
+                                // Add to falling blocks animation
+                                this.fallingBlocks.push({
+                                    x: this.GRID_X + col * this.BLOCK_SIZE,
+                                    y: this.GRID_Y + (this.ROWS - 1 - this.currentRow) * this.BLOCK_SIZE,
+                                    vy: 0
+                                });
+                            }
+                        }
+                    }
+
+                    if (overlapCount === 0) {
+                        this.state = 'END'; // Game Over
+                    } else {
+                        this.activeBlocks = overlapCount;
+                        this.currentRow++;
+                        this.xIndex = Math.max(0, Math.min(this.COLS - this.activeBlocks, this.xIndex));
+                        
+                        if (this.currentRow === 4) this.activeBlocks = Math.min(2, this.activeBlocks);
+                        if (this.currentRow === 10) this.activeBlocks = 1;
+
+                        if (this.currentRow === this.MINOR_LINE) this.ticketsWon += 50;
+                        if (this.currentRow >= this.ROWS) {
+                            this.ticketsWon += 500; 
+                            this.state = 'WIN';
+                        }
+                    }
+                }
+            }
+
+            update(dt) {
+                if (this.state === 'PLAY') {
+                    this.moveTimer += dt;
+                    let currentSpeed = this.baseSpeed * Math.pow(0.92, this.currentRow); // Smoother scaling
+                    
+                    if (this.moveTimer >= currentSpeed) {
+                        this.moveTimer = 0;
+                        this.xIndex += this.dir;
+                        if (this.xIndex + this.activeBlocks > this.COLS || this.xIndex < 0) {
+                            this.dir *= -1;
+                            this.xIndex += this.dir * 2; 
+                        }
+                    }
+                }
+
+                // Update falling blocks gravity
+                for(let i = this.fallingBlocks.length - 1; i >= 0; i--) {
+                    let fb = this.fallingBlocks[i];
+                    fb.vy += 0.8 * (dt/16);
+                    fb.y += fb.vy * (dt/16);
+                    if(fb.y > this.h) this.fallingBlocks.splice(i, 1);
+                }
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = '#111';
+                ctx.fillRect(0, 0, this.w, this.h);
+
+                // Grid bg
+                ctx.strokeStyle = '#222'; ctx.lineWidth = 2;
+                for (let r = 0; r < this.ROWS; r++) {
+                    for (let c = 0; c < this.COLS; c++) {
+                        ctx.strokeRect(this.GRID_X + c * this.BLOCK_SIZE, this.GRID_Y + (this.ROWS - 1 - r) * this.BLOCK_SIZE, this.BLOCK_SIZE, this.BLOCK_SIZE);
+                    }
+                }
+
+                // Prize Lines
+                ctx.strokeStyle = '#ffcc00'; ctx.setLineDash([5, 5]);
+                let minorY = this.GRID_Y + (this.ROWS - this.MINOR_LINE) * this.BLOCK_SIZE;
+                ctx.beginPath(); ctx.moveTo(this.GRID_X - 20, minorY); ctx.lineTo(this.GRID_X + this.COLS*this.BLOCK_SIZE + 20, minorY); ctx.stroke();
+                ctx.fillStyle = '#ffcc00'; ctx.font = '10px "Press Start 2P"'; ctx.fillText('MINOR', this.GRID_X - 50, minorY + 4);
+                
+                let majorY = this.GRID_Y;
+                ctx.beginPath(); ctx.moveTo(this.GRID_X - 20, majorY); ctx.lineTo(this.GRID_X + this.COLS*this.BLOCK_SIZE + 20, majorY); ctx.stroke();
+                ctx.fillText('MAJOR', this.GRID_X - 50, majorY + 4);
+                ctx.setLineDash([]);
+
+                // Draw Placed Blocks
+                ctx.fillStyle = '#ef4444';
+                for (let r = 0; r < this.ROWS; r++) {
+                    for (let c = 0; c < this.COLS; c++) {
+                        if (this.grid[r][c] === 1) {
+                            ctx.fillRect(this.GRID_X + c * this.BLOCK_SIZE + 2, this.GRID_Y + (this.ROWS - 1 - r) * this.BLOCK_SIZE + 2, this.BLOCK_SIZE - 4, this.BLOCK_SIZE - 4);
+                        }
+                    }
+                }
+
+                // Draw Falling Blocks
+                for (let fb of this.fallingBlocks) {
+                    ctx.fillRect(fb.x + 2, fb.y + 2, this.BLOCK_SIZE - 4, this.BLOCK_SIZE - 4);
+                }
+
+                // Draw Active Row
+                if (this.state === 'PLAY') {
+                    ctx.fillStyle = '#ff00ff';
+                    for (let i = 0; i < this.activeBlocks; i++) {
+                        let c = this.xIndex + i;
+                        if (c >= 0 && c < this.COLS) {
+                            ctx.fillRect(this.GRID_X + c * this.BLOCK_SIZE + 2, this.GRID_Y + (this.ROWS - 1 - this.currentRow) * this.BLOCK_SIZE + 2, this.BLOCK_SIZE - 4, this.BLOCK_SIZE - 4);
+                        }
+                    }
+                }
+
+                // UI Top
+                ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w, 40);
+                ctx.fillStyle = '#fff'; ctx.font = '14px "Press Start 2P"';
+                ctx.textAlign = 'left'; ctx.fillText(`LEVEL:${this.currentRow}`, 10, 26);
+                ctx.textAlign = 'right'; ctx.fillText(`WIN:${this.ticketsWon}`, this.w-10, 26);
+
+                this.drawOverlays(ctx);
+            }
+
+            drawOverlays(ctx) {
+                if (this.state === 'START') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#ef4444'; ctx.textAlign = 'center';
+                    ctx.font = '36px "Press Start 2P"'; ctx.fillText('STACKER', this.w/2, this.h/2 - 20);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO STACK BLOCKS', this.w/2, this.h/2 + 30);
+                } else if (this.state === 'END' || this.state === 'WIN') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = this.state === 'WIN' ? '#00ffff' : '#ef4444'; ctx.textAlign = 'center';
+                    ctx.font = '30px "Press Start 2P"'; ctx.fillText(this.state === 'WIN' ? 'MAJOR PRIZE!' : 'GAME OVER', this.w/2, this.h/2 - 40);
+                    ctx.fillStyle = '#ffcc00'; ctx.font = '16px "Press Start 2P"'; ctx.fillText(`TICKETS WON: ${this.ticketsWon}`, this.w/2, this.h/2 + 10);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO REPLAY', this.w/2, this.h/2 + 60);
+                }
+            }
+        }
+
+        class LockPicker {
+            constructor(ctx, canvas) {
+                this.w = canvas.width; this.h = canvas.height;
+                this.CX = this.w / 2;
+                this.CY = this.h / 2 + 20;
+                this.R = 180;
+            }
+
+            init() {
+                this.state = 'START';
+                this.locksLeft = 50;
+                this.ticketsWon = 0;
+                this.playerAngle = 0;
+                this.targetAngle = Math.PI; 
+                this.targetWidth = Math.PI / 4; 
+                this.dir = 1;
+                this.speed = 0.003; 
+                this.particles = [];
+                canvas.style.borderColor = '#facc15';
+            }
+            
+            destroy() {}
+
+            generateTarget() {
+                let offset = (Math.random() * Math.PI + Math.PI/2) * this.dir; 
+                this.targetAngle = (this.playerAngle + offset) % (Math.PI * 2);
+                if (this.targetAngle < 0) this.targetAngle += Math.PI * 2;
+                
+                // Narrow target based on progress towards 50
+                this.targetWidth = Math.max(Math.PI / 18, (Math.PI / 4) * Math.pow(0.96, (50 - this.locksLeft)));
+            }
+
+            handleInput() {
+                if (this.state === 'START' || this.state === 'END' || this.state === 'WIN') {
+                    if(this.state === 'END' || this.state === 'WIN') addTickets(this.ticketsWon);
+                    this.init();
+                    this.state = 'PLAY';
+                } else if (this.state === 'PLAY') {
+                    let diff = Math.abs(this.playerAngle - this.targetAngle);
+                    if (diff > Math.PI) diff = Math.PI * 2 - diff;
+
+                    if (diff <= this.targetWidth / 2) {
+                        // Picked!
+                        this.locksLeft--;
+                        this.ticketsWon += 1;
+                        this.dir *= -1; 
+                        this.speed += 0.0001;
+                        
+                        let tx = this.CX + Math.cos(this.targetAngle) * this.R;
+                        let ty = this.CY + Math.sin(this.targetAngle) * this.R;
+                        for(let k=0; k<20; k++) this.particles.push(new Particle(tx, ty, '#facc15'));
+                        
+                        if (this.locksLeft <= 0) {
+                            this.ticketsWon += 500; // Grand Prize
+                            this.state = 'WIN';
+                        } else {
+                            this.generateTarget();
+                        }
+                    } else {
+                        // Missed!
+                        this.state = 'END';
+                    }
+                }
+            }
+
+            update(dt) {
+                if (this.state === 'PLAY') {
+                    this.playerAngle += this.speed * dt * this.dir;
+                    if (this.playerAngle > Math.PI * 2) this.playerAngle -= Math.PI * 2;
+                    if (this.playerAngle < 0) this.playerAngle += Math.PI * 2;
+                }
+
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    this.particles[i].update(dt);
+                    if (this.particles[i].life <= 0) this.particles.splice(i, 1);
+                }
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = '#050a05';
+                ctx.fillRect(0, 0, this.w, this.h);
+
+                // Base Circle
+                ctx.strokeStyle = '#333'; ctx.lineWidth = 20;
+                ctx.beginPath(); ctx.arc(this.CX, this.CY, this.R, 0, Math.PI * 2); ctx.stroke();
+
+                if (this.state === 'PLAY') {
+                    // Draw Target
+                    ctx.strokeStyle = '#facc15'; ctx.lineWidth = 20; ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.arc(this.CX, this.CY, this.R, this.targetAngle - this.targetWidth/2, this.targetAngle + this.targetWidth/2);
+                    ctx.stroke();
+
+                    // Draw Player Dot
+                    let px = this.CX + Math.cos(this.playerAngle) * this.R;
+                    let py = this.CY + Math.sin(this.playerAngle) * this.R;
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath(); ctx.arc(px, py, 15, 0, Math.PI * 2); ctx.fill();
+                    ctx.shadowBlur = 10; ctx.shadowColor = '#fff'; ctx.fill(); ctx.shadowBlur = 0;
+                }
+
+                // Inner score text
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#333'; ctx.font = '80px "Press Start 2P"';
+                ctx.fillText(this.locksLeft, this.CX, this.CY + 30);
+
+                for (let p of this.particles) p.draw(ctx);
+
+                // UI Top
+                ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w, 40);
+                ctx.fillStyle = '#fff'; ctx.font = '14px "Press Start 2P"';
+                ctx.textAlign = 'center'; ctx.fillText(`TICKETS WON: ${this.ticketsWon}`, this.w/2, 26);
+
+                this.drawOverlays(ctx);
+            }
+
+            drawOverlays(ctx) {
+                if (this.state === 'START') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#facc15'; ctx.textAlign = 'center';
+                    ctx.font = '36px "Press Start 2P"'; ctx.fillText('LOCK PICK', this.w/2, this.h/2 - 20);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('PICK 50 LOCKS FOR GRAND PRIZE', this.w/2, this.h/2 + 30);
+                } else if (this.state === 'END' || this.state === 'WIN') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = this.state === 'WIN' ? '#00ffff' : '#ef4444'; ctx.textAlign = 'center';
+                    ctx.font = '30px "Press Start 2P"'; ctx.fillText(this.state === 'WIN' ? 'GRAND PRIZE!' : 'LOCK BROKEN!', this.w/2, this.h/2 - 40);
+                    ctx.fillStyle = '#ffcc00'; ctx.font = '16px "Press Start 2P"'; ctx.fillText(`TICKETS WON: ${this.ticketsWon}`, this.w/2, this.h/2 + 10);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO REPLAY', this.w/2, this.h/2 + 60);
+                }
+            }
+        }
+
+        class PowerSmash {
+            constructor(ctx, canvas) {
+                this.w = canvas.width; this.h = canvas.height;
+                this.BAR_X = this.w / 2 - 40;
+                this.BAR_W = 80;
+                this.BAR_Y = 150;
+                this.BAR_H = this.h - 250;
+            }
+
+            init() {
+                this.state = 'START';
+                this.power = 0; 
+                this.timeElapsed = 0;
+                this.speed = 800;
+                this.ticketsWon = 0;
+                this.particles = [];
+                this.shake = 0;
+                this.overchargeTime = 0;
+                canvas.style.borderColor = '#f97316';
+            }
+
+            destroy() {}
+
+            handleInput() {
+                if (this.state === 'START' || this.state === 'END') {
+                    if(this.state === 'END') addTickets(this.ticketsWon);
+                    this.init();
+                    this.state = 'PLAY';
+                } else if (this.state === 'PLAY') {
+                    if (this.power > 0.95) {
+                        // Trigger Overcharge!
+                        this.state = 'OVERCHARGE';
+                        this.overchargeTime = 5000; // 5 seconds to mash
+                        this.shake = 30;
+                        for(let k=0; k<50; k++) this.particles.push(new Particle(this.w/2, this.BAR_Y - 40, '#ffcc00'));
+                    } else {
+                        this.state = 'END';
+                        if (this.power > 0.8) this.ticketsWon = 30;
+                        else if (this.power > 0.5) this.ticketsWon = 10;
+                        else this.ticketsWon = 2;
+                    }
+                } else if (this.state === 'OVERCHARGE') {
+                    // Mashing the button!
+                    this.ticketsWon += 5;
+                    this.shake = Math.min(this.shake + 10, 40); // Build up shake
+                    for(let k=0; k<10; k++) this.particles.push(new Particle(this.w/2, this.BAR_Y - 40, '#ff00ff'));
+                }
+            }
+
+            update(dt) {
+                if (this.state === 'PLAY') {
+                    this.timeElapsed += dt;
+                    let cycle = (this.timeElapsed % this.speed) / this.speed;
+                    this.power = cycle < 0.5 ? cycle * 2 : 2 - cycle * 2; 
+                } else if (this.state === 'OVERCHARGE') {
+                    this.overchargeTime -= dt;
+                    this.shake *= 0.9; // Shake degrades
+                    if (this.overchargeTime <= 0) {
+                        this.state = 'END';
+                        this.shake = 0;
+                    }
+                }
+
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    this.particles[i].update(dt);
+                    if (this.particles[i].life <= 0) this.particles.splice(i, 1);
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                if (this.shake > 0.5) {
+                    ctx.translate((Math.random()-0.5)*this.shake, (Math.random()-0.5)*this.shake);
+                }
+
+                ctx.fillStyle = '#0f0500';
+                ctx.fillRect(0, 0, this.w, this.h);
+
+                if (this.state === 'OVERCHARGE') {
+                    ctx.fillStyle = `rgba(255, 0, 255, ${Math.random()*0.2})`;
+                    ctx.fillRect(0, 0, this.w, this.h);
+                }
+
+                // Draw Track
+                ctx.fillStyle = '#222';
+                ctx.fillRect(this.BAR_X, this.BAR_Y, this.BAR_W, this.BAR_H);
+
+                // Draw Power Fill
+                let fillHeight = this.power * this.BAR_H;
+                let fillY = this.BAR_Y + this.BAR_H - fillHeight;
+                
+                let grad = ctx.createLinearGradient(0, this.BAR_Y + this.BAR_H, 0, this.BAR_Y);
+                grad.addColorStop(0, '#22c55e');
+                grad.addColorStop(0.5, '#eab308');
+                grad.addColorStop(0.8, '#ef4444');
+                grad.addColorStop(1, '#ff00ff');
+
+                ctx.fillStyle = grad;
+                ctx.fillRect(this.BAR_X, fillY, this.BAR_W, fillHeight);
+
+                // Markings
+                ctx.strokeStyle = '#555'; ctx.lineWidth = 2;
+                for (let i = 0; i <= 10; i++) {
+                    let markY = this.BAR_Y + (i / 10) * this.BAR_H;
+                    ctx.beginPath(); ctx.moveTo(this.BAR_X - 10, markY); ctx.lineTo(this.BAR_X + this.BAR_W + 10, markY); ctx.stroke();
+                }
+
+                // Indicator
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(this.BAR_X - 10, fillY - 5, this.BAR_W + 20, 10);
+                if(this.state === 'PLAY' || this.state === 'OVERCHARGE') {
+                    ctx.shadowBlur = 15; ctx.shadowColor = '#fff';
+                    ctx.fillRect(this.BAR_X - 10, fillY - 5, this.BAR_W + 20, 10);
+                    ctx.shadowBlur = 0;
+                }
+
+                // Bell
+                ctx.fillStyle = this.state === 'OVERCHARGE' ? (Math.random() > 0.5 ? '#ffcc00' : '#ff00ff') : '#ffcc00';
+                ctx.beginPath(); ctx.arc(this.w/2, this.BAR_Y - 40, 30, 0, Math.PI); 
+                ctx.lineTo(this.w/2 - 30, this.BAR_Y - 10); ctx.lineTo(this.w/2 + 30, this.BAR_Y - 10); ctx.fill();
+
+                for (let p of this.particles) p.draw(ctx);
+
+                // UI Top
+                ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w, 40);
+                ctx.fillStyle = '#fff'; ctx.font = '14px "Press Start 2P"';
+                ctx.textAlign = 'center'; 
+                if (this.state === 'OVERCHARGE') {
+                    ctx.fillStyle = '#ff00ff';
+                    ctx.fillText(`MASH TAP!! TIME: ${(this.overchargeTime/1000).toFixed(1)}s`, this.w/2, 26);
+                } else {
+                    ctx.fillText('HIT WHEN METER IS FULL!', this.w/2, 26);
+                }
+
+                ctx.restore(); // Restore shake transforms before drawing static overlays
+
+                this.drawOverlays(ctx);
+            }
+
+            drawOverlays(ctx) {
+                if (this.state === 'START') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    ctx.fillStyle = '#f97316'; ctx.textAlign = 'center';
+                    ctx.font = '36px "Press Start 2P"'; ctx.fillText('POWER SMASH', this.w/2, this.h/2 - 20);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO SWING HAMMER', this.w/2, this.h/2 + 30);
+                } else if (this.state === 'END') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0,0,this.w,this.h);
+                    
+                    let isJackpot = this.power > 0.95;
+                    ctx.fillStyle = isJackpot ? '#ff00ff' : '#f97316'; 
+                    ctx.textAlign = 'center';
+                    ctx.font = '30px "Press Start 2P"'; 
+                    ctx.fillText(isJackpot ? 'OVERCHARGE FINISH!' : 'NICE HIT', this.w/2, this.h/2 - 40);
+                    
+                    ctx.fillStyle = '#ffcc00'; ctx.font = '16px "Press Start 2P"'; ctx.fillText(`TICKETS WON: ${this.ticketsWon}`, this.w/2, this.h/2 + 10);
+                    ctx.fillStyle = '#fff'; ctx.font = '12px "Press Start 2P"'; ctx.fillText('TAP TO REPLAY', this.w/2, this.h/2 + 60);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

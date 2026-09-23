@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DamVan Games &bull; Arcade</title>
+    <link rel="icon" type="image/x-icon" href="../picon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1310171468795255"
+     crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617; /* Deepest slate */
+        }
+
+        .glass-header {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        @keyframes pulse-splash {
+            0%, 100% { opacity: 1; transform: scale(1) rotate(15deg); }
+            50% { opacity: 0.6; transform: scale(0.95) rotate(15deg); }
+        }
+
+        .splash-text {
+            animation: pulse-splash 1.5s infinite ease-in-out;
+            color: #fde047;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
+            display: inline-block;
+        }
+
+        .title-fun {
+            display: inline-block;
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-bottom: 0.15em;
+            margin-bottom: -0.15em;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .title-fun:hover {
+            transform: translateY(-4px) scale(1.03);
+            filter: drop-shadow(0 0 15px rgba(96, 165, 250, 0.6)) 
+                    drop-shadow(0 0 30px rgba(168, 85, 247, 0.4));
+        }
+
+        .card-gradient {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-decoration: none;
+        }
+
+        .card-gradient:hover {
+            transform: translateY(-4px);
+            background: #1e293b;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            border-color: rgba(96, 165, 250, 0.4);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 4px;
+            background: #3b82f6;
+            border-radius: 2px;
+            margin-top: 8px;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+        /* Theme Overrides for Games Page */
+        [data-theme="classic"] body { background-color: #111827; }
+        [data-theme="classic"] .card-gradient { background: #3B4350; border-color: #4b5563; }
+        [data-theme="classic"] .card-gradient:hover { background: #4b5563; }
+        [data-theme="classic"] header { background: rgba(31, 41, 55, 0.95); }
+
+        [data-theme="fall"] body { background-color: #120905; }
+        [data-theme="fall"] .card-gradient { background: rgba(40, 20, 12, 0.85); border-color: rgba(245, 158, 11, 0.3); }
+        [data-theme="fall"] .card-gradient:hover { border-color: #f59e0b; }
+        [data-theme="fall"] header { background: rgba(26, 13, 8, 0.95); }
+
+        [data-theme="summer"] body { background-color: #02111c; }
+        [data-theme="summer"] .card-gradient { background: rgba(6, 35, 58, 0.8); border-color: rgba(56, 189, 248, 0.3); }
+        [data-theme="summer"] .card-gradient:hover { border-color: #facc15; }
+        [data-theme="summer"] header { background: rgba(2, 21, 36, 0.95); }
+
+        [data-theme="spring"] body { background-color: #02120c; }
+        [data-theme="spring"] .card-gradient { background: rgba(5, 36, 25, 0.8); border-color: rgba(52, 211, 153, 0.3); }
+        [data-theme="spring"] .card-gradient:hover { border-color: #34d399; }
+        [data-theme="spring"] header { background: rgba(3, 24, 17, 0.95); }
+
+        [data-theme="winter"] body { background-color: #020710; }
+        [data-theme="winter"] .card-gradient { 
+            background: rgba(11, 24, 42, 0.8); 
+            border-color: rgba(125, 211, 252, 0.3);
+            position: relative;
+            overflow: visible !important;
+        }
+        [data-theme="winter"] .card-gradient:hover { border-color: #7dd3fc; }
+        [data-theme="winter"] .card-gradient::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 18px;
+            z-index: 15;
+            pointer-events: none;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 20' preserveAspectRatio='none'%3E%3Cpath d='M0 8 Q0 0, 8 0 L152 0 Q160 0, 160 8 L160 11 Q154 18, 146 12 Q138 20, 130 11 Q122 19, 114 12 Q104 20, 94 11 Q84 19, 74 11 Q64 20, 54 12 Q44 19, 34 11 Q24 20, 16 12 Q8 18, 0 11 Z' fill='%23ffffff'/%3E%3Cpath d='M2 7 Q2 2, 8 2 L152 2 Q158 2, 158 7 L158 9 Q153 14, 146 9 Q138 15, 130 8 Q122 14, 114 9 Q104 15, 94 8 Q84 14, 74 8 Q64 15, 54 9 Q44 14, 34 8 Q24 15, 16 9 Q8 14, 2 9 Z' fill='%23f0f9ff' opacity='0.95'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.45)) drop-shadow(0 1px 4px rgba(125, 211, 252, 0.8));
+        }
+        [data-theme="winter"] header { background: rgba(6, 14, 25, 0.95); }
+
+        /* ================= THEME SWITCH LOADING SCREEN ================= */
+        .theme-loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .theme-loading-screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .theme-loader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .theme-loader-text {
+            color: #ffffff;
+            font-family: 'Orbitron', 'Inter', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
+
+        .loader {
+            --color-1: #fff;
+            --size: 1px;
+
+            width: calc(47 * var(--size));
+            height: calc(47 * var(--size));
+            position: relative;
+        }
+        .loader:before,
+        .loader:after {
+            content: '';
+            display: block;
+            border: calc(24 * var(--size)) solid;
+            border-color: transparent transparent var(--color-1) var(--color-1);
+            position: absolute;
+            left: 0;
+            top: 0;
+            animation: mvx 1.2s infinite ease-in;
+        }
+        .loader:before {
+            border-color: var(--color-1) var(--color-1) transparent transparent;
+            animation-name: mvrx;
+        }
+        @keyframes mvx {
+            0%,
+            10% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            30% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            50% {
+                transform: translate(-50%, -50%) rotate(180deg);
+            }
+            75%,
+            100% {
+                transform: translate(0, 0) rotate(180deg);
+            }
+        }
+        @keyframes mvrx {
+            0%,
+            10% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            30% {
+                transform: translate(50%, 50%) rotate(0deg);
+            }
+            50% {
+                transform: translate(50%, 50%) rotate(180deg);
+            }
+            75%,
+            100% {
+                transform: translate(0, 0) rotate(180deg);
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-100 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="glass-header sticky top-0 z-50 py-6">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <a href="../index.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 text-xs font-bold tracking-wider uppercase transition group">
+                <i class="fas fa-arrow-left text-sky-400 group-hover:-translate-x-1 transition-transform"></i>
+                <span>Return to DamVan Hub</span>
+            </a>
+
+            <div class="relative text-center">
+                <h1 class="text-3xl md:text-4xl font-black tracking-tight title-fun">
+                    DamVan Games
+                </h1>
+                <span id="splash-text" class="absolute -right-24 -top-1 text-xs font-bold splash-text whitespace-nowrap hidden lg:block">
+                </span>
+                <p class="text-slate-400 mt-1 text-[11px] md:text-xs font-bold uppercase tracking-[0.25em]">
+                    Arcade & Interactive Experiments
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="#games" class="text-xs font-semibold text-slate-300 hover:text-white transition">Games</a>
+                <span class="text-slate-600">&bull;</span>
+                <a href="#fun" class="text-xs font-semibold text-slate-300 hover:text-white transition">Fun Stuff</a>
+                <div class="relative ml-2">
+                    <button id="theme-toggle-btn" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center justify-center text-xs transition" title="Change Theme">
+                        <i class="fas fa-paint-brush"></i>
+                    </button>
+                    <div id="theme-menu" class="absolute right-0 top-10 w-52 bg-slate-900/95 border border-sky-500/30 rounded-xl p-2 hidden shadow-2xl backdrop-blur-md z-50 flex-col gap-1">
+                        <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 py-1 border-b border-slate-800">Select Theme</div>
+                        <button class="theme-opt-btn flex items-center gap-2 w-full p-2 text-xs rounded-lg hover:bg-slate-800 text-slate-200 transition text-left" data-theme-val="space">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-sky-400 to-purple-500 border border-white/30"></span>
+                            <span>Space (Default)</span>
+                        </button>
+                        <button class="theme-opt-btn flex items-center gap-2 w-full p-2 text-xs rounded-lg hover:bg-slate-800 text-slate-200 transition text-left" data-theme-val="classic">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-blue-400 to-slate-600 border border-white/30"></span>
+                            <span>Classic (Ye Olde)</span>
+                        </button>
+                        <button class="theme-opt-btn flex items-center gap-2 w-full p-2 text-xs rounded-lg hover:bg-slate-800 text-slate-200 transition text-left" data-theme-val="fall">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-amber-500 to-red-600 border border-white/30"></span>
+                            <span>Fall Harvest</span>
+                        </button>
+                        <button class="theme-opt-btn flex items-center gap-2 w-full p-2 text-xs rounded-lg hover:bg-slate-800 text-slate-200 transition text-left" data-theme-val="summer">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-yellow-400 to-sky-600 border border-white/30"></span>
+                            <span>Summer Beach</span>
+                        </button>
+                        <button class="theme-opt-btn flex items-center gap-2 w-full p-2 text-xs rounded-lg hover:bg-slate-800 text-slate-200 transition text-left" data-theme-val="spring">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-emerald-400 to-pink-400 border border-white/30"></span>
+                            <span>Spring Nature</span>
+                        </button>
+                        <button class="theme-opt-btn flex items-center gap-2 w-full p-2 text-xs rounded-lg hover:bg-slate-800 text-slate-200 transition text-left" data-theme-val="winter">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-white to-sky-400 border border-white/30"></span>
+                            <span>Winter Frost</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12 max-w-6xl flex-grow">
+        
+        <!-- Games Section -->
+        <section id="games" class="mb-20">
+            <div class="flex items-center mb-10">
+                <div class="p-3 bg-blue-500/10 text-blue-400 rounded-xl mr-4 border border-blue-500/20">
+                    <i class="fas fa-gamepad text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold section-title text-white">Games</h2>
+                    <p class="text-slate-400 text-xs mt-1">Play our web games right in your browser</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- JGFGJGQ -->
+                <a href="JGFGJGQ.html" class="group block p-7 rounded-2xl card-gradient">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-white text-xl border border-white/20">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-white uppercase tracking-widest bg-cyan-600 px-2 py-1 rounded shadow-sm">BETA</span>
+                    </div>
+                    <h3 class="text-lg font-bold group-hover:text-blue-400 transition-colors text-slate-100">JGFGJGQ</h3>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">The Jackbox Games Fan Game Jackbox Games Quiz.</p>
+                </a>
+                
+                <!-- BeatNinja+ -->
+                <a href="beatninja+.html" class="group block p-7 rounded-2xl card-gradient">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center border border-purple-500/20">
+                            <img src="../BeatNinja.png" alt="BeatNinja+" class="w-8 h-8 object-contain">
+                        </div>
+                        <span class="text-[10px] font-bold text-white uppercase tracking-widest bg-purple-600 px-2 py-1 rounded shadow-sm">BETA</span>
+                    </div>
+                    <h3 class="text-lg font-bold group-hover:text-blue-400 transition-colors text-slate-100">BeatNinja+</h3>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">The intense, upgraded experience. Faster, harder, better.</p>
+                </a>
+
+                <!-- BeatNinja -->
+                <a href="beatninja.html" class="group block p-7 rounded-2xl card-gradient">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center border border-purple-500/20">
+                            <img src="../BeatNinja.png" alt="BeatNinja" class="w-8 h-8 object-contain">
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold group-hover:text-blue-400 transition-colors text-slate-100">BeatNinja</h3>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">It's a mix between Fruit Ninja and Beat Saber... Sorta.</p>
+                </a>
+
+                <!-- Dalton's Gambling Thing -->
+                <a href="gambling.html" class="group block p-7 rounded-2xl card-gradient">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center text-red-400 text-xl border border-red-500/20">
+                            <i class="fas fa-money-bill-1-wave"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold group-hover:text-blue-400 transition-colors text-slate-100">Dalton's Gambling Thing</h3>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">Lose Virtual Money risk-free.</p>
+                </a>
+
+                <!-- OnePixelPlace -->
+                <a href="OnePixelPlace.html" class="group block p-7 rounded-2xl card-gradient">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center text-green-400 text-xl border border-green-500/20">
+                            <i class="fas fa-arrow-pointer"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold group-hover:text-blue-400 transition-colors text-slate-100">OnePixelPlace</h3>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">Claim The Pixel! Defend The Pixel!</p>
+                </a>
+                
+                <!-- Maze Speedrun -->
+                <a href="mazespeedrun.html" class="group block p-7 rounded-2xl card-gradient">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center text-yellow-400 text-xl border border-yellow-500/20">
+                            <i class="fas fa-stopwatch"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold group-hover:text-blue-400 transition-colors text-slate-100">Maze Speedrun</h3>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">Navigate through countless mazes as time gets shorter and shorter!</p>
+                </a>
+
+                <!-- System Breach -->
+                <a href="systembreach.html" class="group block p-7 rounded-2xl card-gradient">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-400 text-xl border border-emerald-500/20">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold group-hover:text-blue-400 transition-colors text-slate-100">System Breach</h3>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">Crack the locks to extract data, get as much intel as you can, agent.</p>
+                </a>
+
+                <!-- Neon One-Button Arcade -->
+                <a href="arcade.html" class="group block p-7 rounded-2xl card-gradient">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-400 text-xl border border-indigo-500/20">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold group-hover:text-blue-400 transition-colors text-slate-100">Neon Arcade</h3>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">Retro 80s one-button arcade games collection.</p>
+                </a>
+
+
+                <!-- Paper Planes -->
+                <a href="https://planes.damvan.ca/" target="_blank" rel="noopener noreferrer" class="group block p-7 rounded-2xl card-gradient">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center text-orange-400 text-xl border border-orange-500/20">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-white uppercase tracking-widest bg-orange-600 px-2 py-1 rounded shadow-sm"><i class="fas fa-arrow-up-right-from-square"></i></span>
+                    </div>
+                    <h3 class="text-lg font-bold group-hover:text-blue-400 transition-colors text-slate-100">Paper Planes</h3>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">Flick your phone to send and catch paper planes from around the world!</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Fun Stuff Section -->
+        <section id="fun" class="mb-20">
+            <div class="flex items-center mb-10">
+                <div class="p-3 bg-pink-500/10 text-pink-400 rounded-xl mr-4 border border-pink-500/20">
+                    <i class="fas fa-rocket text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold section-title text-white">Fun Stuff & Experiments</h2>
+                    <p class="text-slate-400 text-xs mt-1">Quirky web apps, audio tools, and goofy ideas</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- SoniStream -->
+                <a href="../fun/sonistream.html" class="group relative overflow-hidden rounded-2xl p-7 card-gradient block">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-pink-500/10 rounded-full blur-2xl group-hover:bg-pink-500/20 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-pink-500/10 rounded-lg flex items-center justify-center mb-6 border border-pink-500/20">
+                            <i class="fas fa-music text-pink-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-pink-400 transition-colors">SoniStream</h3>
+                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">A Cool Music Visualizer! Upload your audio files or stream tracks and vibe.</p>
+                    </div>
+                </a>
+
+                <!-- I Am Not A Human -->
+                <a href="../fun/ianah.html" class="group relative overflow-hidden rounded-2xl p-7 card-gradient block">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6 border border-emerald-500/20">
+                            <i class="fas fa-robot text-emerald-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-emerald-400 transition-colors">I Am Not A Human</h3>
+                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">In an alternate universe, Captchas are designed to keep us out!</p>
+                    </div>
+                </a>
+
+                <!-- SuperVoter -->
+                <a href="../fun/supervoter.html" class="group relative overflow-hidden rounded-2xl p-7 card-gradient block">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center mb-6 border border-blue-500/20">
+                            <i class="fas fa-hand-pointer text-blue-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-blue-400 transition-colors">SuperVoter</h3>
+                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">Spam the buttons! Watch what happens!</p>
+                    </div>
+                </a>
+
+                <!-- Onlyfans -->
+                <a href="../fun/onlyfans.html" class="group relative overflow-hidden rounded-2xl p-7 card-gradient block">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-green-500/10 rounded-full blur-2xl group-hover:bg-green-500/20 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-6 border border-green-500/20">
+                            <i class="fas fa-fan text-green-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-green-400 transition-colors">Onlyfans</h3>
+                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">...the literal kind.</p>
+                    </div>
+                </a>
+
+                <!-- SystemSlowdown -->
+                <a href="../fun/systemfucker.html" class="group relative overflow-hidden rounded-2xl p-7 card-gradient block">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-500/10 rounded-full blur-2xl group-hover:bg-orange-500/20 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center mb-6 border border-orange-500/20">
+                            <i class="fas fa-triangle-exclamation text-orange-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-orange-400 transition-colors">SystemSlowdown</h3>
+                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">Uh oh! This was supposed to be for internal use only! 0_0</p>
+                    </div>
+                </a>
+
+                <!-- DamVan TV -->
+                <a href="https://tv.concerns.me" target="_blank" rel="noopener noreferrer" class="group relative overflow-hidden rounded-2xl p-7 card-gradient block">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center mb-6 border border-blue-500/20">
+                            <i class="fas fa-tv text-blue-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-blue-400 transition-colors">DamVan TV</h3>
+                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">Try out a fun little TV algorithm project we made!</p>
+                    </div>
+                </a>
+
+                <!-- DamVan Minecraft -->
+                <div class="group relative overflow-hidden rounded-2xl p-7 card-gradient block opacity-85">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6 border border-emerald-500/20">
+                            <i class="fas fa-cube text-emerald-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100">DamVan Minecraft</h3>
+                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">Join our community server to hang out, chat, and build together!</p>
+                        <span class="inline-block mt-3 text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20 uppercase tracking-wider">Coming Soon</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-10 border-t border-slate-900 bg-slate-950/60">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-slate-400 text-sm">
+                &copy; 2026 <a href="../index.html" class="font-bold text-sky-400 hover:underline">DamVan</a> &bull; Made with <i class="fas fa-heart text-red-500/70 mx-1"></i> for fun!
+            </p>
+            <div class="mt-4 flex justify-center gap-4 text-xs text-slate-500">
+                <a href="../index.html#crew" class="hover:text-slate-300 transition">Team</a>
+                <span>&bull;</span>
+                <a href="../index.html#blog" class="hover:text-slate-300 transition">Blog & Updates</a>
+                <span>&bull;</span>
+                <a href="../index.html#contact" class="hover:text-slate-300 transition">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Theme Switch Loading Screen -->
+    <div id="theme-loading-screen" class="theme-loading-screen" aria-hidden="true">
+        <div class="theme-loader-content">
+            <div class="loader"></div>
+            <div class="theme-loader-text">Switching Things Up.</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const phrases = [
+                "Not Canon!",
+                "DamVan Games!",
+                "404 Splash not found",
+                "BEEFY COMPUTER!",
+                "Not Compatible With XP.",
+                "Made In Canada, Eh!",
+                "Flint and Steel!",
+                "Download RAM Free",
+                "Certified Ad-Free",
+                "SIX SEVEN!!!!",
+                "I Use Arch Btw",
+                "Deez Nutz",
+                "Stop Eating My Cables, Cat",
+                "The Cake Was A lie",
+                "Got Games On your Phone?",
+                "Want Fries With That?",
+                "Now Available at GameShop",
+                "Find us On OnlyFans",
+                "Teacher Approved!"
+            ];
+            const splashElement = document.getElementById('splash-text');
+            if (splashElement) {
+                const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+                splashElement.innerText = randomPhrase;
+            }
+
+            // Theme Switcher Logic
+            let currentTheme = localStorage.getItem('damvan-theme') || 'space';
+            function applyTheme(themeName) {
+                const validThemes = ['space', 'classic', 'fall', 'summer', 'spring', 'winter'];
+                if (!validThemes.includes(themeName)) themeName = 'space';
+                currentTheme = themeName;
+                document.documentElement.setAttribute('data-theme', themeName);
+                localStorage.setItem('damvan-theme', themeName);
+            }
+
+            let isSwitchingTheme = false;
+            function switchThemeWithLoader(themeName) {
+                if (isSwitchingTheme) return;
+                isSwitchingTheme = true;
+
+                const loaderScreen = document.getElementById('theme-loading-screen');
+                if (loaderScreen) {
+                    loaderScreen.classList.add('active');
+                    loaderScreen.setAttribute('aria-hidden', 'false');
+                }
+
+                setTimeout(() => {
+                    applyTheme(themeName);
+                }, 500);
+
+                setTimeout(() => {
+                    if (loaderScreen) {
+                        loaderScreen.classList.remove('active');
+                        loaderScreen.setAttribute('aria-hidden', 'true');
+                    }
+                    isSwitchingTheme = false;
+                }, 3000);
+            }
+
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const themeMenu = document.getElementById('theme-menu');
+
+            if (themeToggleBtn && themeMenu) {
+                themeToggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    themeMenu.classList.toggle('hidden');
+                    themeMenu.classList.toggle('flex');
+                });
+
+                document.querySelectorAll('.theme-opt-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const selected = btn.getAttribute('data-theme-val');
+                        themeMenu.classList.add('hidden');
+                        themeMenu.classList.remove('flex');
+                        switchThemeWithLoader(selected);
+                    });
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!themeMenu.contains(e.target) && e.target !== themeToggleBtn) {
+                        themeMenu.classList.add('hidden');
+                        themeMenu.classList.remove('flex');
+                    }
+                });
+            }
+
+            applyTheme(currentTheme);
+        });
+    </script>
+</body>
+</html>

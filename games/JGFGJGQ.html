@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JGFGJGQ &bull; Jackbox Fan Game Jackbox Quiz</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        jackbox: {
+                            cyan: '#00f0ff',
+                            magenta: '#ff007f',
+                            yellow: '#ffe600',
+                            dark: '#0a0d14',
+                            card: '#121824',
+                            border: '#2a364f'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['"Space Grotesk"', '"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                        'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            background-color: #060913;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .party-card {
+            background: radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.9));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.06);
+        }
+
+        /* Glass Trivia Option Pads */
+        .glass-pad {
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-pad:hover:not(:disabled) {
+            background: rgba(30, 41, 59, 0.75);
+            border-color: rgba(56, 189, 248, 0.45);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-pad:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .glass-pad.locked {
+            border-color: #38bdf8 !important;
+            background: rgba(14, 165, 233, 0.18) !important;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.35), inset 0 1px 0 rgba(56, 189, 248, 0.4) !important;
+            transform: scale(1.01);
+        }
+
+        /* Signal Wave Animation for Connection View */
+        @keyframes signalPulse {
+            0% {
+                transform: scale(0.6) rotate(-45deg);
+                opacity: 0.8;
+                border-color: #38bdf8;
+            }
+
+            50% {
+                border-color: #818cf8;
+            }
+
+            100% {
+                transform: scale(1.6) rotate(-45deg);
+                opacity: 0;
+                border-color: #c084fc;
+            }
+        }
+
+        .signal-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            margin-top: -25px;
+            margin-left: -25px;
+            border-radius: 50%;
+            border: 2px solid #38bdf8;
+            animation: signalPulse 2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+        }
+
+        .signal-wave:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .signal-wave:nth-child(3) {
+            animation-delay: 1.0s;
+        }
+
+        .signal-wave:nth-child(4) {
+            animation-delay: 1.5s;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.6);
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
+        }
+    </style>
+</head>
+
+<body class="min-h-full flex flex-col font-sans relative select-none">
+
+    <!-- AUDIO ELEMENT -->
+    <audio id="bgAudio" preload="auto"></audio>
+
+    <!-- HORIZONTAL STARFIELD CANVAS BACKGROUND -->
+    <canvas id="warpCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- GLOBAL PERSISTENT HEADER (Hidden during Connection View) -->
+    <header id="globalHeader"
+        class="hidden w-full glass-panel sticky top-0 z-40 border-b border-slate-700/60 shadow-lg">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+
+            <!-- Branding / Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="app.showTab('ARENA')"
+                title="Back to Game Arena">
+                <div
+                    class="w-10 h-10 rounded-xl bg-slate-800/70 backdrop-blur-md flex items-center justify-center text-xl shadow-md border border-slate-600/50 transition-colors">
+                    📦
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1
+                            class="font-display text-xl sm:text-2xl font-bold tracking-wide text-sky-100 uppercase drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]">
+                            Jackbox SuperFan Quiz
+                        </h1>
+                        <span id="connectionBadge"
+                            class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-900/40 text-emerald-300 border border-emerald-700/50 uppercase backdrop-blur-sm">
+                            LIVE
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Stats & Navigation Badges -->
+            <div class="flex items-center gap-2 sm:gap-4">
+
+                <!-- Live Online Counter Badge -->
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/60 backdrop-blur-sm border border-slate-700/60 text-xs font-sans font-bold text-slate-300"
+                    title="Active Players in Orbit">
+                    <span
+                        class="w-2 h-2 rounded-full bg-sky-400 animate-pulse-slow shadow-[0_0_5px_rgba(56,189,248,0.8)]"></span>
+                    <span id="headerLivePlayers">1 Player</span>
+                </div>
+
+                <!-- Global Score Badge -->
+                <div id="userScoreBadge"
+                    class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/60 backdrop-blur-sm border border-slate-700/60 text-xs font-sans">
+                    <span class="text-amber-300 drop-shadow-[0_0_3px_rgba(252,211,77,0.8)]">⭐</span>
+                    <span id="headerScoreVal" class="text-slate-100 font-bold text-sm">0</span>
+                    <span class="text-slate-400 text-[10px] font-bold">PTS</span>
+                </div>
+
+                <!-- Leaderboard Ranks Button -->
+                <button onclick="app.showTab('LEADERBOARD')"
+                    class="px-3.5 py-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-700/70 backdrop-blur-sm border border-slate-600/50 text-xs font-sans font-bold text-slate-200 flex items-center gap-1.5 transition-all"
+                    title="Global Scoreboard">
+                    <span>🏆</span>
+                    <span class="hidden md:inline">Ranks</span>
+                </button>
+
+                <!-- Sound Toggle -->
+                <button id="soundToggleBtn" onclick="app.toggleSound()"
+                    class="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/70 backdrop-blur-sm border border-slate-600/50 text-slate-200 text-xs transition-all"
+                    title="Toggle Sound">
+                    🔊
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- AUDIO CONTROLLER (Floating for Connect View) -->
+    <button id="audioToggleBtn"
+        class="fixed top-4 right-4 z-50 p-2.5 rounded-full bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all backdrop-blur-md shadow-lg"
+        title="Toggle Background Music">
+        <svg id="audioIconMuted" class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.531V19.94a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.414 0-.75-.336-.75-.75V9c0-.414.336-.75.75-.75h4.24z" />
+        </svg>
+        <svg id="audioIconPlaying" class="w-5 h-5 stroke-current hidden text-cyan-400" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M19.114 5.636a9 9 0 010 12.728M16.463 8.287a5.25 5.25 0 010 7.426M11.25 4.51l-4.72 4.72H4.51c-.414 0-.75.336-.75.75v6c0 .414.336.75.75.75h4.24l4.72 4.72a.75.75 0 001.28-.53V5.041a.75.75 0 00-1.28-.531z" />
+        </svg>
+    </button>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main class="flex-grow flex flex-col items-center justify-center p-3 sm:p-6 w-full max-w-5xl mx-auto relative z-10">
+
+        <!-- ==================== VIEW 1: CONNECTING SCREEN ==================== -->
+        <section id="viewConnect"
+            class="w-full max-w-xl mx-4 p-8 md:p-12 party-card rounded-3xl text-center transition-all duration-500 my-auto">
+
+            <!-- Status Header Text -->
+            <div class="mb-10">
+                <h1 id="statusText"
+                    class="text-2xl md:text-3xl font-extrabold tracking-tight text-white transition-colors duration-300">
+                    Connecting<span class="animate-pulse">...</span>
+                </h1>
+                <p id="subStatusText"
+                    class="text-xs md:text-sm text-slate-400 font-mono mt-2 transition-colors duration-300">
+                    Connecting to JGFGJGQ Firebase Services
+                </p>
+            </div>
+
+            <!-- Laptop to Server Connection Graphic -->
+            <div class="flex items-center justify-between gap-4 my-8 px-2 md:px-6 relative min-h-[100px]">
+
+                <!-- Laptop Icon -->
+                <div class="flex flex-col items-center gap-2">
+                    <div id="laptopContainer"
+                        class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 text-cyan-400 transition-all duration-300">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 stroke-current" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5">
+                            <rect x="3" y="4" width="18" height="12" rx="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M2 20h20" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M9 16h6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <span class="text-[11px] font-mono text-slate-400">Local Device</span>
+                </div>
+
+                <!-- Center Pulsing Signal Waves -->
+                <div class="flex-grow flex items-center justify-center relative h-20 overflow-hidden">
+                    <div id="signalContainer" class="relative w-full h-full flex items-center justify-center">
+                        <div class="signal-wave"></div>
+                        <div class="signal-wave"></div>
+                        <div class="signal-wave"></div>
+                        <div class="signal-wave"></div>
+                        <div class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#38bdf8] z-10"></div>
+                    </div>
+
+                    <!-- Red X for Connection Failure -->
+                    <div id="errorXContainer" class="hidden relative z-10 flex flex-col items-center animate-bounce">
+                        <svg class="w-10 h-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Server Icon -->
+                <div class="flex flex-col items-center gap-2">
+                    <div id="serverContainer"
+                        class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 text-slate-200 transition-all duration-300">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 stroke-current" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5">
+                            <rect x="4" y="3" width="16" height="7" rx="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <rect x="4" y="14" width="16" height="7" rx="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <line x1="8" y1="6.5" x2="8.01" y2="6.5" stroke-width="2.5" stroke-linecap="round" />
+                            <line x1="8" y1="17.5" x2="8.01" y2="17.5" stroke-width="2.5" stroke-linecap="round" />
+                            <line x1="12" y1="6.5" x2="16" y2="6.5" stroke-width="1.5" stroke-linecap="round" />
+                            <line x1="12" y1="17.5" x2="16" y2="17.5" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <span class="text-[11px] font-mono text-slate-400">Firebase</span>
+                </div>
+
+            </div>
+
+            <!-- Retry & Config Buttons (Shown on error) -->
+            <div id="retryAction" class="hidden mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button id="retryBtn" onclick="app.startConnectionProcess()"
+                    class="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-medium text-sm transition-all shadow-lg shadow-red-500/20 active:scale-95 inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Try Again
+                </button>
+                <button onclick="app.toggleConfigModal(true)"
+                    class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 font-medium text-sm transition-all active:scale-95 inline-flex items-center gap-2">
+                    ⚙️ Firebase Setup
+                </button>
+            </div>
+
+            <!-- Quick Skip Option -->
+            <div class="mt-8 pt-4 border-t border-slate-800/60 flex items-center justify-center">
+                <button onclick="app.bypassConnection()"
+                    class="text-xs font-mono text-slate-400 hover:text-sky-300 transition-colors inline-flex items-center gap-1.5">
+                    <span>⚡ Skip & Play in Offline Mode</span>
+                    <span>→</span>
+                </button>
+            </div>
+
+        </section>
+
+        <!-- ==================== VIEW 2: PROFILE INITIALIZATION ==================== -->
+        <section id="viewProfileInit" class="hidden w-full max-w-lg space-y-6 text-center my-auto">
+            <div class="party-card p-8 rounded-2xl space-y-6">
+                <div class="space-y-2">
+                    <div
+                        class="inline-block p-4 rounded-2xl bg-slate-800/60 border border-slate-600/50 text-4xl mb-2 backdrop-blur-md">
+                        🚀
+                    </div>
+                    <h2 class="font-display text-3xl font-bold uppercase tracking-wide text-sky-100 drop-shadow-md">Join
+                        the Party!</h2>
+                    <p class="text-slate-400 text-sm font-sans">
+                        You're connected to the worldwide Jackbox Fan Quiz server. Everyone plays the same trivia
+                        question in real time!
+                    </p>
+                </div>
+
+                <form onsubmit="app.registerNickname(event)" class="space-y-4 text-left">
+                    <div>
+                        <label
+                            class="block text-xs font-sans font-bold text-slate-400 uppercase tracking-wider mb-2">Pick
+                            an Avatar</label>
+                        <div id="avatarPickerGrid"
+                            class="flex justify-between gap-2 p-2 bg-slate-900/60 rounded-xl border border-slate-700/60 backdrop-blur-sm">
+                            <!-- Avatar buttons dynamically rendered via JS -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="block text-xs font-sans font-bold text-slate-400 uppercase tracking-wider">
+                                Assigned Player Name
+                            </label>
+                            <span class="text-[11px] font-mono text-emerald-400">🔒 System Generated</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <!-- Locked, read-only system-generated name display (prevents custom typing/XSS) -->
+                            <div class="flex-grow flex items-center justify-between px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 text-sky-300 font-display text-base sm:text-lg font-bold tracking-wide select-none backdrop-blur-sm shadow-inner overflow-hidden">
+                                <span id="nicknameDisplay" class="truncate">bean-burrito-man</span>
+                                <input type="hidden" id="nicknameInput" value="bean-burrito-man">
+                            </div>
+                            <button type="button" onclick="app.rollNewRandomName()" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-sans font-bold text-sm transition-all active:scale-95 flex items-center gap-1.5 flex-shrink-0 shadow-md" title="Roll Another Random Name">
+                                <span>🎲</span>
+                                <span>Roll</span>
+                            </button>
+                        </div>
+                        <p class="text-[11px] text-slate-500 font-sans mt-1.5">
+                            Names are generated exclusively from our vetted Jackbox word vault to keep the party safe!
+                        </p>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full py-4 rounded-xl font-display text-lg font-bold action-btn uppercase tracking-wide transition-all mt-2">
+                        ENTER THE ARENA 🕹️
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 3: ACTIVE TRIVIA ARENA ==================== -->
+        <section id="viewArena" class="hidden w-full space-y-4 my-auto">
+
+            <!-- Question Header Information & Synchronized Clock -->
+            <div
+                class="flex items-center justify-between glass-panel px-4 sm:px-6 py-3 rounded-2xl border border-slate-700/60">
+                <div class="flex items-center gap-3">
+                    <span id="qCategoryBadge"
+                        class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-sky-900/60 text-sky-300 border border-sky-600/40 backdrop-blur-sm">
+                        Party Pack Lore
+                    </span>
+                    <span id="qSourceBadge" class="hidden sm:inline-block text-[11px] font-mono text-slate-400">
+                        🔥 Live Firestore Sync
+                    </span>
+                </div>
+
+                <!-- Realtime Countdown Timer Box -->
+                <div class="flex items-center gap-2">
+                    <span id="timerLabel"
+                        class="text-xs font-bold text-slate-400 uppercase tracking-wider hidden sm:inline">Time
+                        Left:</span>
+                    <div id="countdownBox"
+                        class="flex items-center justify-center px-4 py-1.5 rounded-xl font-display text-2xl font-bold bg-slate-800/80 border border-slate-600 text-sky-300 shadow-[0_0_10px_rgba(56,189,248,0.2)]">
+                        <span id="timerSeconds">120</span>s
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Synchronized Question Card -->
+            <div id="questionCardContainer"
+                class="party-card p-8 sm:p-12 rounded-3xl min-h-[170px] flex items-center justify-center text-center relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-b from-sky-500/5 via-transparent to-transparent pointer-events-none">
+                </div>
+                <h3 id="globalQuestionText"
+                    class="font-sans text-xl sm:text-2xl md:text-3xl font-bold text-slate-100 tracking-tight leading-relaxed drop-shadow-sm max-w-3xl relative z-10">
+                    Synchronizing live trivia round from Firebase...
+                </h3>
+            </div>
+
+            <!-- Dedicated Answer Locked Notice Banner (Non-overlapping) -->
+            <div id="answerLockedNotice"
+                class="hidden w-full p-3.5 sm:p-4 rounded-2xl bg-slate-900/90 border border-sky-500/50 shadow-[0_0_20px_rgba(56,189,248,0.2)] flex items-center justify-center gap-3 backdrop-blur-md transition-all">
+                <span class="text-xl animate-pulse">🔒</span>
+                <span id="answerLockedMessage"
+                    class="text-xs sm:text-sm font-sans font-semibold text-sky-300 tracking-wide">
+                    Answer locked in! Waiting for other players...
+                </span>
+            </div>
+
+            <!-- 4 Modern Glass Choice Pads -->
+            <div id="kahootPadsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+
+                <!-- Option A (Sky Blue Badge) -->
+                <button id="padBtn0" onclick="app.handleAnswerClick(0)"
+                    class="glass-pad p-5 sm:p-6 rounded-2xl text-left flex items-center gap-4 group cursor-pointer">
+                    <span
+                        class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center font-display text-base font-bold text-sky-300 group-hover:scale-105 group-hover:bg-sky-500/25 group-hover:border-sky-400 transition-all flex-shrink-0">A</span>
+                    <span id="padText0"
+                        class="font-sans font-medium text-base sm:text-lg text-slate-200 group-hover:text-white transition-colors leading-snug">Option
+                        A</span>
+                </button>
+
+                <!-- Option B (Indigo/Purple Badge) -->
+                <button id="padBtn1" onclick="app.handleAnswerClick(1)"
+                    class="glass-pad p-5 sm:p-6 rounded-2xl text-left flex items-center gap-4 group cursor-pointer">
+                    <span
+                        class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center font-display text-base font-bold text-indigo-300 group-hover:scale-105 group-hover:bg-indigo-500/25 group-hover:border-indigo-400 transition-all flex-shrink-0">B</span>
+                    <span id="padText1"
+                        class="font-sans font-medium text-base sm:text-lg text-slate-200 group-hover:text-white transition-colors leading-snug">Option
+                        B</span>
+                </button>
+
+                <!-- Option C (Amber/Gold Badge) -->
+                <button id="padBtn2" onclick="app.handleAnswerClick(2)"
+                    class="glass-pad p-5 sm:p-6 rounded-2xl text-left flex items-center gap-4 group cursor-pointer">
+                    <span
+                        class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center font-display text-base font-bold text-amber-300 group-hover:scale-105 group-hover:bg-amber-500/25 group-hover:border-amber-400 transition-all flex-shrink-0">C</span>
+                    <span id="padText2"
+                        class="font-sans font-medium text-base sm:text-lg text-slate-200 group-hover:text-white transition-colors leading-snug">Option
+                        C</span>
+                </button>
+
+                <!-- Option D (Emerald/Teal Badge) -->
+                <button id="padBtn3" onclick="app.handleAnswerClick(3)"
+                    class="glass-pad p-5 sm:p-6 rounded-2xl text-left flex items-center gap-4 group cursor-pointer">
+                    <span
+                        class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center font-display text-base font-bold text-emerald-300 group-hover:scale-105 group-hover:bg-emerald-500/25 group-hover:border-emerald-400 transition-all flex-shrink-0">D</span>
+                    <span id="padText3"
+                        class="font-sans font-medium text-base sm:text-lg text-slate-200 group-hover:text-white transition-colors leading-snug">Option
+                        D</span>
+                </button>
+            </div>
+
+            <!-- Reveal Phase Recap Banner (Shown when timer hits 0) -->
+            <div id="revealResultBox"
+                class="hidden party-card p-6 rounded-2xl border border-amber-500/50 space-y-3 text-center relative z-20">
+                <div id="revealHeaderIcon" class="text-4xl animate-bounce drop-shadow-md">👀</div>
+                <h4 id="revealHeaderText" class="font-display text-2xl font-bold text-amber-100">The Answer Is...</h4>
+                <p id="revealExplanation" class="text-slate-300 text-sm font-sans max-w-xl mx-auto">
+                    Explanation goes here...
+                </p>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 4: GLOBAL LEADERBOARD ==================== -->
+        <section id="viewLeaderboard" class="hidden w-full max-w-3xl space-y-6 my-auto">
+            <div class="party-card p-6 sm:p-8 rounded-2xl space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-2xl drop-shadow-md">🏆</span>
+                            <h2 class="font-display text-2xl font-bold text-white uppercase tracking-wide">VIP Audience
+                                Members</h2>
+                        </div>
+                        <p class="text-sm text-slate-400 font-sans">Global realtime rankings synced via Firestore</p>
+                    </div>
+                    <button onclick="app.showTab('ARENA')"
+                        class="px-4 py-2 rounded-lg text-sm font-sans font-bold bg-slate-800/70 hover:bg-slate-700/80 text-slate-200 border border-slate-600/50 transition backdrop-blur-sm">
+                        ← Back to Game
+                    </button>
+                </div>
+
+                <div id="leaderboardList" class="space-y-3 max-h-[420px] overflow-y-auto pr-2">
+                    <div class="text-center py-8 text-slate-400 font-sans text-sm">Loading VIPs...</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FIREBASE CONFIG MODAL HELPER -->
+    <div id="configModal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="party-card p-6 sm:p-8 rounded-2xl max-w-lg w-full space-y-4 border border-sky-500/40">
+            <div class="flex items-center justify-between">
+                <h3 class="font-display text-xl font-bold text-white flex items-center gap-2">
+                    <span>⚙️</span> Configure Firebase Credentials
+                </h3>
+                <button onclick="app.toggleConfigModal(false)"
+                    class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-slate-300 font-sans">
+                Paste your <code class="text-sky-300 bg-slate-800 px-1.5 py-0.5 rounded">firebaseConfig</code> JSON
+                object below to test your connection without editing files:
+            </p>
+            <textarea id="configInputArea" rows="8"
+                class="w-full p-3 rounded-xl bg-slate-900/90 border border-slate-700 text-sky-200 font-mono text-xs focus:outline-none focus:border-sky-400"></textarea>
+            <div class="flex gap-2 justify-end">
+                <button onclick="app.toggleConfigModal(false)"
+                    class="px-4 py-2 rounded-xl text-sm font-sans font-bold text-slate-400 hover:text-white">
+                    Cancel
+                </button>
+                <button onclick="app.saveCustomConfig()"
+                    class="px-5 py-2 rounded-xl text-sm font-sans font-bold bg-sky-600 hover:bg-sky-500 text-white shadow-md">
+                    Save & Connect
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION STACK -->
+    <div id="toastStack"
+        class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none font-sans text-sm font-bold"></div>
+
+    <!-- FOOTER -->
+    <footer
+        class="w-full py-4 text-center text-xs font-sans text-slate-500 border-t border-slate-800/80 glass-panel mt-auto z-10 relative">
+        JACKBOX FAN GAME JACKBOX QUIZ (JGFGJGQ) &bull; REALTIME MULTIPLAYER SERVER
+    </footer>
+
+    <!-- FIREBASE MODULAR SDK & APPLICATION ENGINE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        /* =========================================================================
+         * 1. DEFAULT FIREBASE CONFIGURATION (Connected to user project)
+         * ========================================================================= */
+        const DEFAULT_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyC4SB1XWI0zej6170BO4QuR2IAH17DQVFQ",
+            authDomain: "jackbox-games-fan-game-jgq.firebaseapp.com",
+            projectId: "jackbox-games-fan-game-jgq",
+            storageBucket: "jackbox-games-fan-game-jgq.firebasestorage.app",
+            messagingSenderId: "32559811950",
+            appId: "1:32559811950:web:f5d08497aaefe23a83457f",
+            measurementId: "G-JZYH13JFF6"
+        };
+
+        const APP_ID = "jgfgjq-arena";
+
+        /* Seed Trivia Vault for instant offline fallback and Firestore database seeding */
+        const SEED_TRIVIA_VAULT = [
+            {
+                order: 1,
+                category: "Franchise History",
+                question: "Which Jackbox Party Pack first introduced the hit game 'Quiplash'?",
+                options: ["Party Pack 1", "Party Pack 2", "Party Pack 3", "Party Pack 4"],
+                correctIndex: 1,
+                explanation: "Quiplash XL debuted in The Jackbox Party Pack 2, though the original standalone Quiplash released slightly earlier."
+            },
+            {
+                order: 2,
+                category: "Iconic Hosts",
+                question: "Who is the legendary, long-time host of the 'You Don't Know Jack' series?",
+                options: ["Schmitty", "Nate Shapiro", "Cookie Masterson", "Guy LaFleur"],
+                correctIndex: 2,
+                explanation: "Cookie Masterson is the iconic, beloved host of the You Don't Know Jack franchise!"
+            },
+            {
+                order: 3,
+                category: "Trivia Murder Party",
+                question: "In Trivia Murder Party, what happens to players who answer a question incorrectly?",
+                options: ["They lose points", "They go to the Killing Floor", "They are eliminated instantly", "They become a ghost"],
+                correctIndex: 1,
+                explanation: "Wrong answers send players to the Killing Floor for a deadly minigame to fight for survival!"
+            },
+            {
+                order: 4,
+                category: "Game Mechanics",
+                question: "In 'Drawful', what are players required to draw using only their smart devices?",
+                options: ["Famous landmarks", "Portraits of each other", "Bizarre and absurd prompts", "Replicas of paintings"],
+                correctIndex: 2,
+                explanation: "Drawful challenges players to draw ridiculous and obscure prompts with zero erasing."
+            },
+            {
+                order: 5,
+                category: "Art & Bidding",
+                question: "Which Jackbox game revolves around players drawing art and then bidding on each other's pieces?",
+                options: ["Drawful 2", "Tee K.O.", "Patently Stupid", "Bidiots"],
+                correctIndex: 3,
+                explanation: "In Bidiots, players auction off paintings with secret insider valuations."
+            },
+            {
+                order: 6,
+                category: "Tee K.O.",
+                question: "In Tee K.O., what two player elements are combined to create custom t-shirts?",
+                options: ["Colors and Shapes", "Drawings and Slogans", "Photos and Captions", "Patterns and Logos"],
+                correctIndex: 1,
+                explanation: "Tee K.O. mixes drawings with funny player slogans to battle in tournament rounds!"
+            },
+            {
+                order: 7,
+                category: "Fibbage",
+                question: "What is the primary objective of the game 'Fibbage'?",
+                options: ["To draw the best picture", "To fool others with your lies", "To answer trivia the fastest", "To survive a haunted house"],
+                correctIndex: 1,
+                explanation: "Fibbage is all about inventing believable lies and tricking friends into picking your lie."
+            },
+            {
+                order: 8,
+                category: "Social Deduction",
+                question: "In 'Push The Button', what happens if humans fail to discover the aliens before time expires?",
+                options: ["The ship explodes", "The aliens win", "Everyone is ejected", "The game restarts"],
+                correctIndex: 1,
+                explanation: "If humans fail to isolate the impostors, the aliens take over the spacecraft!"
+            }
+        ];
+
+        /* =========================================================================
+         * 2. HORIZONTAL STREAMING STARS CANVAS
+         * ========================================================================= */
+        const canvas = document.getElementById('warpCanvas');
+        const ctx = canvas.getContext('2d');
+        let canvasWidth = 0;
+        let canvasHeight = 0;
+        let stars = [];
+        const STAR_COUNT = 180;
+        let animFrameId = null;
+        let lastTime = 0;
+
+        function resizeCanvas() {
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            initStars();
+        }
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: Math.random() * canvasWidth,
+                    y: Math.random() * canvasHeight,
+                    speed: Math.random() * 450 + 180,
+                    length: Math.random() * 22 + 6,
+                    size: Math.random() * 1.5 + 0.6,
+                    alpha: Math.random() * 0.7 + 0.3
+                });
+            }
+        }
+
+        function drawStars(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            const delta = (timestamp - lastTime) / 1000;
+            lastTime = timestamp;
+
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+            for (let i = 0; i < stars.length; i++) {
+                const s = stars[i];
+                s.x -= s.speed * delta;
+
+                if (s.x < -s.length) {
+                    s.x = canvasWidth + Math.random() * 50;
+                    s.y = Math.random() * canvasHeight;
+                }
+
+                ctx.strokeStyle = `rgba(186, 230, 253, ${s.alpha})`;
+                ctx.lineWidth = s.size;
+                ctx.beginPath();
+                ctx.moveTo(s.x, s.y);
+                ctx.lineTo(s.x + s.length, s.y);
+                ctx.stroke();
+            }
+
+            animFrameId = requestAnimationFrame(drawStars);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        /* =========================================================================
+         * 3. APPLICATION LOGIC & STATE CONTROLLER
+         * ========================================================================= */
+        window.app = {
+            fbApp: null,
+            auth: null,
+            db: null,
+            currentUser: null,
+            userId: null,
+            isConnected: false,
+            isOfflineMode: false,
+            connectionTimeoutId: null,
+            syncTimerInterval: null,
+
+            userProfile: {
+                nickname: localStorage.getItem('jgfgjq_nickname') || '',
+                avatar: localStorage.getItem('jgfgjq_avatar') || '🤡',
+                score: 0,
+                hasAnsweredCurrent: false,
+                pendingAnswer: null
+            },
+
+            soundEnabled: true,
+            audioCtx: null,
+            leaderboardData: [],
+            firestoreQuestions: [],
+            currentCyclePhase: null,
+
+            QUESTION_DURATION: 120,
+            REVEAL_DURATION: 15,
+            TOTAL_CYCLE: 135,
+
+            getEffectiveConfig() {
+                if (DEFAULT_FIREBASE_CONFIG.apiKey && !DEFAULT_FIREBASE_CONFIG.apiKey.includes("YOUR_API_KEY")) {
+                    return DEFAULT_FIREBASE_CONFIG;
+                }
+                const stored = localStorage.getItem('jgfgjq_custom_config');
+                if (stored) {
+                    try {
+                        return JSON.parse(stored);
+                    } catch (e) {
+                        console.warn("Stored config invalid, falling back to default");
+                    }
+                }
+                return DEFAULT_FIREBASE_CONFIG;
+            },
+
+            toggleConfigModal(show) {
+                const modal = document.getElementById('configModal');
+                const textarea = document.getElementById('configInputArea');
+                if (show) {
+                    textarea.value = JSON.stringify(this.getEffectiveConfig(), null, 2);
+                    modal.classList.remove('hidden');
+                } else {
+                    modal.classList.add('hidden');
+                }
+            },
+
+            saveCustomConfig() {
+                const raw = document.getElementById('configInputArea').value.trim();
+                try {
+                    const parsed = JSON.parse(raw);
+                    if (!parsed.projectId || !parsed.apiKey) {
+                        throw new Error("Config must contain at least apiKey and projectId");
+                    }
+                    localStorage.setItem('jgfgjq_custom_config', JSON.stringify(parsed));
+                    this.toggleConfigModal(false);
+                    this.showToast("Configuration saved! Reconnecting...", "success");
+                    this.startConnectionProcess();
+                } catch (e) {
+                    alert("Invalid JSON Firebase configuration: " + e.message);
+                }
+            },
+
+            /* Audio Playlist & Synthesizer System */
+            currentTrackIndex: -1,
+            bgmPlaylist: [
+                { name: "Connecting", src: "audio/connecting.mp3" },
+                { name: "Fixy", src: "audio/Fixy.mp3" },
+                { name: "Jinx", src: "audio/Jinx.mp3" },
+                { name: "Junk", src: "audio/Junk.mp3" },
+                { name: "Quix", src: "audio/Quix.mp3" },
+                { name: "Riddle", src: "audio/Riddle.mp3" },
+                { name: "Survey", src: "audio/Survey.mp3" },
+                { name: "Tee", src: "audio/Tee.mp3" },
+                { name: "Fibbage 4", src: "audio/fibb4.mp3" },
+                { name: "Weapons", src: "audio/weapons.mp3" }
+            ],
+
+            playRandomBgm(notify = false) {
+                if (!this.bgmPlaylist || this.bgmPlaylist.length === 0) return;
+                const bgAudio = document.getElementById('bgAudio');
+                if (!bgAudio) return;
+
+                let nextIdx = Math.floor(Math.random() * this.bgmPlaylist.length);
+                if (this.bgmPlaylist.length > 1 && nextIdx === this.currentTrackIndex) {
+                    nextIdx = (nextIdx + 1) % this.bgmPlaylist.length;
+                }
+                this.currentTrackIndex = nextIdx;
+                const track = this.bgmPlaylist[nextIdx];
+
+                bgAudio.src = track.src;
+                bgAudio.load();
+
+                if (this.soundEnabled) {
+                    bgAudio.play().catch(e => {
+                        console.log("Audio play waiting for user gesture:", e);
+                    });
+                }
+                if (notify) {
+                    this.showToast(`🎶 Now Playing: ${track.name}`, 'info');
+                }
+            },
+
+            initAudio() {
+                const bgAudio = document.getElementById('bgAudio');
+                const audioToggleBtn = document.getElementById('audioToggleBtn');
+
+                const updateUI = (isPlaying) => {
+                    const iconMuted = document.getElementById('audioIconMuted');
+                    const iconPlaying = document.getElementById('audioIconPlaying');
+                    if (iconMuted && iconPlaying) {
+                        if (isPlaying) {
+                            iconMuted.classList.add('hidden');
+                            iconPlaying.classList.remove('hidden');
+                        } else {
+                            iconMuted.classList.remove('hidden');
+                            iconPlaying.classList.add('hidden');
+                        }
+                    }
+                };
+
+                bgAudio.addEventListener('play', () => updateUI(true));
+                bgAudio.addEventListener('pause', () => updateUI(false));
+
+                // Auto-advance to next random track when current track ends
+                bgAudio.addEventListener('ended', () => {
+                    this.playRandomBgm(true);
+                });
+
+                if (audioToggleBtn) {
+                    audioToggleBtn.addEventListener('click', () => this.toggleSound());
+                }
+
+                // Initial random track selection
+                this.playRandomBgm(false);
+
+                // Autoplay resume on first user interaction
+                const resumeOnInteract = () => {
+                    if (this.soundEnabled && bgAudio.paused) {
+                        bgAudio.play().catch(() => { });
+                    }
+                };
+                window.addEventListener('click', resumeOnInteract, { once: true });
+                window.addEventListener('keydown', resumeOnInteract, { once: true });
+            },
+
+            playSound(type) {
+                if (!this.soundEnabled) return;
+                try {
+                    if (!this.audioCtx) {
+                        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                    const ctx = this.audioCtx;
+                    if (ctx.state === 'suspended') ctx.resume();
+
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    const now = ctx.currentTime;
+
+                    if (type === 'click') {
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(400, now);
+                        gain.gain.setValueAtTime(0.05, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                        osc.start(now);
+                        osc.stop(now + 0.05);
+                    } else if (type === 'correct') {
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(440, now);
+                        osc.frequency.setValueAtTime(554.37, now + 0.1);
+                        osc.frequency.setValueAtTime(659.25, now + 0.2);
+                        osc.frequency.setValueAtTime(880, now + 0.3);
+                        gain.gain.setValueAtTime(0.2, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                        osc.start(now);
+                        osc.stop(now + 0.6);
+                    } else if (type === 'wrong') {
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(220, now);
+                        osc.frequency.setValueAtTime(140, now + 0.2);
+                        gain.gain.setValueAtTime(0.2, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                        osc.start(now);
+                        osc.stop(now + 0.5);
+                    } else if (type === 'lock') {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(600, now);
+                        osc.frequency.setValueAtTime(800, now + 0.1);
+                        gain.gain.setValueAtTime(0.1, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                        osc.start(now);
+                        osc.stop(now + 0.2);
+                    }
+                } catch (e) {
+                    console.log("Audio synth error", e);
+                }
+            },
+
+            toggleSound() {
+                this.soundEnabled = !this.soundEnabled;
+                const bgAudio = document.getElementById('bgAudio');
+                const btn = document.getElementById('soundToggleBtn');
+                if (this.soundEnabled) {
+                    if (bgAudio) {
+                        if (!bgAudio.src) {
+                            this.playRandomBgm(false);
+                        } else if (bgAudio.paused) {
+                            bgAudio.play().catch(() => { });
+                        }
+                    }
+                    if (btn) btn.innerText = '🔊';
+                    this.showToast('Audio Enabled', 'info');
+                } else {
+                    if (bgAudio && !bgAudio.paused) bgAudio.pause();
+                    if (btn) btn.innerText = '🔇';
+                    this.showToast('Audio Muted', 'info');
+                }
+            },
+
+            showToast(msg, type = 'info') {
+                const stack = document.getElementById('toastStack');
+                const toast = document.createElement('div');
+                toast.className = `px-4 py-3 rounded-lg shadow-2xl transition-all duration-300 transform translate-y-2 opacity-0 flex items-center gap-2 border backdrop-blur-md ${type === 'error' ? 'bg-[#450a0a] text-red-200 border-red-800' :
+                    type === 'success' ? 'bg-[#064e3b] text-emerald-200 border-emerald-800' :
+                        'bg-[#1e1b4b] text-purple-200 border-purple-800'
+                    }`;
+                toast.innerHTML = `<span>${type === 'error' ? '✖' : type === 'success' ? '✔' : 'ℹ'}</span><span>${msg}</span>`;
+                stack.appendChild(toast);
+                setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3500);
+            },
+
+            showTab(tabName) {
+                const views = ['viewConnect', 'viewProfileInit', 'viewArena', 'viewLeaderboard'];
+                views.forEach(v => document.getElementById(v).classList.add('hidden'));
+
+                const floatingAudio = document.getElementById('audioToggleBtn');
+
+                if (tabName === 'CONNECT') {
+                    document.getElementById('globalHeader').classList.add('hidden');
+                    document.getElementById('viewConnect').classList.remove('hidden');
+                    if (floatingAudio) floatingAudio.classList.remove('hidden');
+                    return;
+                }
+
+                document.getElementById('globalHeader').classList.remove('hidden');
+                if (floatingAudio) floatingAudio.classList.add('hidden');
+
+                if (!this.userProfile.nickname && tabName === 'ARENA') {
+                    const safeName = this.generateRandomName();
+                    const nickInput = document.getElementById('nicknameInput');
+                    const nickDisplay = document.getElementById('nicknameDisplay');
+                    if (nickInput) nickInput.value = safeName;
+                    if (nickDisplay) nickDisplay.textContent = safeName;
+                    this.renderAvatarPicker();
+                    document.getElementById('viewProfileInit').classList.remove('hidden');
+                    return;
+                }
+
+                if (tabName === 'ARENA') document.getElementById('viewArena').classList.remove('hidden');
+                if (tabName === 'LEADERBOARD') document.getElementById('viewLeaderboard').classList.remove('hidden');
+            },
+
+            /* Connection Flow */
+            startConnectionProcess() {
+                this.showTab('CONNECT');
+                const statusText = document.getElementById('statusText');
+                const subStatusText = document.getElementById('subStatusText');
+                const signalContainer = document.getElementById('signalContainer');
+                const errorXContainer = document.getElementById('errorXContainer');
+                const retryAction = document.getElementById('retryAction');
+                const laptopContainer = document.getElementById('laptopContainer');
+                const serverContainer = document.getElementById('serverContainer');
+
+                statusText.textContent = 'Connecting...';
+                statusText.className = 'text-2xl md:text-3xl font-extrabold tracking-tight text-white transition-colors duration-300';
+                subStatusText.textContent = 'Connecting to JGFGJGQ Firebase Services';
+                subStatusText.className = 'text-xs md:text-sm text-slate-400 font-mono mt-2 transition-colors duration-300';
+
+                signalContainer.classList.remove('hidden');
+                errorXContainer.classList.add('hidden');
+                retryAction.classList.add('hidden');
+
+                laptopContainer.className = 'p-4 rounded-2xl bg-slate-800/80 border border-slate-700 text-cyan-400 transition-all duration-300';
+                serverContainer.className = 'p-4 rounded-2xl bg-slate-800/80 border border-slate-700 text-slate-200 transition-all duration-300';
+
+                clearTimeout(this.connectionTimeoutId);
+
+                // 8-second timeout for fallback/error
+                this.connectionTimeoutId = setTimeout(() => {
+                    this.triggerConnectionError("Connection timed out. If Anonymous Auth is not enabled yet in your Firebase Console, click 'Skip & Play in Offline Mode' below!");
+                }, 8000);
+
+                this.initFirebase();
+            },
+
+            triggerConnectionError(reason = "Failed to connect to Firebase") {
+                clearTimeout(this.connectionTimeoutId);
+                const statusText = document.getElementById('statusText');
+                const subStatusText = document.getElementById('subStatusText');
+                const signalContainer = document.getElementById('signalContainer');
+                const errorXContainer = document.getElementById('errorXContainer');
+                const retryAction = document.getElementById('retryAction');
+                const laptopContainer = document.getElementById('laptopContainer');
+                const serverContainer = document.getElementById('serverContainer');
+
+                statusText.textContent = 'Connection Failed';
+                statusText.className = 'text-2xl md:text-3xl font-extrabold tracking-tight text-red-500 transition-colors duration-300';
+                subStatusText.textContent = reason;
+                subStatusText.className = 'text-xs md:text-sm text-red-400 font-mono mt-2 transition-colors duration-300';
+
+                signalContainer.classList.add('hidden');
+                errorXContainer.classList.remove('hidden');
+                retryAction.classList.remove('hidden');
+
+                laptopContainer.className = 'p-4 rounded-2xl bg-slate-800/80 border border-red-500/30 text-slate-400 transition-all duration-300';
+                serverContainer.className = 'p-4 rounded-2xl bg-slate-800/80 border border-red-500/30 text-slate-400 transition-all duration-300';
+            },
+
+            bypassConnection() {
+                clearTimeout(this.connectionTimeoutId);
+                this.isOfflineMode = true;
+                this.userId = 'offline_' + Math.random().toString(36).substr(2, 9);
+                this.firestoreQuestions = [...SEED_TRIVIA_VAULT];
+                this.showToast("Entered Offline Mode (Local Seed Questions Active)", "info");
+                document.getElementById('connectionBadge').innerText = 'OFFLINE';
+                document.getElementById('connectionBadge').className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-900/40 text-amber-300 border border-amber-700/50 uppercase backdrop-blur-sm';
+
+                this.startGlobalSyncEngine();
+                if (this.userProfile.nickname) {
+                    this.showTab('ARENA');
+                } else {
+                    this.showTab('ARENA');
+                }
+            },
+
+            async initFirebase() {
+                const config = this.getEffectiveConfig();
+
+                if (!config.apiKey || config.apiKey.includes("YOUR_API_KEY")) {
+                    this.triggerConnectionError("Please configure your Firebase credentials in index.html or click 'Firebase Setup'.");
+                    return;
+                }
+
+                try {
+                    const subStatusText = document.getElementById('subStatusText');
+                    if (subStatusText) subStatusText.textContent = "1/3 Initializing Firebase SDK...";
+
+                    this.fbApp = initializeApp(config);
+                    this.auth = getAuth(this.fbApp);
+                    this.db = getFirestore(this.fbApp);
+
+                    if (subStatusText) subStatusText.textContent = "2/3 Authenticating guest session...";
+
+                    let connectionHandled = false;
+
+                    const proceedToGame = async (user) => {
+                        if (connectionHandled) return;
+                        connectionHandled = true;
+                        clearTimeout(this.connectionTimeoutId);
+                        this.currentUser = user;
+                        this.userId = user ? user.uid : ('guest_' + Math.random().toString(36).substr(2, 8));
+                        this.isConnected = true;
+
+                        const statusText = document.getElementById('statusText');
+                        if (statusText) {
+                            statusText.textContent = 'Connected!';
+                            statusText.className = 'text-2xl md:text-3xl font-extrabold tracking-tight text-emerald-400 transition-colors duration-300';
+                        }
+                        if (subStatusText) {
+                            subStatusText.textContent = '3/3 Entering Jackbox Arena...';
+                        }
+
+                        try {
+                            await this.loadUserProfile();
+                        } catch (e) {
+                            console.warn("Profile load bypassed", e);
+                        }
+
+                        this.subscribeToPersonalUserDoc();
+                        this.subscribeToPresenceAndLeaderboard();
+                        this.subscribeToFirestoreQuestions();
+                        this.startGlobalSyncEngine();
+
+                        setTimeout(() => {
+                            this.showTab('ARENA');
+                        }, 600);
+                    };
+
+                    // Listen for existing session or user deletion from Auth
+                    onAuthStateChanged(this.auth, (user) => {
+                        if (user) {
+                            proceedToGame(user);
+                        } else if (this.isConnected) {
+                            console.warn("User deleted from Firebase Auth. Booting back to connect screen...");
+                            this.isConnected = false;
+                            this.currentUser = null;
+                            this.handleUserDeleted("Your user was deleted from Firebase. Reconnecting...");
+                            setTimeout(() => {
+                                this.startConnectionProcess();
+                            }, 800);
+                        }
+                    });
+
+                    // Trigger anonymous sign in
+                    signInAnonymously(this.auth).then((userCred) => {
+                        if (userCred && userCred.user) {
+                            proceedToGame(userCred.user);
+                        }
+                    }).catch((authErr) => {
+                        console.error("signInAnonymously failed:", authErr);
+                        let friendlyMsg = authErr.message;
+                        if (authErr.code === 'auth/admin-restricted-operation' || authErr.code === 'auth/operation-not-allowed') {
+                            friendlyMsg = "Anonymous Sign-In is disabled in your Firebase project. Go to Firebase Console > Authentication > Sign-in method > Enable Anonymous.";
+                        } else if (authErr.code === 'auth/network-request-failed') {
+                            friendlyMsg = "Network error connecting to Firebase auth.";
+                        } else if (authErr.code === 'auth/invalid-api-key') {
+                            friendlyMsg = "Invalid Firebase API key provided.";
+                        } else if (authErr.code === 'auth/unauthorized-domain') {
+                            friendlyMsg = "Domain unauthorized. Add 'localhost' to Firebase Auth > Authorized Domains.";
+                        }
+                        this.triggerConnectionError(friendlyMsg);
+                    });
+
+                } catch (err) {
+                    console.error("Firebase connection error:", err);
+                    this.triggerConnectionError(err.message || "Failed to authenticate with Firebase.");
+                }
+            },
+
+            /* Firestore Question Bank Synchronization & Auto-Seed */
+            async subscribeToFirestoreQuestions() {
+                if (!this.db) {
+                    if (this.firestoreQuestions.length === 0) {
+                        this.firestoreQuestions = [...SEED_TRIVIA_VAULT];
+                    }
+                    return;
+                }
+                try {
+                    const qCol = collection(this.db, 'artifacts', APP_ID, 'public', 'data', 'trivia_questions');
+
+                    onSnapshot(qCol, async (snapshot) => {
+                        if (snapshot.empty) {
+                            console.log("Firestore question bank is empty. Seeding initial questions to Firebase...");
+                            await this.seedInitialQuestionsToFirestore();
+                            return;
+                        }
+
+                        const loadedQuestions = [];
+                        snapshot.forEach(docSnap => {
+                            const data = docSnap.data();
+                            loadedQuestions.push({ id: docSnap.id, ...data });
+                        });
+
+                        loadedQuestions.sort((a, b) => (a.order || 0) - (b.order || 0) || (a.createdAt || 0) - (b.createdAt || 0));
+                        this.firestoreQuestions = loadedQuestions;
+
+                        const sourceBadge = document.getElementById('qSourceBadge');
+                        if (sourceBadge) {
+                            sourceBadge.innerText = `🔥 ${this.firestoreQuestions.length} Questions Synced`;
+                        }
+                    }, (err) => {
+                        console.warn("Firestore questions subscription warning (using local fallback):", err);
+                        if (this.firestoreQuestions.length === 0) {
+                            this.firestoreQuestions = [...SEED_TRIVIA_VAULT];
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Error setting up questions listener:", e);
+                    if (this.firestoreQuestions.length === 0) {
+                        this.firestoreQuestions = [...SEED_TRIVIA_VAULT];
+                    }
+                }
+            },
+
+            async seedInitialQuestionsToFirestore() {
+                if (!this.db) return;
+                try {
+                    const batch = writeBatch(this.db);
+                    SEED_TRIVIA_VAULT.forEach((q, idx) => {
+                        const docId = `q_${String(idx + 1).padStart(3, '0')}`;
+                        const qRef = doc(this.db, 'artifacts', APP_ID, 'public', 'data', 'trivia_questions', docId);
+                        batch.set(qRef, {
+                            ...q,
+                            createdAt: Date.now()
+                        });
+                    });
+                    await batch.commit();
+                    console.log("Initial trivia questions seeded successfully to Firestore!");
+                    this.showToast("Default question vault seeded to your Firebase database!", "success");
+                } catch (err) {
+                    console.error("Error seeding initial questions:", err);
+                    if (this.firestoreQuestions.length === 0) {
+                        this.firestoreQuestions = [...SEED_TRIVIA_VAULT];
+                    }
+                }
+            },
+
+            /* Avatar & Nickname Profile */
+            NAME_LIST_1: [
+                'bean', 'spicy', 'crispy', 'funky', 'cosmic', 'super', 'turbo', 'snazzy',
+                'disco', 'crunchy', 'cheesy', 'wild', 'glitchy', 'atomic', 'silly', 'magic',
+                'golden', 'hyper', 'zesty', 'pickle', 'waffle', 'nacho', 'taco', 'chili',
+                'bacon', 'noodle', 'potato', 'banana', 'garlic', 'cookie', 'jelly', 'donut',
+                'cheddar', 'tofu', 'guac', 'velvet', 'retro', 'stellar', 'neon', 'fuzzy'
+            ],
+            NAME_LIST_2: [
+                'burrito', 'taco', 'waffle', 'noodle', 'pickle', 'potato', 'banana', 'donut',
+                'nacho', 'biscuit', 'pancake', 'muffin', 'dumpling', 'pizza', 'burger', 'pretzel',
+                'hotdog', 'sandwich', 'meatball', 'bagel', 'sushi', 'avocado', 'popcorn', 'peanut',
+                'cupcake', 'lasagna', 'sausage', 'tater', 'cheddar', 'marshmallow', 'ramen', 'cookie'
+            ],
+            NAME_LIST_3: [
+                'man', 'guy', 'dude', 'boss', 'king', 'queen', 'wizard', 'ninja',
+                'bot', 'duck', 'champion', 'hero', 'master', 'legend', 'captain', 'beast',
+                'goblin', 'gremlin', 'guru', 'jester', 'pilot', 'knight', 'detective', 'doctor',
+                'ranger', 'vampire', 'bandit', 'clown', 'pirate', 'gamer', 'samurai', 'monk'
+            ],
+
+            escapeHTML(str) {
+                return String(str || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            },
+
+            generateRandomName() {
+                const w1 = this.NAME_LIST_1[Math.floor(Math.random() * this.NAME_LIST_1.length)];
+                let w2 = this.NAME_LIST_2[Math.floor(Math.random() * this.NAME_LIST_2.length)];
+                if (w2 === w1) w2 = 'burrito';
+                const w3 = this.NAME_LIST_3[Math.floor(Math.random() * this.NAME_LIST_3.length)];
+                return `${w1}-${w2}-${w3}`;
+            },
+
+            isValidGeneratedName(name) {
+                if (!name || typeof name !== 'string') return false;
+                const parts = name.toLowerCase().trim().split('-');
+                if (parts.length !== 3) return false;
+                return this.NAME_LIST_1.includes(parts[0]) &&
+                       this.NAME_LIST_2.includes(parts[1]) &&
+                       this.NAME_LIST_3.includes(parts[2]);
+            },
+
+            rollNewRandomName() {
+                const newName = this.generateRandomName();
+                const input = document.getElementById('nicknameInput');
+                const display = document.getElementById('nicknameDisplay');
+                if (input) input.value = newName;
+                if (display) display.textContent = newName;
+                this.showToast(`Rolled: ${newName}`, "info");
+            },
+
+            renderAvatarPicker() {
+                const emojis = ['🤡', '👽', '👻', '👾', '🤠', '😈', '🤖', '💩'];
+                const grid = document.getElementById('avatarPickerGrid');
+                const current = this.userProfile.avatar || '🤡';
+                grid.innerHTML = emojis.map((e) => `
+                    <button type="button" onclick="app.selectAvatar('${e}')" class="avatar-btn p-2 rounded-lg text-2xl transition-all ${e === current ? 'bg-slate-800 border border-sky-500 shadow-[0_0_8px_rgba(56,189,248,0.3)]' : 'hover:bg-slate-700/50'}" data-emoji="${e}">
+                        ${e}
+                    </button>
+                `).join('');
+            },
+
+            selectAvatar(emoji) {
+                this.userProfile.avatar = emoji;
+                localStorage.setItem('jgfgjq_avatar', emoji);
+                document.querySelectorAll('.avatar-btn').forEach(btn => {
+                    if (btn.getAttribute('data-emoji') === emoji) {
+                        btn.className = "avatar-btn p-2 rounded-lg text-2xl bg-slate-800 border border-sky-500 shadow-[0_0_8px_rgba(56,189,248,0.3)]";
+                    } else {
+                        btn.className = "avatar-btn p-2 rounded-lg text-2xl hover:bg-slate-700/50 transition-all";
+                    }
+                });
+            },
+
+            async registerNickname(e) {
+                if (e && e.preventDefault) e.preventDefault();
+                let nick = document.getElementById('nicknameInput')?.value || '';
+                
+                // Strict validation: must match valid 3-word structure from whitelist
+                if (!this.isValidGeneratedName(nick)) {
+                    nick = this.generateRandomName();
+                }
+
+                this.userProfile.nickname = nick;
+                localStorage.setItem('jgfgjq_nickname', nick);
+
+                if (this.db && this.userId) {
+                    try {
+                        const userDocRef = doc(this.db, 'artifacts', APP_ID, 'public', 'data', 'global_leaderboard', this.userId);
+                        await setDoc(userDocRef, {
+                            nickname: nick,
+                            avatar: this.userProfile.avatar,
+                            score: this.userProfile.score || 0,
+                            updatedAt: Date.now()
+                        }, { merge: true });
+                    } catch (err) {
+                        console.error("Failed to save nickname to Firestore:", err);
+                    }
+                }
+
+                this.showToast(`Welcome aboard, ${nick}!`, "success");
+                this.showTab('ARENA');
+            },
+
+            handleUserDeleted(reason = "Your profile was deleted from Firebase. Please pick a nickname to rejoin!") {
+                console.warn("User deletion detected:", reason);
+                this.userProfile.nickname = '';
+                this.userProfile.score = 0;
+                this.userProfile.hasAnsweredCurrent = false;
+                this.userProfile.pendingAnswer = null;
+                localStorage.removeItem('jgfgjq_nickname');
+                localStorage.removeItem('jgfgjq_avatar');
+                this.updateScoreDisplays();
+
+                const nickInput = document.getElementById('nicknameInput');
+                if (nickInput) {
+                    nickInput.value = this.generateRandomName();
+                }
+
+                this.showToast(reason, "error");
+                this.showTab('ARENA'); // Because nickname is now empty, showTab('ARENA') will immediately open the join screen
+            },
+
+            subscribeToPersonalUserDoc() {
+                if (!this.db || !this.userId) return;
+                try {
+                    const userDocRef = doc(this.db, 'artifacts', APP_ID, 'public', 'data', 'global_leaderboard', this.userId);
+                    let initialLoad = true;
+
+                    onSnapshot(userDocRef, (snap) => {
+                        if (initialLoad) {
+                            initialLoad = false;
+                            if (snap.exists()) {
+                                const data = snap.data();
+                                if (data.nickname) this.userProfile.nickname = data.nickname;
+                                if (data.avatar) this.userProfile.avatar = data.avatar;
+                                if (typeof data.score === 'number') this.userProfile.score = data.score;
+                                this.updateScoreDisplays();
+                            }
+                            return;
+                        }
+
+                        // If user has a nickname and document gets deleted in Firestore:
+                        if (!snap.exists() && this.userProfile.nickname) {
+                            this.handleUserDeleted("Your user document was deleted in Firebase. Rejoining...");
+                        }
+                    }, (err) => {
+                        if (err.code === 'permission-denied' || err.code === 'unauthenticated') {
+                            this.handleUserDeleted("Session expired or removed. Please rejoin!");
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Personal user doc listener error:", e);
+                }
+            },
+
+            async loadUserProfile() {
+                if (!this.db || !this.userId) return;
+                try {
+                    const userDocRef = doc(this.db, 'artifacts', APP_ID, 'public', 'data', 'global_leaderboard', this.userId);
+                    const snap = await getDoc(userDocRef);
+                    if (snap.exists()) {
+                        const data = snap.data();
+                        if (data.nickname) this.userProfile.nickname = data.nickname;
+                        if (data.avatar) this.userProfile.avatar = data.avatar;
+                        if (typeof data.score === 'number') this.userProfile.score = data.score;
+                        this.updateScoreDisplays();
+                    }
+                } catch (e) {
+                    console.log("Could not load remote profile:", e);
+                }
+            },
+
+            updateScoreDisplays() {
+                const headerBadge = document.getElementById('userScoreBadge');
+                const scoreVal = document.getElementById('headerScoreVal');
+                if (headerBadge && scoreVal) {
+                    scoreVal.innerText = this.userProfile.score || 0;
+                    headerBadge.classList.remove('hidden');
+                }
+            },
+
+            /* Realtime Presence and Leaderboard */
+            subscribeToPresenceAndLeaderboard() {
+                if (!this.db) return;
+
+                // 1. Presence Heartbeat
+                const updatePresence = async () => {
+                    if (!this.userId || !this.db) return;
+                    try {
+                        const presenceRef = doc(this.db, 'artifacts', APP_ID, 'public', 'data', 'online_players', this.userId);
+                        await setDoc(presenceRef, {
+                            lastSeen: Date.now(),
+                            nickname: this.userProfile.nickname || 'Audience Member',
+                            avatar: this.userProfile.avatar || '🤡'
+                        }, { merge: true });
+                    } catch (e) {
+                        if (e.code === 'permission-denied' || e.code === 'unauthenticated') {
+                            this.handleUserDeleted("User session removed. Please pick a nickname to rejoin!");
+                        }
+                    }
+                };
+
+                updatePresence();
+                setInterval(updatePresence, 20000);
+
+                // 2. Active Players Listener
+                const presenceCol = collection(this.db, 'artifacts', APP_ID, 'public', 'data', 'online_players');
+                onSnapshot(presenceCol, (snapshot) => {
+                    const threshold = Date.now() - 60000;
+                    let count = 0;
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (data.lastSeen && data.lastSeen > threshold) count++;
+                    });
+                    const countEl = document.getElementById('headerLivePlayers');
+                    if (countEl) countEl.innerText = `${Math.max(1, count)} Player${count === 1 ? '' : 's'}`;
+                }, (err) => {
+                    console.log("Presence listener bypassed", err);
+                });
+
+                // 3. Global Leaderboard Listener
+                const leaderboardCol = collection(this.db, 'artifacts', APP_ID, 'public', 'data', 'global_leaderboard');
+                onSnapshot(leaderboardCol, (snapshot) => {
+                    const list = [];
+                    snapshot.forEach(docSnap => {
+                        list.push({ userId: docSnap.id, ...docSnap.data() });
+                    });
+                    list.sort((a, b) => (b.score || 0) - (a.score || 0));
+                    this.leaderboardData = list;
+                    this.renderLeaderboardUI();
+                }, (err) => {
+                    console.log("Leaderboard listener bypassed", err);
+                });
+            },
+
+            /* Synchronized Clock & Global Cycle Engine */
+            startGlobalSyncEngine() {
+                if (this.syncTimerInterval) clearInterval(this.syncTimerInterval);
+
+                const tick = () => {
+                    const questions = (this.firestoreQuestions && this.firestoreQuestions.length > 0)
+                        ? this.firestoreQuestions
+                        : SEED_TRIVIA_VAULT;
+
+                    const nowSeconds = Math.floor(Date.now() / 1000);
+                    const cycleSecond = nowSeconds % this.TOTAL_CYCLE;
+                    const activeQIndex = Math.floor(nowSeconds / this.TOTAL_CYCLE) % questions.length;
+                    const activeQ = questions[activeQIndex] || questions[0];
+
+                    const timerLabelEl = document.getElementById('timerLabel');
+                    const timerSecondsEl = document.getElementById('timerSeconds');
+                    const countdownBox = document.getElementById('countdownBox');
+
+                    if (cycleSecond < this.QUESTION_DURATION) {
+                        // Phase: Answering Round (0 - 120s)
+                        const remaining = this.QUESTION_DURATION - cycleSecond;
+                        if (timerSecondsEl) timerSecondsEl.innerText = remaining;
+                        if (timerLabelEl) timerLabelEl.innerText = "Time Left:";
+
+                        if (remaining <= 10) {
+                            countdownBox.className = 'flex items-center justify-center px-4 py-1.5 rounded-xl font-display text-2xl font-bold bg-red-950/80 border border-red-500 text-red-300 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.5)]';
+                        } else {
+                            countdownBox.className = 'flex items-center justify-center px-4 py-1.5 rounded-xl font-display text-2xl font-bold bg-slate-800/80 border border-slate-600 text-sky-300 shadow-[0_0_10px_rgba(56,189,248,0.2)]';
+                        }
+
+                        if (this.currentCyclePhase !== 'QUESTION_' + activeQIndex) {
+                            this.currentCyclePhase = 'QUESTION_' + activeQIndex;
+                            this.enterQuestionPhase(activeQ);
+                        }
+                    } else {
+                        // Phase: Reveal & Cooldown (120s - 135s)
+                        const revealRemaining = this.TOTAL_CYCLE - cycleSecond;
+                        if (timerSecondsEl) timerSecondsEl.innerText = revealRemaining;
+                        if (timerLabelEl) timerLabelEl.innerText = "Next Question:";
+
+                        countdownBox.className = 'flex items-center justify-center px-4 py-1.5 rounded-xl font-display text-2xl font-bold bg-amber-950/60 border border-amber-500/60 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.3)]';
+
+                        if (this.currentCyclePhase !== 'REVEAL_' + activeQIndex) {
+                            this.currentCyclePhase = 'REVEAL_' + activeQIndex;
+                            this.enterRevealPhase(activeQ);
+                        }
+                    }
+                };
+
+                tick();
+                this.syncTimerInterval = setInterval(tick, 1000);
+            },
+
+            enterQuestionPhase(q) {
+                this.userProfile.hasAnsweredCurrent = false;
+                this.userProfile.pendingAnswer = null;
+
+                document.getElementById('revealResultBox').classList.add('hidden');
+                document.getElementById('answerLockedNotice').classList.add('hidden');
+
+                document.getElementById('qCategoryBadge').innerText = q.category || 'Trivia Prompt';
+                document.getElementById('globalQuestionText').innerText = q.question;
+
+                for (let i = 0; i < 4; i++) {
+                    const pad = document.getElementById(`padBtn${i}`);
+                    const textSpan = document.getElementById(`padText${i}`);
+                    pad.disabled = false;
+                    pad.classList.remove('locked');
+                    pad.style.opacity = "1";
+                    pad.style.borderColor = "";
+                    pad.style.background = "";
+                    pad.style.boxShadow = "";
+                    textSpan.innerText = (q.options && q.options[i]) ? q.options[i] : `Choice ${i + 1}`;
+                }
+            },
+
+            enterRevealPhase(q) {
+                this.processPendingAnswer(q);
+                this.highlightRevealAnswer(q);
+                document.getElementById('revealResultBox').classList.remove('hidden');
+            },
+
+            handleAnswerClick(optionIdx) {
+                if (this.userProfile.hasAnsweredCurrent) return;
+
+                this.userProfile.hasAnsweredCurrent = true;
+                this.userProfile.pendingAnswer = optionIdx;
+                this.playSound('lock');
+
+                for (let i = 0; i < 4; i++) {
+                    const pad = document.getElementById(`padBtn${i}`);
+                    pad.disabled = true;
+                    if (i !== optionIdx) {
+                        pad.style.opacity = "0.35";
+                    } else {
+                        pad.classList.add('locked');
+                    }
+                }
+
+                const letters = ['A', 'B', 'C', 'D'];
+                const messageEl = document.getElementById('answerLockedMessage');
+                messageEl.innerText = `Answer locked in: Option ${letters[optionIdx]} — Waiting for other players...`;
+
+                document.getElementById('answerLockedNotice').classList.remove('hidden');
+                this.showToast(`Locked in Option ${letters[optionIdx]}!`, "info");
+            },
+
+            async processPendingAnswer(activeQ) {
+                if (!this.userProfile.hasAnsweredCurrent) return;
+                if (this.userProfile.pendingAnswer === null) return;
+
+                const isCorrect = (this.userProfile.pendingAnswer === activeQ.correctIndex);
+
+                if (isCorrect) {
+                    this.userProfile.score = (this.userProfile.score || 0) + 1;
+                    this.updateScoreDisplays();
+                    this.playSound('correct');
+                    this.showToast("You got it right! +1 Point.", "success");
+
+                    if (typeof confetti === 'function') {
+                        confetti({ particleCount: 65, spread: 75, origin: { y: 0.7 } });
+                    }
+
+                    if (this.db && this.userId) {
+                        try {
+                            const userDocRef = doc(this.db, 'artifacts', APP_ID, 'public', 'data', 'global_leaderboard', this.userId);
+                            await setDoc(userDocRef, {
+                                score: this.userProfile.score,
+                                updatedAt: Date.now()
+                            }, { merge: true });
+                        } catch (e) {
+                            console.error("Failed to update score in Firestore:", e);
+                        }
+                    }
+                } else {
+                    this.playSound('wrong');
+                    this.showToast("Incorrect! Better luck on the next prompt.", "error");
+                }
+
+                this.userProfile.pendingAnswer = null;
+            },
+
+            highlightRevealAnswer(q) {
+                const correctIdx = q.correctIndex;
+                const explanation = q.explanation || `Correct answer: ${q.options[correctIdx]}`;
+
+                document.getElementById('revealHeaderText').innerText = `The Answer: ${q.options[correctIdx]}`;
+                document.getElementById('revealExplanation').innerText = explanation;
+
+                for (let i = 0; i < 4; i++) {
+                    const pad = document.getElementById(`padBtn${i}`);
+                    pad.disabled = true;
+
+                    if (i === correctIdx) {
+                        pad.style.opacity = "1";
+                        pad.style.borderColor = "#10b981";
+                        pad.style.background = "rgba(16, 185, 129, 0.18)";
+                        pad.style.boxShadow = "0 0 30px rgba(16, 185, 129, 0.35)";
+                    } else if (i === this.userProfile.pendingAnswer) {
+                        pad.style.opacity = "0.75";
+                        pad.style.borderColor = "#ef4444";
+                        pad.style.background = "rgba(239, 68, 68, 0.18)";
+                        pad.style.boxShadow = "0 0 20px rgba(239, 68, 68, 0.25)";
+                    } else {
+                        pad.style.opacity = "0.25";
+                    }
+                }
+            },
+
+            renderLeaderboardUI() {
+                const listEl = document.getElementById('leaderboardList');
+                if (!listEl) return;
+
+                if (this.leaderboardData.length === 0) {
+                    listEl.innerHTML = `<p class="text-center py-6 text-slate-400 font-sans text-sm">No audience members yet. Be the first!</p>`;
+                    return;
+                }
+
+                listEl.innerHTML = this.leaderboardData.map((p, idx) => {
+                    const isMe = p.userId === this.userId;
+                    const rankTag = `#${idx + 1}`;
+                    return `
+                        <div class="flex items-center justify-between p-4 rounded-xl ${isMe ? 'bg-slate-800/85 border border-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.2)]' : 'bg-slate-900/50 border border-slate-700/50'} font-sans backdrop-blur-sm transition-all hover:bg-slate-800/70">
+                            <div class="flex items-center gap-4">
+                                <span class="w-8 font-bold text-center text-lg ${idx === 0 ? 'text-amber-400 drop-shadow-[0_0_3px_rgba(251,191,36,0.8)]' : 'text-slate-400'}">${rankTag}</span>
+                                <span class="text-3xl">${p.avatar || '🤡'}</span>
+                                <div>
+                                    <p class="font-bold text-slate-200 flex items-center gap-2 text-lg">
+                                        <span>${this.escapeHTML(p.nickname || 'Guest')}</span>
+                                        ${isMe ? '<span class="px-2 py-0.5 text-[10px] bg-sky-900/60 text-sky-300 border border-sky-700/60 rounded uppercase tracking-wider backdrop-blur-sm">YOU</span>' : ''}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="font-display font-bold text-white text-2xl">
+                                ${p.score || 0} <span class="text-xs text-slate-400 font-sans">PTS</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        };
+
+        // Application bootstrap
+        window.addEventListener('DOMContentLoaded', () => {
+            resizeCanvas();
+            drawStars(0);
+            app.renderAvatarPicker();
+            app.initAudio();
+            app.startConnectionProcess();
+        });
+    </script>
+</body>
+
+</html>
