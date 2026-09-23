@@ -1110,6 +1110,37 @@
             background: linear-gradient(135deg, #ffffff, #38bdf8);
         }
 
+        .swatch-birthday {
+            background: linear-gradient(135deg, #ec4899, #f59e0b, #8b5cf6);
+        }
+
+        .swatch-hacker {
+            background: linear-gradient(135deg, #00ff41, #021a08);
+        }
+
+        .swatch-liquidglass {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(147, 197, 253, 0.75) 45%, rgba(192, 132, 252, 0.75) 75%, rgba(255, 255, 255, 0.5) 100%);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 8px rgba(147, 197, 253, 0.7), inset 0 1px 2px #ffffff;
+        }
+
+        .swatch-canadian {
+            background: linear-gradient(135deg, #ef4444 33%, #ffffff 33%, #ffffff 66%, #ef4444 66%);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .swatch-minecraft {
+            background: linear-gradient(180deg, #5b8c32 50%, #573d26 50%);
+            border: 1px solid #4dedf4;
+            box-shadow: 0 0 5px rgba(77, 237, 244, 0.6);
+        }
+
+        .swatch-pokemon {
+            background: linear-gradient(180deg, #ef4444 42%, #1e293b 42%, #1e293b 58%, #ffffff 58%);
+            border: 1px solid #facc15;
+            box-shadow: 0 0 6px rgba(250, 204, 21, 0.6);
+        }
+
         /* ================= THEME SWITCH LOADING SCREEN ================= */
         .theme-loading-screen {
             position: fixed;
@@ -1601,6 +1632,546 @@
             background-repeat: no-repeat;
             filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.45)) drop-shadow(0 1px 4px rgba(125, 211, 252, 0.8));
         }
+
+        /* 6. BIRTHDAY THEME (Balloons, Confetti & Party Celebration) */
+        [data-theme="birthday"] {
+            --metal-dark: #120524;
+            --metal-base: #1f0b3d;
+            --metal-light: #3b146e;
+            --accent-blue: #ec4899;
+            --text-main: #fdf4ff;
+            --text-muted: #d8b4fe;
+            --hazard-yellow: #f59e0b;
+            --canvas-bg: radial-gradient(circle at center, #230b42 0%, #0d0319 100%);
+            --panel-bg: linear-gradient(145deg, rgba(37, 13, 70, 0.8), rgba(18, 5, 36, 0.92));
+            --panel-border: 1px solid rgba(236, 72, 153, 0.35);
+            --panel-border-top: 2px solid rgba(244, 114, 182, 0.85);
+            --panel-border-left: 2px solid rgba(168, 85, 247, 0.5);
+            --nav-bg: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(30, 9, 58, 0.75));
+            --nav-border: 2px solid rgba(244, 114, 182, 0.6);
+            --nav-color: #fdf4ff;
+            --glow-color: rgba(236, 72, 153, 0.5);
+            --launch-btn-bg: linear-gradient(135deg, #ec4899, #8b5cf6);
+            --launch-btn-border: 2px solid #fbcfe8;
+            --launch-btn-hover: linear-gradient(135deg, #f43f5e, #fbbf24);
+            --launch-btn-hover-color: #fff;
+            --drawer-bg: radial-gradient(circle at 50% 0%, #2e0f54 0%, #0c0217 85%);
+            --drawer-border: 3px solid #ec4899;
+            --header-bg: rgba(18, 5, 36, 0.94);
+            --header-border: rgba(236, 72, 153, 0.35);
+        }
+
+        [data-theme="birthday"] body {
+            background-color: #0d0319;
+        }
+
+        [data-theme="birthday"] .rivet {
+            background: radial-gradient(circle, #fbcfe8, #a855f7) !important;
+            box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.6), 1px 1px 3px rgba(0, 0, 0, 0.8) !important;
+        }
+
+        [data-theme="birthday"] .nav-btn:hover {
+            border-color: #f472b6 !important;
+            color: #fdf4ff !important;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.7) !important;
+        }
+
+        [data-theme="birthday"] .tech-btn {
+            border-color: #ec4899 !important;
+            color: #fdf4ff !important;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(139, 92, 246, 0.25)) !important;
+        }
+
+        [data-theme="birthday"] .tech-btn:hover {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
+            color: #fff !important;
+            box-shadow: 0 0 22px rgba(236, 72, 153, 0.8) !important;
+            border-color: #fbcfe8 !important;
+        }
+
+        [data-theme="birthday"] .badge-beta {
+            background: rgba(236, 72, 153, 0.25) !important;
+            color: #f472b6 !important;
+            border-color: #ec4899 !important;
+        }
+
+        /* Birthday Theme: Party Pennant Bunting Garland on Top of Boxes */
+        [data-theme="birthday"] .panel,
+        [data-theme="birthday"] .portal-card {
+            overflow: visible !important;
+        }
+
+        [data-theme="birthday"] .panel::before,
+        [data-theme="birthday"] .portal-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 18px;
+            z-index: 15;
+            pointer-events: none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 22' preserveAspectRatio='none'%3E%3Cpath d='M0 3 Q40 8, 80 3 Q120 8, 160 3' stroke='%23fce7f3' stroke-width='1.5' fill='none' opacity='0.8'/%3E%3Cpolygon points='6,3 22,3 14,19' fill='%23ec4899'/%3E%3Cpolygon points='26,4 42,4 34,20' fill='%23f59e0b'/%3E%3Cpolygon points='46,5 62,5 54,21' fill='%2306b6d4'/%3E%3Cpolygon points='66,5 82,5 74,21' fill='%23a855f7'/%3E%3Cpolygon points='86,4 102,4 94,20' fill='%2310b981'/%3E%3Cpolygon points='106,4 122,4 114,20' fill='%23f43f5e'/%3E%3Cpolygon points='126,5 142,5 134,21' fill='%23fbbf24'/%3E%3Cpolygon points='146,4 158,4 152,19' fill='%238b5cf6'/%3E%3C/svg%3E");
+            background-size: 160px 20px;
+            background-repeat: repeat-x;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        /* 7. HACKER THEME (Matrix Digital Rain, Cyberpunk Terminal) */
+        [data-theme="hacker"] {
+            --metal-dark: #020b05;
+            --metal-base: #041a0b;
+            --metal-light: #063814;
+            --accent-blue: #00ff41;
+            --text-main: #e0ffe5;
+            --text-muted: #4ade80;
+            --hazard-yellow: #22c55e;
+            --canvas-bg: radial-gradient(circle at center, #031c0a 0%, #010803 100%);
+            --panel-bg: linear-gradient(145deg, rgba(3, 26, 11, 0.88), rgba(1, 10, 4, 0.94));
+            --panel-border: 1px solid rgba(0, 255, 65, 0.35);
+            --panel-border-top: 2px solid #00ff41;
+            --panel-border-left: 2px solid rgba(0, 255, 65, 0.6);
+            --nav-bg: linear-gradient(135deg, rgba(0, 255, 65, 0.2), rgba(2, 18, 7, 0.85));
+            --nav-border: 2px solid #00ff41;
+            --nav-color: #00ff41;
+            --glow-color: rgba(0, 255, 65, 0.5);
+            --launch-btn-bg: linear-gradient(135deg, #052e16, #166534);
+            --launch-btn-border: 2px solid #00ff41;
+            --launch-btn-hover: linear-gradient(135deg, #00ff41, #22c55e);
+            --launch-btn-hover-color: #000;
+            --drawer-bg: radial-gradient(circle at 50% 0%, #04240f 0%, #010602 85%);
+            --drawer-border: 3px solid #00ff41;
+            --header-bg: rgba(2, 12, 5, 0.96);
+            --header-border: rgba(0, 255, 65, 0.4);
+        }
+
+        [data-theme="hacker"] body {
+            background-color: #010803;
+        }
+
+        [data-theme="hacker"] .rivet {
+            background: radial-gradient(circle, #86efac, #00ff41) !important;
+            box-shadow: 0 0 6px #00ff41 !important;
+        }
+
+        [data-theme="hacker"] .nav-btn:hover {
+            border-color: #00ff41 !important;
+            color: #00ff41 !important;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.8) !important;
+            background: rgba(0, 255, 65, 0.15) !important;
+        }
+
+        [data-theme="hacker"] .tech-btn {
+            border-color: #00ff41 !important;
+            color: #00ff41 !important;
+            background: rgba(0, 255, 65, 0.08) !important;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.2) !important;
+            font-family: 'Courier New', monospace !important;
+            letter-spacing: 0.05em !important;
+        }
+
+        [data-theme="hacker"] .tech-btn:hover {
+            background: #00ff41 !important;
+            color: #000 !important;
+            box-shadow: 0 0 25px #00ff41 !important;
+        }
+
+        [data-theme="hacker"] .badge-beta {
+            background: rgba(0, 255, 65, 0.2) !important;
+            color: #00ff41 !important;
+            border-color: #00ff41 !important;
+            box-shadow: 0 0 8px rgba(0, 255, 65, 0.4) !important;
+        }
+
+        /* Hacker Theme: Cyber Terminal Circuit Header on Top of Boxes */
+        [data-theme="hacker"] .panel,
+        [data-theme="hacker"] .portal-card {
+            overflow: visible !important;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.08) !important;
+        }
+
+        [data-theme="hacker"] .panel::before,
+        [data-theme="hacker"] .portal-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 18px;
+            z-index: 15;
+            pointer-events: none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 20' preserveAspectRatio='none'%3E%3Cpath d='M0 2 L45 2 L52 14 L108 14 L115 2 L160 2' stroke='%2300ff41' stroke-width='2' fill='none' opacity='0.9'/%3E%3Ccircle cx='45' cy='2' r='2' fill='%2386efac'/%3E%3Ccircle cx='115' cy='2' r='2' fill='%2386efac'/%3E%3Ccircle cx='80' cy='14' r='2' fill='%2300ff41'/%3E%3C/svg%3E");
+            background-size: 160px 18px;
+            background-repeat: repeat-x;
+            filter: drop-shadow(0 0 5px #00ff41);
+        }
+
+        /* 8. APPLE "LIQUID GLASS" THEME (visionOS Frosted Glass, Prismatic Caustic Sheen & Glass Orbs) */
+        [data-theme="liquidglass"] {
+            --metal-dark: #070814;
+            --metal-base: #0f1226;
+            --metal-light: #1b2042;
+            --accent-blue: #38bdf8;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --hazard-yellow: #a78bfa;
+            --canvas-bg: radial-gradient(circle at 50% 15%, #181d3d 0%, #0c0f24 45%, #05060d 100%);
+            --panel-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            --panel-border: 1px solid rgba(255, 255, 255, 0.22);
+            --panel-border-top: 2px solid rgba(255, 255, 255, 0.7);
+            --panel-border-left: 2px solid rgba(147, 197, 253, 0.6);
+            --nav-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(15, 18, 38, 0.85));
+            --nav-border: 1px solid rgba(255, 255, 255, 0.3);
+            --nav-color: #ffffff;
+            --glow-color: rgba(147, 197, 253, 0.5);
+            --launch-btn-bg: linear-gradient(135deg, rgba(56, 189, 248, 0.85), rgba(129, 140, 248, 0.85));
+            --launch-btn-border: 1.5px solid rgba(255, 255, 255, 0.8);
+            --launch-btn-hover: linear-gradient(135deg, #ffffff, rgba(147, 197, 253, 0.95));
+            --launch-btn-hover-color: #0f172a;
+            --drawer-bg: radial-gradient(circle at 50% 0%, #1e254e 0%, #080a18 85%);
+            --drawer-border: 1.5px solid rgba(255, 255, 255, 0.35);
+            --header-bg: rgba(12, 15, 33, 0.85);
+            --header-border: rgba(255, 255, 255, 0.18);
+        }
+
+        [data-theme="liquidglass"] body {
+            background-color: #05060d;
+        }
+
+        [data-theme="liquidglass"] .rivet {
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #cbd5e1 45%, #475569 100%) !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 1px #fff, 0 0 6px rgba(255, 255, 255, 0.5) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        }
+
+        [data-theme="liquidglass"] .nav-btn:hover {
+            border-color: rgba(255, 255, 255, 0.8) !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 20px rgba(147, 197, 253, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        [data-theme="liquidglass"] .tech-btn {
+            border-color: rgba(255, 255, 255, 0.28) !important;
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(14px) !important;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35), 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="liquidglass"] .tech-btn:hover {
+            background: rgba(255, 255, 255, 0.22) !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+            box-shadow: 0 0 24px rgba(147, 197, 253, 0.65), inset 0 1px 2px #fff !important;
+        }
+
+        [data-theme="liquidglass"] .badge-beta {
+            background: rgba(147, 197, 253, 0.2) !important;
+            color: #e0f2fe !important;
+            border-color: rgba(147, 197, 253, 0.5) !important;
+        }
+
+        /* Apple "Liquid Glass": Prismatic Refraction Bevel Edge */
+        [data-theme="liquidglass"] .panel,
+        [data-theme="liquidglass"] .portal-card {
+            overflow: visible !important;
+            backdrop-filter: blur(24px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35), 0 0 25px rgba(147, 197, 253, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+        }
+
+        [data-theme="liquidglass"] .panel::before,
+        [data-theme="liquidglass"] .portal-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 12px;
+            z-index: 15;
+            pointer-events: none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 15%, rgba(147, 197, 253, 0.9) 35%, rgba(216, 180, 254, 0.9) 50%, rgba(253, 186, 116, 0.8) 65%, rgba(255, 255, 255, 0.4) 85%, rgba(255, 255, 255, 0) 100%);
+            box-shadow: 0 0 16px rgba(147, 197, 253, 0.6), 0 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        /* 9. CANADIAN THEME (Maple Red, Northern Frost & Red Leaves) */
+        [data-theme="canadian"] {
+            --metal-dark: #120305;
+            --metal-base: #1f0509;
+            --metal-light: #3d0c13;
+            --accent-blue: #ef4444;
+            --text-main: #fef2f2;
+            --text-muted: #fca5a5;
+            --hazard-yellow: #f87171;
+            --canvas-bg: radial-gradient(circle at 50% 30%, #28070b 0%, #0a0102 100%);
+            --panel-bg: linear-gradient(145deg, rgba(38, 7, 12, 0.88), rgba(18, 3, 5, 0.94));
+            --panel-border: 1px solid rgba(239, 68, 68, 0.35);
+            --panel-border-top: 2px solid #ef4444;
+            --panel-border-left: 2px solid rgba(254, 242, 242, 0.7);
+            --nav-bg: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(20, 4, 6, 0.8));
+            --nav-border: 2px solid #ef4444;
+            --nav-color: #fef2f2;
+            --glow-color: rgba(239, 68, 68, 0.5);
+            --launch-btn-bg: linear-gradient(135deg, #dc2626, #991b1b);
+            --launch-btn-border: 2px solid #ffffff;
+            --launch-btn-hover: linear-gradient(135deg, #ef4444, #ffffff);
+            --launch-btn-hover-color: #991b1b;
+            --drawer-bg: radial-gradient(circle at 50% 0%, #30080d 0%, #0d0203 85%);
+            --drawer-border: 3px solid #ef4444;
+            --header-bg: rgba(18, 3, 5, 0.96);
+            --header-border: rgba(239, 68, 68, 0.35);
+        }
+
+        [data-theme="canadian"] body {
+            background-color: #0a0102;
+        }
+
+        [data-theme="canadian"] .rivet {
+            background: radial-gradient(circle, #ffffff, #dc2626) !important;
+            box-shadow: 0 0 6px rgba(239, 68, 68, 0.8) !important;
+        }
+
+        [data-theme="canadian"] .nav-btn:hover {
+            border-color: #ffffff !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.8) !important;
+            background: rgba(239, 68, 68, 0.2) !important;
+        }
+
+        [data-theme="canadian"] .tech-btn {
+            border-color: #ef4444 !important;
+            color: #fef2f2 !important;
+            background: rgba(239, 68, 68, 0.15) !important;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2) !important;
+        }
+
+        [data-theme="canadian"] .tech-btn:hover {
+            background: #ef4444 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 22px #ef4444 !important;
+            border-color: #ffffff !important;
+        }
+
+        [data-theme="canadian"] .badge-beta {
+            background: rgba(239, 68, 68, 0.25) !important;
+            color: #fca5a5 !important;
+            border-color: #ef4444 !important;
+        }
+
+        /* Canadian Theme: Maple Leaf Garland Top Border on Panels */
+        [data-theme="canadian"] .panel,
+        [data-theme="canadian"] .portal-card {
+            overflow: visible !important;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.12) !important;
+        }
+
+        [data-theme="canadian"] .panel::before,
+        [data-theme="canadian"] .portal-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 18px;
+            z-index: 15;
+            pointer-events: none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 20' preserveAspectRatio='none'%3E%3Cpath d='M0 4 L160 4' stroke='%23ef4444' stroke-width='1.5' stroke-dasharray='4 3' opacity='0.8'/%3E%3Cg fill='%23ef4444'%3E%3Cpath d='M20 2 L22 7 L26 5 L24 9 L28 10 L24 12 L25 16 L21 13 L20 18 L19 13 L15 16 L16 12 L12 10 L16 9 L14 5 L18 7 Z'/%3E%3Cpath d='M60 2 L62 7 L66 5 L64 9 L68 10 L64 12 L65 16 L61 13 L60 18 L59 13 L55 16 L56 12 L52 10 L56 9 L54 5 L58 7 Z'/%3E%3Cpath d='M100 2 L102 7 L106 5 L104 9 L108 10 L104 12 L105 16 L101 13 L100 18 L99 13 L95 16 L96 12 L92 10 L96 9 L94 5 L98 7 Z'/%3E%3Cpath d='M140 2 L142 7 L146 5 L144 9 L148 10 L144 12 L145 16 L141 13 L140 18 L139 13 L135 16 L136 12 L132 10 L136 9 L134 5 L138 7 Z'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: 160px 18px;
+            background-repeat: repeat-x;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+        }
+
+        /* 10. MINECRAFT THEME (Pixel Grass Block, Diamond Cyan, Deepslate & XP Orbs) */
+        [data-theme="minecraft"] {
+            --metal-dark: #0f150f;
+            --metal-base: #182218;
+            --metal-light: #263820;
+            --accent-blue: #4dedf4;
+            --text-main: #f0fdf4;
+            --text-muted: #86efac;
+            --hazard-yellow: #a3e635;
+            --canvas-bg: radial-gradient(circle at 50% 30%, #1c2b18 0%, #0d140e 100%);
+            --panel-bg: linear-gradient(180deg, rgba(30, 44, 23, 0.95), rgba(18, 27, 15, 0.96));
+            --panel-border: 1px solid rgba(91, 140, 50, 0.4);
+            --panel-border-top: 2px solid #5b8c32;
+            --panel-border-left: 2px solid rgba(77, 237, 244, 0.6);
+            --nav-bg: linear-gradient(180deg, rgba(91, 140, 50, 0.25), rgba(15, 23, 13, 0.9));
+            --nav-border: 2px solid #5b8c32;
+            --nav-color: #f0fdf4;
+            --glow-color: rgba(77, 237, 244, 0.45);
+            --launch-btn-bg: linear-gradient(180deg, #22c55e, #15803d);
+            --launch-btn-border: 2px solid #4dedf4;
+            --launch-btn-hover: linear-gradient(180deg, #4dedf4, #22c55e);
+            --launch-btn-hover-color: #064e3b;
+            --drawer-bg: radial-gradient(circle at 50% 0%, #203319 0%, #0b110a 85%);
+            --drawer-border: 3px solid #5b8c32;
+            --header-bg: rgba(14, 21, 13, 0.96);
+            --header-border: rgba(91, 140, 50, 0.4);
+        }
+
+        [data-theme="minecraft"] body {
+            background-color: #0d140e;
+        }
+
+        [data-theme="minecraft"] .rivet {
+            border-radius: 1px !important;
+            width: 10px !important;
+            height: 10px !important;
+            background: #4dedf4 !important;
+            box-shadow: 2px 2px 0px #000, 0 0 8px rgba(77, 237, 244, 0.8) !important;
+        }
+
+        [data-theme="minecraft"] .nav-btn:hover {
+            border-color: #4dedf4 !important;
+            color: #4dedf4 !important;
+            box-shadow: 0 0 16px rgba(77, 237, 244, 0.6) !important;
+            background: rgba(91, 140, 50, 0.25) !important;
+        }
+
+        [data-theme="minecraft"] .tech-btn {
+            border-color: #5b8c32 !important;
+            color: #f0fdf4 !important;
+            background: rgba(30, 48, 22, 0.8) !important;
+            box-shadow: inset -2px -2px 0px rgba(0, 0, 0, 0.6), inset 2px 2px 0px rgba(114, 176, 58, 0.4) !important;
+        }
+
+        [data-theme="minecraft"] .tech-btn:hover {
+            background: #5b8c32 !important;
+            color: #ffffff !important;
+            border-color: #4dedf4 !important;
+            box-shadow: 0 0 18px rgba(77, 237, 244, 0.7) !important;
+        }
+
+        [data-theme="minecraft"] .badge-beta {
+            background: rgba(91, 140, 50, 0.3) !important;
+            color: #a3e635 !important;
+            border-color: #5b8c32 !important;
+        }
+
+        /* Minecraft Theme: Pixel Grass Block Top Border */
+        [data-theme="minecraft"] .panel,
+        [data-theme="minecraft"] .portal-card {
+            overflow: visible !important;
+            box-shadow: 0 0 20px rgba(91, 140, 50, 0.15) !important;
+        }
+
+        [data-theme="minecraft"] .panel::before,
+        [data-theme="minecraft"] .portal-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 18px;
+            z-index: 15;
+            pointer-events: none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 18' preserveAspectRatio='none'%3E%3Crect width='64' height='18' fill='%23573d26' opacity='0.9'/%3E%3Crect x='0' y='0' width='64' height='5' fill='%235b8c32'/%3E%3Crect x='0' y='0' width='64' height='2' fill='%2372b03a'/%3E%3Crect x='4' y='5' width='4' height='5' fill='%235b8c32'/%3E%3Crect x='12' y='5' width='6' height='7' fill='%235b8c32'/%3E%3Crect x='22' y='5' width='4' height='4' fill='%235b8c32'/%3E%3Crect x='30' y='5' width='6' height='8' fill='%235b8c32'/%3E%3Crect x='40' y='5' width='4' height='5' fill='%235b8c32'/%3E%3Crect x='48' y='5' width='6' height='7' fill='%235b8c32'/%3E%3Crect x='58' y='5' width='4' height='4' fill='%235b8c32'/%3E%3C/svg%3E");
+            background-size: 64px 18px;
+            background-repeat: repeat-x;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+        }
+
+        /* 11. POKÉMON THEME (Pokéball Red & White, Indigo Stadium, Electric Yellow & Pokéballs) */
+        [data-theme="pokemon"] {
+            --metal-dark: #0b0d1e;
+            --metal-base: #141738;
+            --metal-light: #212656;
+            --accent-blue: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --hazard-yellow: #facc15;
+            --canvas-bg: radial-gradient(circle at 50% 30%, #1e245a 0%, #0a0b18 100%);
+            --panel-bg: linear-gradient(150deg, rgba(27, 32, 74, 0.94), rgba(13, 16, 40, 0.96));
+            --panel-border: 1px solid rgba(239, 68, 68, 0.35);
+            --panel-border-top: 2px solid #ef4444;
+            --panel-border-left: 2px solid rgba(250, 204, 21, 0.65);
+            --nav-bg: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(15, 18, 44, 0.9));
+            --nav-border: 2px solid #ef4444;
+            --nav-color: #f8fafc;
+            --glow-color: rgba(250, 204, 21, 0.5);
+            --launch-btn-bg: linear-gradient(135deg, #ef4444, #b91c1c);
+            --launch-btn-border: 2px solid #facc15;
+            --launch-btn-hover: linear-gradient(135deg, #facc15, #ef4444);
+            --launch-btn-hover-color: #1e1b4b;
+            --drawer-bg: radial-gradient(circle at 50% 0%, #262c6d 0%, #0c0d20 85%);
+            --drawer-border: 3px solid #ef4444;
+            --header-bg: rgba(13, 16, 38, 0.96);
+            --header-border: rgba(239, 68, 68, 0.35);
+        }
+
+        [data-theme="pokemon"] body {
+            background-color: #0a0b18;
+        }
+
+        [data-theme="pokemon"] .rivet {
+            border-radius: 50% !important;
+            background: linear-gradient(180deg, #ef4444 42%, #1e293b 42%, #1e293b 58%, #ffffff 58%) !important;
+            box-shadow: 0 0 7px rgba(239, 68, 68, 0.8) !important;
+            border: 1px solid #1e293b !important;
+        }
+
+        [data-theme="pokemon"] .nav-btn:hover {
+            border-color: #facc15 !important;
+            color: #facc15 !important;
+            box-shadow: 0 0 18px rgba(250, 204, 21, 0.7) !important;
+            background: rgba(239, 68, 68, 0.2) !important;
+        }
+
+        [data-theme="pokemon"] .tech-btn {
+            border-color: #facc15 !important;
+            color: #f8fafc !important;
+            background: rgba(30, 36, 84, 0.75) !important;
+            box-shadow: 0 0 10px rgba(250, 204, 21, 0.2) !important;
+        }
+
+        [data-theme="pokemon"] .tech-btn:hover {
+            background: #ef4444 !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+            box-shadow: 0 0 22px rgba(239, 68, 68, 0.8), 0 0 10px #facc15 !important;
+        }
+
+        [data-theme="pokemon"] .badge-beta {
+            background: rgba(250, 204, 21, 0.2) !important;
+            color: #fef08a !important;
+            border-color: #facc15 !important;
+        }
+
+        /* Pokémon Theme: Pokéball Garland Top Border */
+        [data-theme="pokemon"] .panel,
+        [data-theme="pokemon"] .portal-card {
+            overflow: visible !important;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.15) !important;
+        }
+
+        [data-theme="pokemon"] .panel::before,
+        [data-theme="pokemon"] .portal-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 18px;
+            z-index: 15;
+            pointer-events: none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 20' preserveAspectRatio='none'%3E%3Cline x1='0' y1='9' x2='160' y2='9' stroke='%2338bdf8' stroke-width='1.5' stroke-dasharray='4 3' opacity='0.7'/%3E%3C!-- Pokeball 1 --%3E%3Cg transform='translate(15, 1)'%3E%3Ccircle cx='8' cy='8' r='7.5' fill='%23ffffff' stroke='%231e293b' stroke-width='1.2'/%3E%3Cpath d='M 0.5 8 A 7.5 7.5 0 0 1 15.5 8 Z' fill='%23ef4444'/%3E%3Cline x1='0.5' y1='8' x2='15.5' y2='8' stroke='%231e293b' stroke-width='1.8'/%3E%3Ccircle cx='8' cy='8' r='2.8' fill='%23ffffff' stroke='%231e293b' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='8' r='1.2' fill='%231e293b'/%3E%3C/g%3E%3C!-- Pokeball 2 --%3E%3Cg transform='translate(55, 1)'%3E%3Ccircle cx='8' cy='8' r='7.5' fill='%23ffffff' stroke='%231e293b' stroke-width='1.2'/%3E%3Cpath d='M 0.5 8 A 7.5 7.5 0 0 1 15.5 8 Z' fill='%23ef4444'/%3E%3Cline x1='0.5' y1='8' x2='15.5' y2='8' stroke='%231e293b' stroke-width='1.8'/%3E%3Ccircle cx='8' cy='8' r='2.8' fill='%23ffffff' stroke='%231e293b' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='8' r='1.2' fill='%231e293b'/%3E%3C/g%3E%3C!-- Pokeball 3 --%3E%3Cg transform='translate(95, 1)'%3E%3Ccircle cx='8' cy='8' r='7.5' fill='%23ffffff' stroke='%231e293b' stroke-width='1.2'/%3E%3Cpath d='M 0.5 8 A 7.5 7.5 0 0 1 15.5 8 Z' fill='%23ef4444'/%3E%3Cline x1='0.5' y1='8' x2='15.5' y2='8' stroke='%231e293b' stroke-width='1.8'/%3E%3Ccircle cx='8' cy='8' r='2.8' fill='%23ffffff' stroke='%231e293b' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='8' r='1.2' fill='%231e293b'/%3E%3C/g%3E%3C!-- Pokeball 4 --%3E%3Cg transform='translate(135, 1)'%3E%3Ccircle cx='8' cy='8' r='7.5' fill='%23ffffff' stroke='%231e293b' stroke-width='1.2'/%3E%3Cpath d='M 0.5 8 A 7.5 7.5 0 0 1 15.5 8 Z' fill='%23ef4444'/%3E%3Cline x1='0.5' y1='8' x2='15.5' y2='8' stroke='%231e293b' stroke-width='1.8'/%3E%3Ccircle cx='8' cy='8' r='2.8' fill='%23ffffff' stroke='%231e293b' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='8' r='1.2' fill='%231e293b'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: 160px 18px;
+            background-repeat: repeat-x;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+        }
     </style>
 </head>
 
@@ -1667,6 +2238,36 @@
                     <button class="theme-opt-btn" data-theme-val="winter">
                         <span class="theme-swatch swatch-winter"></span>
                         <span class="theme-name">Winter Frost</span>
+                        <i class="fas fa-check check-icon"></i>
+                    </button>
+                    <button class="theme-opt-btn" data-theme-val="birthday">
+                        <span class="theme-swatch swatch-birthday"></span>
+                        <span class="theme-name">Birthday Party</span>
+                        <i class="fas fa-check check-icon"></i>
+                    </button>
+                    <button class="theme-opt-btn" data-theme-val="hacker">
+                        <span class="theme-swatch swatch-hacker"></span>
+                        <span class="theme-name">Hacker Terminal</span>
+                        <i class="fas fa-check check-icon"></i>
+                    </button>
+                    <button class="theme-opt-btn" data-theme-val="liquidglass">
+                        <span class="theme-swatch swatch-liquidglass"></span>
+                        <span class="theme-name">Bubbles</span>
+                        <i class="fas fa-check check-icon"></i>
+                    </button>
+                    <button class="theme-opt-btn" data-theme-val="canadian">
+                        <span class="theme-swatch swatch-canadian"></span>
+                        <span class="theme-name">Canada</span>
+                        <i class="fas fa-check check-icon"></i>
+                    </button>
+                    <button class="theme-opt-btn" data-theme-val="minecraft">
+                        <span class="theme-swatch swatch-minecraft"></span>
+                        <span class="theme-name">Minecraft</span>
+                        <i class="fas fa-check check-icon"></i>
+                    </button>
+                    <button class="theme-opt-btn" data-theme-val="pokemon">
+                        <span class="theme-swatch swatch-pokemon"></span>
+                        <span class="theme-name">Pokémon</span>
                         <i class="fas fa-check check-icon"></i>
                     </button>
                 </div>
@@ -2347,6 +2948,17 @@
         let sunBubbles = [];
         let petals = [];
         let snowflakes = [];
+        let balloons = [];
+        let confetti = [];
+        let matrixRain = [];
+        let glassOrbs = [];
+        let glassCaustics = [];
+        let mapleLeaves = [];
+        let canadianSnow = [];
+        let xpOrbs = [];
+        let mcPixels = [];
+        let pokeballs = [];
+        let electricSparks = [];
 
         function initCanvas() {
             width = canvas.width = window.innerWidth;
@@ -2444,7 +3056,499 @@
                         alpha: Math.random() * 0.6 + 0.35
                     });
                 }
+            } else if (currentTheme === 'birthday') {
+                balloons = [];
+                const balloonColors = ['#ec4899', '#f43f5e', '#f59e0b', '#10b981', '#06b6d4', '#8b5cf6', '#a855f7', '#fbbf24', '#3b82f6'];
+                const numBalloons = Math.min(26, Math.floor(width / 65) + 8);
+                for (let i = 0; i < numBalloons; i++) {
+                    const radiusX = Math.random() * 8 + 12;
+                    balloons.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radiusX: radiusX,
+                        radiusY: radiusX * 1.25,
+                        speedY: Math.random() * 0.8 + 0.6,
+                        swaySpeed: Math.random() * 0.02 + 0.015,
+                        swayAmp: Math.random() * 0.8 + 0.4,
+                        phase: Math.random() * Math.PI * 2,
+                        color: balloonColors[Math.floor(Math.random() * balloonColors.length)],
+                        stringLength: Math.random() * 14 + 20,
+                        alpha: Math.random() * 0.2 + 0.75
+                    });
+                }
+
+                confetti = [];
+                const confettiColors = ['#ec4899', '#f59e0b', '#06b6d4', '#10b981', '#a855f7', '#fbbf24', '#f43f5e', '#60a5fa', '#34d399', '#fce7f3'];
+                const numConfetti = Math.min(85, Math.floor((width * height) / 18000) + 40);
+                for (let i = 0; i < numConfetti; i++) {
+                    confetti.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        width: Math.random() * 6 + 5,
+                        height: Math.random() * 8 + 6,
+                        speedY: Math.random() * 1.4 + 0.8,
+                        speedX: Math.random() * 0.8 - 0.4,
+                        swaySpeed: Math.random() * 0.035 + 0.015,
+                        phase: Math.random() * Math.PI * 2,
+                        rotation: Math.random() * Math.PI * 2,
+                        rotSpeed: (Math.random() - 0.5) * 0.06,
+                        color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+                        isCircle: Math.random() > 0.75,
+                        alpha: Math.random() * 0.35 + 0.65
+                    });
+                }
+            } else if (currentTheme === 'hacker') {
+                matrixRain = [];
+                const fontSize = 16;
+                const columns = Math.ceil(width / fontSize);
+                const matrixChars = "0101010101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%&#!?><:~^";
+                for (let i = 0; i < columns; i++) {
+                    const trailLength = Math.floor(Math.random() * 18 + 12);
+                    const chars = [];
+                    for (let j = 0; j < trailLength; j++) {
+                        chars.push(matrixChars[Math.floor(Math.random() * matrixChars.length)]);
+                    }
+                    matrixRain.push({
+                        x: i * fontSize,
+                        y: Math.random() * -height,
+                        speed: Math.random() * 2.5 + 2,
+                        fontSize: fontSize,
+                        trailLength: trailLength,
+                        chars: chars
+                    });
+                }
+            } else if (currentTheme === 'liquidglass') {
+                glassOrbs = [];
+                const numOrbs = Math.min(32, Math.floor((width * height) / 28000) + 12);
+                for (let i = 0; i < numOrbs; i++) {
+                    const radius = Math.random() * 16 + 12;
+                    glassOrbs.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radius: radius,
+                        speedY: Math.random() * 0.6 + 0.3,
+                        driftX: (Math.random() - 0.5) * 0.3,
+                        swaySpeed: Math.random() * 0.02 + 0.01,
+                        swayAmp: Math.random() * 18 + 10,
+                        phase: Math.random() * Math.PI * 2,
+                        elasticity: Math.random() * 0.03 + 0.015,
+                        hueShift: Math.random() * 60,
+                        alpha: Math.random() * 0.35 + 0.55
+                    });
+                }
+
+                glassCaustics = [];
+                const numCaustics = Math.min(45, Math.floor((width * height) / 22000) + 18);
+                const causticTints = ['#93c5fd', '#c084fc', '#f472b6', '#a7f3d0', '#fed7aa', '#ffffff'];
+                for (let i = 0; i < numCaustics; i++) {
+                    glassCaustics.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radius: Math.random() * 4 + 2,
+                        speedY: Math.random() * 0.8 + 0.4,
+                        speedX: (Math.random() - 0.5) * 0.4,
+                        flareSize: Math.random() * 12 + 6,
+                        phase: Math.random() * Math.PI * 2,
+                        pulseSpeed: Math.random() * 0.04 + 0.02,
+                        color: causticTints[Math.floor(Math.random() * causticTints.length)],
+                        alpha: Math.random() * 0.35 + 0.35
+                    });
+                }
+            } else if (currentTheme === 'canadian') {
+                mapleLeaves = [];
+                const mapleColors = ['#ef4444', '#dc2626', '#b91c1c', '#f87171', '#991b1b', '#ffffff'];
+                const numMaple = Math.min(50, Math.floor((width * height) / 22000) + 20);
+                for (let i = 0; i < numMaple; i++) {
+                    mapleLeaves.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        size: Math.random() * 14 + 14,
+                        speedY: Math.random() * 1.3 + 0.7,
+                        driftX: (Math.random() - 0.4) * 0.6,
+                        swaySpeed: Math.random() * 0.025 + 0.015,
+                        swayAmp: Math.random() * 25 + 15,
+                        phase: Math.random() * Math.PI * 2,
+                        angle: Math.random() * Math.PI * 2,
+                        rotSpeed: (Math.random() - 0.5) * 0.035,
+                        color: mapleColors[Math.floor(Math.random() * mapleColors.length)],
+                        alpha: Math.random() * 0.35 + 0.65
+                    });
+                }
+
+                canadianSnow = [];
+                const numFlakes = Math.min(60, Math.floor((width * height) / 20000) + 20);
+                for (let i = 0; i < numFlakes; i++) {
+                    canadianSnow.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radius: Math.random() * 2 + 0.8,
+                        speedY: Math.random() * 0.9 + 0.5,
+                        wind: (Math.random() - 0.3) * 0.6,
+                        swaySpeed: Math.random() * 0.025 + 0.01,
+                        phase: Math.random() * Math.PI * 2,
+                        alpha: Math.random() * 0.45 + 0.25
+                    });
+                }
+            } else if (currentTheme === 'minecraft') {
+                xpOrbs = [];
+                const numOrbs = Math.min(35, Math.floor((width * height) / 28000) + 14);
+                for (let i = 0; i < numOrbs; i++) {
+                    xpOrbs.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radius: Math.random() * 5 + 6,
+                        speedY: Math.random() * 0.7 + 0.3,
+                        speedX: (Math.random() - 0.5) * 0.4,
+                        phase: Math.random() * Math.PI * 2,
+                        pulseSpeed: Math.random() * 0.05 + 0.03,
+                        alpha: Math.random() * 0.35 + 0.65
+                    });
+                }
+
+                mcPixels = [];
+                const pixelColors = ['#4dedf4', '#ef4444', '#70ff37', '#fbbf24', '#a855f7', '#ffffff'];
+                const numPixels = Math.min(65, Math.floor((width * height) / 18000) + 25);
+                for (let i = 0; i < numPixels; i++) {
+                    mcPixels.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        size: Math.random() * 5 + 3,
+                        speedY: Math.random() * 1.0 + 0.5,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        phase: Math.random() * Math.PI * 2,
+                        rotation: Math.random() * Math.PI * 2,
+                        rotSpeed: (Math.random() - 0.5) * 0.04,
+                        color: pixelColors[Math.floor(Math.random() * pixelColors.length)],
+                        alpha: Math.random() * 0.4 + 0.5
+                    });
+                }
+            } else if (currentTheme === 'pokemon') {
+                pokeballs = [];
+                const ballTypes = ['pokeball', 'pokeball', 'greatball', 'ultraball'];
+                const numBalls = Math.min(30, Math.floor((width * height) / 30000) + 12);
+                for (let i = 0; i < numBalls; i++) {
+                    pokeballs.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radius: Math.random() * 6 + 10,
+                        speedY: Math.random() * 0.8 + 0.4,
+                        driftX: (Math.random() - 0.5) * 0.5,
+                        swaySpeed: Math.random() * 0.025 + 0.015,
+                        swayAmp: Math.random() * 15 + 10,
+                        angle: Math.random() * Math.PI * 2,
+                        rotSpeed: (Math.random() - 0.5) * 0.025,
+                        phase: Math.random() * Math.PI * 2,
+                        type: ballTypes[Math.floor(Math.random() * ballTypes.length)],
+                        alpha: Math.random() * 0.3 + 0.65
+                    });
+                }
+
+                electricSparks = [];
+                const numSparks = Math.min(45, Math.floor((width * height) / 22000) + 15);
+                for (let i = 0; i < numSparks; i++) {
+                    electricSparks.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        size: Math.random() * 6 + 4,
+                        speedY: Math.random() * 1.2 + 0.5,
+                        speedX: (Math.random() - 0.5) * 0.8,
+                        phase: Math.random() * Math.PI * 2,
+                        sparkSpeed: Math.random() * 0.08 + 0.04,
+                        color: Math.random() > 0.3 ? '#facc15' : '#38bdf8',
+                        alpha: Math.random() * 0.5 + 0.4
+                    });
+                }
             }
+        }
+
+        function drawLiquidGlassOrb(ctx, orb) {
+            ctx.save();
+            ctx.translate(orb.x, orb.y);
+            ctx.globalAlpha = orb.alpha;
+
+            const r = orb.radius;
+            const stretchY = 1 + Math.sin(orb.phase) * 0.06;
+            const stretchX = 1 - Math.sin(orb.phase) * 0.06;
+            ctx.scale(stretchX, stretchY);
+
+            // Soft refractive ambient glass glow
+            ctx.shadowColor = 'rgba(147, 197, 253, 0.4)';
+            ctx.shadowBlur = 12;
+
+            // Translucent liquid glass sphere background
+            const bgGrad = ctx.createRadialGradient(-r * 0.2, -r * 0.3, r * 0.1, 0, 0, r);
+            bgGrad.addColorStop(0, 'rgba(255, 255, 255, 0.28)');
+            bgGrad.addColorStop(0.5, 'rgba(147, 197, 253, 0.10)');
+            bgGrad.addColorStop(0.85, 'rgba(192, 132, 252, 0.14)');
+            bgGrad.addColorStop(1, 'rgba(255, 255, 255, 0.32)');
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.fillStyle = bgGrad;
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+
+            // Iridescent prismatic caustic border rim
+            const rimGrad = ctx.createLinearGradient(-r, -r, r, r);
+            rimGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
+            rimGrad.addColorStop(0.3, 'rgba(147, 197, 253, 0.7)');
+            rimGrad.addColorStop(0.65, 'rgba(216, 180, 254, 0.7)');
+            rimGrad.addColorStop(0.9, 'rgba(253, 186, 116, 0.6)');
+            rimGrad.addColorStop(1, 'rgba(255, 255, 255, 0.85)');
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.strokeStyle = rimGrad;
+            ctx.lineWidth = 1.4;
+            ctx.stroke();
+
+            // Primary specular crescent reflection (top-left)
+            ctx.beginPath();
+            ctx.ellipse(-r * 0.35, -r * 0.35, r * 0.42, r * 0.22, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+            ctx.fill();
+
+            // Secondary internal caustic reflection (bottom-right)
+            ctx.beginPath();
+            ctx.ellipse(r * 0.3, r * 0.32, r * 0.32, r * 0.14, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(147, 197, 253, 0.45)';
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawPrismaticCaustic(ctx, c) {
+            ctx.save();
+            ctx.translate(c.x, c.y);
+            const pulse = 0.7 + Math.sin(c.phase) * 0.3;
+            ctx.globalAlpha = c.alpha * pulse;
+            const spike = c.flareSize * pulse;
+
+            // Center glow core
+            ctx.beginPath();
+            ctx.arc(0, 0, c.radius, 0, Math.PI * 2);
+            ctx.fillStyle = c.color;
+            ctx.shadowColor = c.color;
+            ctx.shadowBlur = 10;
+            ctx.fill();
+
+            // Subtle lens flare cross
+            ctx.beginPath();
+            ctx.moveTo(-spike, 0);
+            ctx.lineTo(spike, 0);
+            ctx.moveTo(0, -spike);
+            ctx.lineTo(0, spike);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function drawXpOrb(ctx, orb) {
+            ctx.save();
+            ctx.translate(orb.x, orb.y);
+            ctx.globalAlpha = orb.alpha;
+
+            const colorMix = Math.sin(orb.phase) * 0.5 + 0.5;
+            const r = Math.floor(112 * (1 - colorMix) + 250 * colorMix);
+            const g = Math.floor(255 * (1 - colorMix) + 204 * colorMix);
+            const b = Math.floor(55 * (1 - colorMix) + 21 * colorMix);
+            const glowColor = `rgb(${r}, ${g}, ${b})`;
+
+            ctx.beginPath();
+            ctx.arc(0, 0, orb.radius * 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.25)`;
+            ctx.fill();
+
+            const pulseRadius = orb.radius * (0.85 + Math.sin(orb.phase * 2) * 0.15);
+            ctx.beginPath();
+            ctx.arc(0, 0, pulseRadius, 0, Math.PI * 2);
+            ctx.fillStyle = glowColor;
+            ctx.shadowColor = glowColor;
+            ctx.shadowBlur = 8;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, pulseRadius * 0.45, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            for (let i = 0; i < 4; i++) {
+                const dotAngle = orb.phase * 1.5 + (i * Math.PI / 2);
+                const dist = orb.radius * 1.35;
+                const dx = Math.cos(dotAngle) * dist;
+                const dy = Math.sin(dotAngle) * dist;
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(dx - 1.5, dy - 1.5, 3, 3);
+            }
+
+            ctx.restore();
+        }
+
+        function drawMcPixel(ctx, p) {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = p.color;
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur = 4;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size * 0.4, p.size * 0.4);
+            ctx.restore();
+        }
+
+        function drawPokeball(ctx, ball) {
+            ctx.save();
+            ctx.translate(ball.x, ball.y);
+            ctx.rotate(ball.angle);
+            ctx.globalAlpha = ball.alpha;
+
+            const r = ball.radius;
+
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+            ctx.shadowBlur = 6;
+
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI, false);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, r, Math.PI, 0, false);
+            if (ball.type === 'greatball') {
+                ctx.fillStyle = '#0284c7';
+            } else if (ball.type === 'ultraball') {
+                ctx.fillStyle = '#1e293b';
+            } else {
+                ctx.fillStyle = '#ef4444';
+            }
+            ctx.fill();
+
+            if (ball.type === 'greatball') {
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath();
+                ctx.arc(-r * 0.4, -r * 0.45, r * 0.28, 0, Math.PI * 2);
+                ctx.arc(r * 0.4, -r * 0.45, r * 0.28, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (ball.type === 'ultraball') {
+                ctx.fillStyle = '#facc15';
+                ctx.beginPath();
+                ctx.arc(0, -r * 0.45, r * 0.35, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.shadowBlur = 0;
+
+            ctx.beginPath();
+            ctx.rect(-r, -r * 0.12, r * 2, r * 0.24);
+            ctx.fillStyle = '#1e293b';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, r * 0.32, 0, Math.PI * 2);
+            ctx.fillStyle = '#1e293b';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, r * 0.12, 0, Math.PI * 2);
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.ellipse(-r * 0.35, -r * 0.35, r * 0.35, r * 0.18, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.38)';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function drawElectricSpark(ctx, s) {
+            ctx.save();
+            ctx.translate(s.x, s.y);
+            const pulse = 0.7 + Math.sin(s.phase) * 0.3;
+            ctx.globalAlpha = s.alpha * pulse;
+            const spike = s.size * pulse;
+
+            ctx.fillStyle = s.color;
+            ctx.shadowColor = s.color;
+            ctx.shadowBlur = 6;
+
+            ctx.beginPath();
+            ctx.moveTo(0, -spike * 1.4);
+            ctx.lineTo(spike * 0.4, -spike * 0.3);
+            ctx.lineTo(spike * 1.4, 0);
+            ctx.lineTo(spike * 0.4, spike * 0.3);
+            ctx.lineTo(0, spike * 1.4);
+            ctx.lineTo(-spike * 0.4, spike * 0.3);
+            ctx.lineTo(-spike * 1.4, 0);
+            ctx.lineTo(-spike * 0.4, -spike * 0.3);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, spike * 0.3, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawMapleLeaf(ctx, x, y, size, angle, color, alpha) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.scale(size / 20, size / 20);
+            ctx.fillStyle = color;
+            ctx.globalAlpha = alpha;
+            ctx.beginPath();
+            ctx.moveTo(0, -18);
+            ctx.lineTo(2.5, -11);
+            ctx.lineTo(7, -13);
+            ctx.lineTo(5, -7);
+            ctx.lineTo(12, -7);
+            ctx.lineTo(16, -3);
+            ctx.lineTo(11, 2);
+            ctx.lineTo(14, 5);
+            ctx.lineTo(8, 6);
+            ctx.lineTo(8, 10);
+            ctx.lineTo(3, 8);
+            ctx.lineTo(1.5, 16);
+            ctx.lineTo(-1.5, 16);
+            ctx.lineTo(-3, 8);
+            ctx.lineTo(-8, 10);
+            ctx.lineTo(-8, 6);
+            ctx.lineTo(-14, 5);
+            ctx.lineTo(-11, 2);
+            ctx.lineTo(-16, -3);
+            ctx.lineTo(-12, -7);
+            ctx.lineTo(-5, -7);
+            ctx.lineTo(-7, -13);
+            ctx.lineTo(-2.5, -11);
+            ctx.closePath();
+            ctx.fill();
+
+            // Subtle stem vein
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, 16);
+            ctx.lineTo(0, -10);
+            ctx.stroke();
+
+            ctx.restore();
         }
 
         function drawLeaf(ctx, x, y, size, angle, color, alpha) {
@@ -2479,6 +3583,64 @@
             ctx.bezierCurveTo(size * 0.7, -size * 0.5, size * 0.6, size * 0.6, 0, size);
             ctx.bezierCurveTo(-size * 0.6, size * 0.6, -size * 0.7, -size * 0.5, 0, -size);
             ctx.fill();
+            ctx.restore();
+        }
+
+        function drawBalloon(ctx, x, y, radiusX, radiusY, color, stringLength, phase, alpha) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+
+            // Wavy trailing string
+            ctx.beginPath();
+            ctx.moveTo(x, y + radiusY + 3);
+            const sway = Math.sin(phase) * 6;
+            ctx.bezierCurveTo(
+                x + sway, y + radiusY + stringLength * 0.4,
+                x - sway, y + radiusY + stringLength * 0.7,
+                x + sway * 0.5, y + radiusY + stringLength
+            );
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // Balloon Knot
+            ctx.beginPath();
+            ctx.moveTo(x - 3, y + radiusY + 4);
+            ctx.lineTo(x + 3, y + radiusY + 4);
+            ctx.lineTo(x, y + radiusY);
+            ctx.fillStyle = color;
+            ctx.fill();
+
+            // Balloon Body
+            ctx.beginPath();
+            ctx.ellipse(x, y, radiusX, radiusY, 0, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+
+            // Specular Highlight
+            ctx.beginPath();
+            ctx.ellipse(x - radiusX * 0.35, y - radiusY * 0.35, radiusX * 0.3, radiusY * 0.2, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawConfetti(ctx, c) {
+            ctx.save();
+            ctx.translate(c.x, c.y);
+            ctx.rotate(c.rotation);
+            ctx.scale(Math.cos(c.phase), 1);
+            ctx.fillStyle = c.color;
+            ctx.globalAlpha = c.alpha;
+
+            if (c.isCircle) {
+                ctx.beginPath();
+                ctx.arc(0, 0, c.width * 0.5, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.fillRect(-c.width * 0.5, -c.height * 0.5, c.width, c.height);
+            }
             ctx.restore();
         }
 
@@ -2622,6 +3784,205 @@
                     if (f.x > width + 10) f.x = -10;
                     if (f.x < -10) f.x = width + 10;
                 });
+            } else if (currentTheme === 'birthday') {
+                // Animate and draw confetti fluttering down
+                confetti.forEach(c => {
+                    c.phase += c.swaySpeed;
+                    c.rotation += c.rotSpeed;
+                    c.y += c.speedY;
+                    c.x += c.speedX + Math.sin(c.phase) * 0.7;
+
+                    drawConfetti(ctx, c);
+
+                    if (c.y > height + 25) {
+                        c.y = -25;
+                        c.x = Math.random() * width;
+                    }
+                    if (c.x > width + 25) c.x = -25;
+                    if (c.x < -25) c.x = width + 25;
+                });
+
+                // Animate and draw balloons floating up
+                balloons.forEach(b => {
+                    b.phase += b.swaySpeed;
+                    b.y -= b.speedY;
+                    b.x += Math.sin(b.phase) * b.swayAmp;
+
+                    drawBalloon(ctx, b.x, b.y, b.radiusX, b.radiusY, b.color, b.stringLength, b.phase, b.alpha);
+
+                    if (b.y < -b.radiusY - b.stringLength - 20) {
+                        b.y = height + b.radiusY + 30 + Math.random() * 60;
+                        b.x = Math.random() * width;
+                    }
+                });
+            } else if (currentTheme === 'hacker') {
+                const matrixChars = "0101010101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%&#!?><:~^";
+                ctx.font = 'bold 15px "Courier New", monospace';
+                matrixRain.forEach(col => {
+                    col.y += col.speed;
+
+                    // Draw the stream of green characters
+                    for (let j = 0; j < col.trailLength; j++) {
+                        const charY = col.y - (j * col.fontSize);
+                        if (charY > -col.fontSize && charY < height + col.fontSize) {
+                            // Occasional random mutation
+                            if (Math.random() < 0.05 || !col.chars[j]) {
+                                col.chars[j] = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                            }
+
+                            if (j === 0) {
+                                // Leading head character: glowing bright white-mint
+                                ctx.fillStyle = '#ffffff';
+                                ctx.shadowColor = '#00ff41';
+                                ctx.shadowBlur = 10;
+                            } else if (j === 1) {
+                                ctx.fillStyle = '#86efac';
+                                ctx.shadowColor = '#00ff41';
+                                ctx.shadowBlur = 5;
+                            } else {
+                                const alpha = Math.max(0.08, 1 - (j / col.trailLength));
+                                ctx.fillStyle = `rgba(0, 255, 65, ${alpha})`;
+                                ctx.shadowBlur = 0;
+                            }
+
+                            ctx.fillText(col.chars[j], col.x, charY);
+                        }
+                    }
+                    ctx.shadowBlur = 0;
+
+                    // Reset column when entire trail scrolls past the bottom
+                    if (col.y - (col.trailLength * col.fontSize) > height) {
+                        col.y = Math.random() * -100;
+                        col.speed = Math.random() * 2.5 + 2;
+                        col.trailLength = Math.floor(Math.random() * 18 + 12);
+                    }
+                });
+            } else if (currentTheme === 'liquidglass') {
+                glassCaustics.forEach(c => {
+                    c.phase += c.pulseSpeed;
+                    c.y -= c.speedY;
+                    c.x += c.speedX + Math.sin(c.phase) * 0.4;
+
+                    drawPrismaticCaustic(ctx, c);
+
+                    if (c.y < -30) {
+                        c.y = height + 20;
+                        c.x = Math.random() * width;
+                    }
+                    if (c.x > width + 30) c.x = -30;
+                    if (c.x < -30) c.x = width + 30;
+                });
+
+                glassOrbs.forEach(orb => {
+                    orb.phase += orb.swaySpeed;
+                    orb.y -= orb.speedY;
+                    orb.x += Math.sin(orb.phase) * orb.swayAmp * 0.04 + orb.driftX;
+
+                    drawLiquidGlassOrb(ctx, orb);
+
+                    if (orb.y < -orb.radius - 30) {
+                        orb.y = height + orb.radius + 20;
+                        orb.x = Math.random() * width;
+                    }
+                    if (orb.x > width + orb.radius + 30) orb.x = -orb.radius - 30;
+                    if (orb.x < -orb.radius - 30) orb.x = width + orb.radius + 30;
+                });
+            } else if (currentTheme === 'canadian') {
+                mapleLeaves.forEach(leaf => {
+                    leaf.phase += leaf.swaySpeed;
+                    leaf.angle += leaf.rotSpeed;
+                    leaf.y += leaf.speedY;
+                    leaf.x += Math.sin(leaf.phase) * leaf.swayAmp * 0.05 + leaf.driftX;
+
+                    drawMapleLeaf(ctx, leaf.x, leaf.y, leaf.size, leaf.angle, leaf.color, leaf.alpha);
+
+                    if (leaf.y > height + 30) {
+                        leaf.y = -30;
+                        leaf.x = Math.random() * width;
+                    }
+                    if (leaf.x > width + 30) leaf.x = -30;
+                    if (leaf.x < -30) leaf.x = width + 30;
+                });
+
+                canadianSnow.forEach(f => {
+                    f.phase += f.swaySpeed;
+                    f.y += f.speedY;
+                    f.x += f.wind + Math.sin(f.phase) * 0.5;
+
+                    ctx.beginPath();
+                    ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${f.alpha})`;
+                    ctx.fill();
+
+                    if (f.y > height + 10) {
+                        f.y = -10;
+                        f.x = Math.random() * width;
+                    }
+                    if (f.x > width + 10) f.x = -10;
+                    if (f.x < -10) f.x = width + 10;
+                });
+            } else if (currentTheme === 'minecraft') {
+                xpOrbs.forEach(orb => {
+                    orb.phase += orb.pulseSpeed;
+                    orb.y -= orb.speedY;
+                    orb.x += orb.speedX + Math.sin(orb.phase) * 0.4;
+
+                    drawXpOrb(ctx, orb);
+
+                    if (orb.y < -30) {
+                        orb.y = height + 20;
+                        orb.x = Math.random() * width;
+                    }
+                    if (orb.x > width + 30) orb.x = -30;
+                    if (orb.x < -30) orb.x = width + 30;
+                });
+
+                mcPixels.forEach(p => {
+                    p.phase += 0.03;
+                    p.rotation += p.rotSpeed;
+                    p.y -= p.speedY;
+                    p.x += p.speedX + Math.sin(p.phase) * 0.3;
+
+                    drawMcPixel(ctx, p);
+
+                    if (p.y < -20) {
+                        p.y = height + 20;
+                        p.x = Math.random() * width;
+                    }
+                    if (p.x > width + 20) p.x = -20;
+                    if (p.x < -20) p.x = width + 20;
+                });
+            } else if (currentTheme === 'pokemon') {
+                pokeballs.forEach(b => {
+                    b.phase += b.swaySpeed;
+                    b.angle += b.rotSpeed;
+                    b.y -= b.speedY;
+                    b.x += Math.sin(b.phase) * b.swayAmp * 0.04 + b.driftX;
+
+                    drawPokeball(ctx, b);
+
+                    if (b.y < -b.radius - 20) {
+                        b.y = height + b.radius + 20;
+                        b.x = Math.random() * width;
+                    }
+                    if (b.x > width + b.radius + 20) b.x = -b.radius - 20;
+                    if (b.x < -b.radius - 20) b.x = width + b.radius + 20;
+                });
+
+                electricSparks.forEach(s => {
+                    s.phase += s.sparkSpeed;
+                    s.y -= s.speedY;
+                    s.x += s.speedX + Math.sin(s.phase) * 0.5;
+
+                    drawElectricSpark(ctx, s);
+
+                    if (s.y < -20) {
+                        s.y = height + 20;
+                        s.x = Math.random() * width;
+                    }
+                    if (s.x > width + 20) s.x = -20;
+                    if (s.x < -20) s.x = width + 20;
+                });
             }
 
             requestAnimationFrame(animateCanvas);
@@ -2629,7 +3990,7 @@
 
         // 2. THEME SWITCHER CONTROLLER
         function applyTheme(themeName) {
-            const validThemes = ['space', 'classic', 'fall', 'summer', 'spring', 'winter'];
+            const validThemes = ['space', 'classic', 'fall', 'summer', 'spring', 'winter', 'birthday', 'hacker', 'liquidglass', 'canadian', 'minecraft', 'pokemon'];
             if (!validThemes.includes(themeName)) {
                 themeName = 'space';
             }
