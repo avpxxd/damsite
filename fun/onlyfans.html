@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OnlyFans — the literal kind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-pale:#eaf5f8;
+    --sky-deep:#cfe6ee;
+    --ink:#132b34;
+    --breeze:#4fa3c4;
+    --breeze-dark:#357792;
+    --sun:#f2b642;
+    --paper:#fbf6ea;
+    --coral:#e2603f;
+    --line: rgba(19,43,52,0.14);
+    --global-mult: 1;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at top, var(--sky-pale), var(--sky-deep) 70%);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; margin:0;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+
+  a{color:inherit;}
+
+  /* ---------- layout helpers ---------- */
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+  section{padding:96px 0;}
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:.72rem;
+    color:var(--breeze-dark);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--coral);display:inline-block;}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter: blur(10px);
+    background:rgba(234,245,248,.72);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding-top:16px; padding-bottom:16px;}
+  .logo{display:flex; align-items:center; gap:12px; font-family:'Fraunces',serif; font-weight:900; font-size:1.25rem; letter-spacing:-.01em;}
+  .logo small{display:block; font-family:'JetBrains Mono',monospace; font-weight:400; font-size:.6rem; letter-spacing:.08em; color:var(--breeze-dark); text-transform:uppercase;}
+
+  /* ---------- generic fan machinery ---------- */
+  .fan{ position:relative; }
+  .fan__blades{
+    position:absolute; inset:0;
+    animation: spin var(--base-dur, 3s) linear infinite;
+    animation-duration: calc(var(--base-dur, 3s) * var(--global-mult));
+  }
+  .blade{
+    position:absolute; top:50%; left:50%;
+    width:47%; height:15%;
+    margin-top:calc(-0.075 * var(--sz, 100px));
+    background:var(--blade-color, var(--breeze));
+    border-radius:4% 60% 60% 4% / 50% 50% 50% 50%;
+    transform-origin:0% 50%;
+  }
+  .hub{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:20%; height:20%; border-radius:50%;
+    background:var(--hub-color, var(--ink));
+    border:2px solid var(--paper);
+    z-index:2;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @keyframes oscillate{ 0%,100%{ transform:rotate(-11deg);} 50%{ transform:rotate(11deg);} }
+  @keyframes breathe{ 0%,100%{ transform:scaleX(1);} 50%{ transform:scaleX(.55);} }
+  @keyframes drift{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-14px);} }
+  @keyframes pulseglow{ 0%,100%{ opacity:.55;} 50%{ opacity:1;} }
+  @keyframes wallscroll{ to{ transform:translateX(-50%); } }
+  @keyframes flicker{ to{ transform:rotate(360deg); } }
+  @keyframes shake{
+    0%,100%{ transform:translate(0,0); }
+    25%{ transform:translate(calc(var(--shake-amt,0px) * -1), var(--shake-amt,0px)); }
+    50%{ transform:translate(var(--shake-amt,0px), calc(var(--shake-amt,0px) * -1)); }
+    75%{ transform:translate(calc(var(--shake-amt,0px) * -1), calc(var(--shake-amt,0px) * -1)); }
+  }
+  #page{
+    animation: shake calc(0.35s * var(--global-mult)) infinite;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding-top:70px;
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:48px;
+    align-items:center;
+    overflow:hidden;
+  }
+  .hero::before{ /* blade-shadow flicker, the signature move */
+    content:"";
+    position:absolute; inset:-20%;
+    background:conic-gradient(from 0deg,
+      transparent 0deg 78deg,
+      rgba(19,43,52,.05) 78deg 92deg,
+      transparent 92deg 168deg,
+      rgba(19,43,52,.05) 168deg 182deg,
+      transparent 182deg 258deg,
+      rgba(19,43,52,.05) 258deg 272deg,
+      transparent 272deg 348deg,
+      rgba(19,43,52,.05) 348deg 360deg);
+    animation: flicker calc(6s * var(--global-mult)) linear infinite;
+    pointer-events:none;
+    z-index:0;
+  }
+  .hero-copy{ position:relative; z-index:1; }
+  .hero h1{
+    font-size:clamp(2.4rem, 5.2vw, 4.4rem);
+    line-height:1.02;
+    font-weight:900;
+    letter-spacing:-.01em;
+  }
+  .hero h1 em{ font-style:normal; color:var(--breeze-dark); }
+  .hero p.sub{ margin-top:22px; max-width:46ch; font-size:1.08rem; line-height:1.6; color:#2c4a55;}
+
+  .breeze-control{
+    margin-top:36px; padding:18px 22px;
+    background:var(--paper); border:1px solid var(--line); border-radius:16px;
+    display:flex; flex-direction:column; gap:10px; max-width:380px;
+  }
+  .breeze-control .row{display:flex; justify-content:space-between; align-items:center; font-family:'JetBrains Mono',monospace; font-size:.78rem;}
+  .breeze-control input[type=range]{ width:100%; accent-color:var(--coral); }
+
+  .hero-visual{ position:relative; z-index:1; display:flex; justify-content:center; align-items:flex-start; }
+  .ceiling-rig{ position:relative; width:min(340px, 80vw); }
+  .ceiling-rig .rod{ position:absolute; top:-46px; left:50%; width:6px; height:46px; background:var(--ink); transform:translateX(-50%); border-radius:3px; }
+  .ceiling-rig .fan{ width:100%; aspect-ratio:1/1; --sz:340px; }
+  .ceiling-rig .blade{ background:linear-gradient(90deg, var(--paper), var(--breeze)); border:2px solid var(--ink); }
+  .ceiling-rig .hub{ background:var(--sun); animation:pulseglow calc(2.4s * var(--global-mult)) ease-in-out infinite; }
+
+  /* ---------- lineup ---------- */
+  .lineup h2{ font-size:clamp(1.8rem,3.4vw,2.6rem); margin-bottom:8px;}
+  .lineup > p{ max-width:60ch; color:#2c4a55; margin-bottom:48px; }
+  .grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:22px;
+  }
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:20px;
+    padding:28px 24px 22px; display:flex; flex-direction:column; align-items:center;
+    text-align:center; transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .card:hover{ transform:translateY(-6px); box-shadow:0 18px 34px rgba(19,43,52,.12); }
+  .card:hover .fan__blades{ animation-duration: calc(var(--base-dur,3s) * var(--global-mult) * .35) !important; }
+  .card:hover .oscillator{ animation-duration: calc(2.6s * var(--global-mult) * .5) !important; }
+  .stage{ width:150px; height:150px; position:relative; margin-bottom:20px; }
+  .card h3{ font-size:1.2rem; margin-bottom:8px; }
+  .card .spec{ font-size:.72rem; color:var(--breeze-dark); line-height:1.6; }
+
+  /* box fan */
+  .cage{ position:absolute; inset:6%; border-radius:50%; border:6px solid var(--ink); background:
+      repeating-conic-gradient(rgba(19,43,52,.16) 0deg 4deg, transparent 4deg 18deg); }
+  .stand{ position:absolute; bottom:-16px; left:50%; width:14px; height:26px; background:var(--ink); transform:translateX(-50%); border-radius:0 0 4px 4px; z-index:3;}
+
+  /* desk fan oscillator */
+  .desk-stage{ overflow:hidden; }
+  .neck{ position:absolute; bottom:6px; left:50%; width:10px; height:20px; background:var(--ink); transform:translateX(-50%); z-index:0; border-radius:2px; }
+  .oscillator{ position:absolute; inset:14% 6% 26% 6%; animation:oscillate calc(2.6s * var(--global-mult)) ease-in-out infinite; transform-origin:50% 100%; }
+  .oscillator .fan{ width:100%; height:100%; }
+
+  /* hand fan */
+  .handfan-wrap{ position:relative; width:150px; height:150px; display:flex; align-items:flex-end; justify-content:center; }
+  .handfan{ position:relative; width:130px; height:110px; transform-origin:50% 100%; animation:breathe calc(3.2s * var(--global-mult)) ease-in-out infinite; }
+  .pleat{ position:absolute; bottom:0; left:50%; width:6px; height:105px; background:var(--coral); transform-origin:bottom center; border-radius:6px 6px 0 0; opacity:.92;}
+  .pleat:nth-child(odd){ background:var(--sun); }
+  .handfan-pin{ position:absolute; bottom:-4px; left:50%; width:10px; height:10px; border-radius:50%; background:var(--ink); transform:translateX(-50%); z-index:3;}
+
+  /* industrial */
+  .hazard{ position:absolute; inset:2%; border-radius:50%;
+    background:repeating-conic-gradient(var(--sun) 0deg 14deg, var(--ink) 14deg 28deg);
+    padding:10px;
+  }
+  .hazard-inner{ position:absolute; inset:12%; border-radius:50%; background:var(--sky-pale); }
+  /* ---------- wall of fans marquee ---------- */
+  .wall{ overflow:hidden; padding-top:0; padding-bottom:0;}
+  .wall-inner{ padding:30px 0; background:var(--ink); }
+  .wall-track{
+    display:flex; gap:44px; width:max-content;
+    animation: wallscroll calc(60s * var(--global-mult)) linear infinite;
+  }
+  .mini-fan{ width:64px; height:64px; --sz:64px; flex:none; opacity:0; animation: fadein .6s ease forwards; animation-delay: calc(var(--pop-delay, 0s)); }
+  @keyframes fadein{ to{ opacity:1; } }
+  .mini-fan .blade{ background:var(--sun); }
+  .mini-fan .hub{ background:var(--breeze); border-color:var(--ink); }
+  .wall h2{ color:var(--paper); text-align:center; padding:36px 0 0; font-size:1.6rem;}
+
+  footer{ padding:56px 0 70px; text-align:center; }
+  footer p{ font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--breeze-dark); letter-spacing:.02em; }
+  footer p.big{ font-family:'Fraunces',serif; font-size:1.3rem; color:var(--ink); margin-bottom:10px; font-weight:600;}
+
+  @media (max-width: 900px){
+    .hero{ grid-template-columns:1fr; }
+    .grid{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width: 560px){
+    .grid{ grid-template-columns:1fr; }
+    section{ padding:64px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .fan__blades, .oscillator, .handfan, .hazard, .torus::after, .wall-track, .hero::before, .hub, #page, .mini-fan{
+      animation:none !important;
+      opacity:1;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="page">
+
+<nav>
+  <div class="wrap">
+    <div class="logo">
+      <span>ONLYFANS.</span>
+      <small>workshop of things that spin</small>
+    </div>
+    <div class="mono" style="font-size:.72rem; color:var(--breeze-dark);">est. today · 0 subscriptions required</div>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="hero-copy">
+    <div class="eyebrow">not that kind of only fans</div>
+    <h1>A whole page of fans.<br>The kind with <em>blades</em>.</h1>
+    <p class="sub">You clicked expecting one thing. You get a ceiling fan, a box fan, a desk fan, a hand fan, and a fan with no blades at all — every single one actually spinning, actually cooling an imaginary room.</p>
+
+    <div class="breeze-control">
+      <div class="row"><span>BREEZE INTENSITY</span><span id="breezeLabel">LVL 1 — BARELY A WHISPER</span></div>
+      <input id="breezeSlider" type="range" min="1" max="5" step="1" value="1">
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="ceiling-rig">
+      <div class="rod"></div>
+      <div class="fan" style="--base-dur:3.4s;">
+        <div class="fan__blades" id="blades-hero">
+          <span class="blade" style="transform:rotate(0deg);"></span>
+          <span class="blade" style="transform:rotate(90deg);"></span>
+          <span class="blade" style="transform:rotate(180deg);"></span>
+          <span class="blade" style="transform:rotate(270deg);"></span>
+        </div>
+        <div class="hub"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="lineup wrap">
+  <div class="eyebrow">the lineup</div>
+  <h2>Six fans. Zero paywalls.</h2>
+  <p>Every card below runs its own real animation — hover one to see it pick up speed, like it's finally allowed to try.</p>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="stage">
+        <div class="fan" style="--sz:150px; --base-dur:2.2s; width:100%; height:100%;">
+          <div class="fan__blades">
+            <span class="blade" style="transform:rotate(0deg); background:var(--paper); border:2px solid var(--ink);"></span>
+            <span class="blade" style="transform:rotate(90deg); background:var(--paper); border:2px solid var(--ink);"></span>
+            <span class="blade" style="transform:rotate(180deg); background:var(--paper); border:2px solid var(--ink);"></span>
+            <span class="blade" style="transform:rotate(270deg); background:var(--paper); border:2px solid var(--ink);"></span>
+          </div>
+          <div class="hub" style="background:var(--sun);"></div>
+        </div>
+      </div>
+      <h3>Ceiling Fan</h3>
+      <div class="spec mono">blades: 4 · mount: overhead<br>mood: colonial veranda</div>
+    </div>
+
+    <div class="card">
+      <div class="stage">
+        <div class="cage"></div>
+        <div class="fan" style="--sz:150px; --base-dur:1.4s; width:100%; height:100%;">
+          <div class="fan__blades">
+            <span class="blade" style="transform:rotate(0deg);"></span>
+            <span class="blade" style="transform:rotate(72deg);"></span>
+            <span class="blade" style="transform:rotate(144deg);"></span>
+            <span class="blade" style="transform:rotate(216deg);"></span>
+            <span class="blade" style="transform:rotate(288deg);"></span>
+          </div>
+          <div class="hub"></div>
+        </div>
+        <div class="stand"></div>
+      </div>
+      <h3>Desk Fan</h3>
+      <div class="spec mono">blades: 5 · cage: yes<br>mood: dorm room, august</div>
+    </div>
+
+    <div class="card">
+      <div class="handfan-wrap">
+        <div class="handfan">
+          <span class="pleat" style="transform:rotate(-52deg);"></span>
+          <span class="pleat" style="transform:rotate(-31deg);"></span>
+          <span class="pleat" style="transform:rotate(-10deg);"></span>
+          <span class="pleat" style="transform:rotate(10deg);"></span>
+          <span class="pleat" style="transform:rotate(31deg);"></span>
+          <span class="pleat" style="transform:rotate(52deg);"></span>
+        </div>
+        <div class="handfan-pin"></div>
+      </div>
+      <h3>Hand Fan</h3>
+      <div class="spec mono">folds: 6 · power source: wrist<br>mood: royal court</div>
+    </div>
+
+    <div class="card">
+      <div class="stage">
+        <div class="hazard">
+          <div class="hazard-inner"></div>
+        </div>
+        <div class="fan" style="--sz:150px; --base-dur:0.7s; width:100%; height:100%;">
+          <div class="fan__blades">
+            <span class="blade" style="transform:rotate(0deg); background:var(--ink); width:40%;"></span>
+            <span class="blade" style="transform:rotate(120deg); background:var(--ink); width:40%;"></span>
+            <span class="blade" style="transform:rotate(240deg); background:var(--ink); width:40%;"></span>
+          </div>
+          <div class="hub" style="background:var(--coral);"></div>
+        </div>
+      </div>
+      <h3>Industrial Fan</h3>
+      <div class="spec mono">blades: 3 · cage: hazard-striped<br>mood: warehouse, no AC</div>
+    </div>
+  </div>
+</section>
+
+<section class="wall">
+  <div class="wall-inner">
+    <h2>so. many. fans.</h2>
+    <div class="wall-track" id="wallTrack"></div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p class="big">No subscriptions. No paywalls.</p>
+  <p>Just fans — built with CSS, not consent forms.</p>
+</footer>
+
+</div>
+
+<script>
+  // breeze intensity control — drives every animation on the page
+  const root = document.documentElement;
+  const slider = document.getElementById('breezeSlider');
+  const label = document.getElementById('breezeLabel');
+  const levels = {
+    1: 'LVL 1 — BARELY A WHISPER',
+    2: 'LVL 2 — GENTLE',
+    3: 'LVL 3 — PLEASANT',
+    4: 'LVL 4 — HAIR EVERYWHERE',
+    5: 'LVL 5 — HURRICANE WARNING (screen may shake)'
+  };
+  // higher intensity = shorter animation duration = faster spin
+  const multMap = { 1: 2.2, 2: 1.5, 3: 1, 4: 0.55, 5: 0.28 };
+
+  const shakeMap = { 1: 0, 2: 1, 3: 2, 4: 4, 5: 7 };
+  function applyLevel(v){
+    root.style.setProperty('--global-mult', multMap[v]);
+    root.style.setProperty('--shake-amt', shakeMap[v] + 'px');
+    label.textContent = levels[v];
+  }
+  slider.addEventListener('input', e => applyLevel(e.target.value));
+  applyLevel(slider.value);
+
+  // build the "wall of fans" marquee, duplicated for seamless loop
+  const track = document.getElementById('wallTrack');
+  const fanHTML = (dur, delay) => `
+    <div class="fan mini-fan" style="--sz:64px; --base-dur:${dur}s; --pop-delay:${delay}s;">
+      <div class="fan__blades">
+        <span class="blade" style="transform:rotate(0deg);"></span>
+        <span class="blade" style="transform:rotate(90deg);"></span>
+        <span class="blade" style="transform:rotate(180deg);"></span>
+        <span class="blade" style="transform:rotate(270deg);"></span>
+      </div>
+      <div class="hub"></div>
+    </div>`;
+  function buildRow(startDelay){
+    let row = '';
+    for(let i=0;i<14;i++){
+      const dur = (0.8 + Math.random()*1.6).toFixed(2);
+      const delay = (startDelay + i * 0.18).toFixed(2);
+      row += fanHTML(dur, delay);
+    }
+    return row;
+  }
+  track.innerHTML = buildRow(0) + buildRow(2.6); // second copy pops in a beat later, duplicated for the scroll loop
+</script>
+
+</body>
+</html>
